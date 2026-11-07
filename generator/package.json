@@ -1,0 +1,24 @@
+{
+  "name": "@osamaps/generator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node src/index.ts",
+    "generate:full": "node src/index.ts --full",
+    "parity": "node src/parity.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@osamaps/shared": "*",
+    "csv-parse": "^7.0.3",
+    "p-limit": "^7.1.0",
+    "read-excel-file": "^9.3.14",
+    "simple-statistics": "^7.8.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0"
+  }
+}
