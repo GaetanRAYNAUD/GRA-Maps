@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.wrangler/
+.env
+.env.*
+!.env.example
+!web/.env.production
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# Generator sources, output and parity reference
+/generator/sources/
+/generator/out/
+/generator/reference/*
+!/generator/reference/README.md
+/generator/.tmp/

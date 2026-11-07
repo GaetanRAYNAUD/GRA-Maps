@@ -1,0 +1,35 @@
+{
+  "name": "osamaps",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
+  "workspaces": [
+    "shared",
+    "generator",
+    "web"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "generate": "npm run generate -w generator",
+    "generate:full": "npm run generate:full -w generator",
+    "publish:data": "node scripts/publish-data.ts",
+    "deploy": "npm run build && wrangler deploy",
+    "typecheck": "npm run typecheck --workspaces --if-present && tsc -p scripts --noEmit",
+    "test": "npm run test --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "prettier": "^3.6.0",
+    "typescript": "^5.9.0",
+    "wrangler": "^4.40.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261104.1": true
+  }
+}
