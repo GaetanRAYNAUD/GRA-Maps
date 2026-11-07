@@ -10,24 +10,48 @@ par Vite) en `max-age=31536000, immutable`.
 
 Domaine : `maps.gaetanraynaud.fr` (route à ajouter dans `wrangler.toml` au moment de la bascule).
 
-CI (`.github/workflows/deploy.yml`) : build puis `wrangler deploy`, lancée à la main pour l'instant
-(onglet Actions de GitHub, « Run workflow »). Le déclenchement sur push `master` est en commentaire
-dans le fichier.
+## Déploiement du front : Workers Builds
+
+Pas de CI GitHub : Cloudflare (Workers Builds, l'intégration Git des Workers) clone le repo, build
+et déploie à chaque push sur `master`. Logs et historique dans le dashboard Cloudflare, Worker
+`gra-maps` > Settings > Builds.
+
+Réglages du Worker :
+
+| Champ             | Valeur                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| Repository        | `GaetanRAYNAUD/GRA-Maps`                                                            |
+| Production branch | `master`                                                                            |
+| Root directory    | `/`                                                                                 |
+| Build command     | `npm run build`                                                                     |
+| Deploy command    | `npx wrangler deploy`                                                               |
+| Nom du Worker     | `gra-maps` (doit être identique au `name` de `wrangler.toml`)                       |
+| Build watch paths | `web/*`, `shared/*`, `wrangler.toml`, `package.json`, `package-lock.json`, `.nvmrc` |
+
+Version de Node : l'image de build utilise Node 24 par défaut, mais lit `.nvmrc` (ou la variable
+`NODE_VERSION`), donc le build tourne en Node 26 sans réglage
+([doc](https://developers.cloudflare.com/workers/ci-cd/builds/build-image/#overriding-default-versions)).
+
+Les branches autres que `master` peuvent produire des previews (option « non-production branch
+builds »). Les watch paths évitent de redéployer le front pour un commit qui ne touche que le
+générateur ou la doc.
+
+Déploiement à la main depuis le poste : `npm run deploy` (après `wrangler login`).
 
 ## Secrets et identifiants
 
-Rien de secret dans le repo.
+Rien de secret dans le repo, et aucun secret côté GitHub : Workers Builds s'authentifie avec
+l'intégration GitHub de Cloudflare.
 
 | Où                                                      | Quoi                                                                                                                                                   |
 | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| GitHub, Settings > Secrets and variables > Actions      | Secret `CLOUDFLARE_API_TOKEN` (modèle « Edit Cloudflare Workers ») et `CLOUDFLARE_ACCOUNT_ID` (secret ou variable), lus par la CI                      |
 | `.env` à la racine (ignoré par git), en local seulement | Variables de `npm run publish:data` (R2 et purge du cache), chargées par `node --env-file-if-exists=.env`. Aussi lues par wrangler pour `CLOUDFLARE_*` |
-| `wrangler login`                                        | Alternative locale au token pour `npm run deploy` (OAuth dans le navigateur)                                                                           |
+| `wrangler login`                                        | Authentification locale pour `npm run deploy` (OAuth dans le navigateur), à la place d'un `CLOUDFLARE_API_TOKEN`                                       |
+
+Modèle du `.env` : [`.env.example`](../.env.example) à la racine.
 
 L'identifiant de compte Cloudflare n'est pas un secret : il peut aussi aller dans `wrangler.toml`
-(`account_id = "..."`), ce qui évite de le déclarer partout.
-
-En CLI : `gh secret set CLOUDFLARE_API_TOKEN` puis `gh secret set CLOUDFLARE_ACCOUNT_ID`.
+(`account_id = "..."`).
 
 Variables prévues dans `.env` pour la publication (noms à confirmer en écrivant le script) :
 

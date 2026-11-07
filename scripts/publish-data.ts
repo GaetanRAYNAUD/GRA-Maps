@@ -7,7 +7,7 @@
  * - common.json is uploaded last so it never references files not yet published.
  * - Then purge the Cloudflare cache by prefix (dedicated API token).
  *
- * Manual only (`npm run publish:data`), never run in CI.
+ * Manual only (`npm run publish:data`), never run in a build.
  */
 console.error('publish-data: not implemented yet')
 process.exitCode = 1

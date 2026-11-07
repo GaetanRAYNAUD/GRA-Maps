@@ -24,8 +24,8 @@ npm run publish:data   # synchronise generator/out/ vers R2 (manuel uniquement)
 npm run deploy         # build + wrangler deploy
 ```
 
-Le déploiement du front par la CI est manuel pour l'instant (onglet Actions). La génération et la publication
-des données restent manuelles.
+Le front est déployé par Cloudflare Workers Builds à chaque push sur `master` (voir
+[docs/hosting.md](docs/hosting.md)). La génération et la publication des données restent manuelles.
 
 ## Générateur
 
