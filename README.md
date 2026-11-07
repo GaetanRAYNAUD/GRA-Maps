@@ -24,7 +24,7 @@ npm run publish:data   # synchronise generator/out/ vers R2 (manuel uniquement)
 npm run deploy         # build + wrangler deploy
 ```
 
-Le déploiement du front se fait aussi en CI sur push `master`. La génération et la publication
+Le déploiement du front par la CI est manuel pour l'instant (onglet Actions). La génération et la publication
 des données restent manuelles.
 
 ## Générateur

@@ -10,8 +10,35 @@ par Vite) en `max-age=31536000, immutable`.
 
 Domaine : `maps.gaetanraynaud.fr` (route à ajouter dans `wrangler.toml` au moment de la bascule).
 
-CI (`.github/workflows/deploy.yml`) : sur push `master`, build puis `wrangler deploy`. Secrets
-`CLOUDFLARE_API_TOKEN` et `CLOUDFLARE_ACCOUNT_ID`.
+CI (`.github/workflows/deploy.yml`) : build puis `wrangler deploy`, lancée à la main pour l'instant
+(onglet Actions de GitHub, « Run workflow »). Le déclenchement sur push `master` est en commentaire
+dans le fichier.
+
+## Secrets et identifiants
+
+Rien de secret dans le repo.
+
+| Où                                                      | Quoi                                                                                                                                                   |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GitHub, Settings > Secrets and variables > Actions      | Secret `CLOUDFLARE_API_TOKEN` (modèle « Edit Cloudflare Workers ») et `CLOUDFLARE_ACCOUNT_ID` (secret ou variable), lus par la CI                      |
+| `.env` à la racine (ignoré par git), en local seulement | Variables de `npm run publish:data` (R2 et purge du cache), chargées par `node --env-file-if-exists=.env`. Aussi lues par wrangler pour `CLOUDFLARE_*` |
+| `wrangler login`                                        | Alternative locale au token pour `npm run deploy` (OAuth dans le navigateur)                                                                           |
+
+L'identifiant de compte Cloudflare n'est pas un secret : il peut aussi aller dans `wrangler.toml`
+(`account_id = "..."`), ce qui évite de le déclarer partout.
+
+En CLI : `gh secret set CLOUDFLARE_API_TOKEN` puis `gh secret set CLOUDFLARE_ACCOUNT_ID`.
+
+Variables prévues dans `.env` pour la publication (noms à confirmer en écrivant le script) :
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=          # token R2 (R2 > Manage API tokens), lecture/écriture sur le bucket
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET=
+CLOUDFLARE_ZONE_ID=        # zone gaetanraynaud.fr, pour la purge
+CLOUDFLARE_PURGE_TOKEN=    # token dédié, permission Zone > Cache Purge
+```
 
 ## Données : Cloudflare R2
 

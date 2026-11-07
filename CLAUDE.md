@@ -48,7 +48,9 @@ npm workspaces : `shared/` (types et chemins des JSON publiés), `generator/` (p
 
 ## Déploiement
 
-- Front : Worker Cloudflare en assets statiques uniquement (pas de `main`), déployé par la CI sur
-  push `master`. Détails et vérifications : [docs/hosting.md](docs/hosting.md).
+- Front : Worker Cloudflare en assets statiques uniquement (pas de `main`), déployé par la CI
+  (déclenchement manuel pour l'instant). Détails et vérifications : [docs/hosting.md](docs/hosting.md).
 - Données : génération (`npm run generate`) et publication (`npm run publish:data`) toujours
   manuelles, jamais en CI. Les données ne passent jamais par le Worker.
+- Secrets : jamais dans le repo. GitHub Actions pour la CI, `.env` racine (ignoré) en local ;
+  détail dans [docs/hosting.md](docs/hosting.md#secrets-et-identifiants).

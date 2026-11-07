@@ -15,7 +15,7 @@
     "build": "npm run build -w web",
     "generate": "npm run generate -w generator",
     "generate:full": "npm run generate:full -w generator",
-    "publish:data": "node scripts/publish-data.ts",
+    "publish:data": "node --env-file-if-exists=.env scripts/publish-data.ts",
     "deploy": "npm run build && wrangler deploy",
     "typecheck": "npm run typecheck --workspaces --if-present && tsc -p scripts --noEmit",
     "test": "npm run test --workspaces --if-present",

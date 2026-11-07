@@ -1,8 +1,9 @@
 name: Deploy front
 
+# Manual only for now. To deploy on every push again, add:
+#   push:
+#     branches: [master]
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 concurrency:
