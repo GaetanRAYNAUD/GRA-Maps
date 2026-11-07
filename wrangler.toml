@@ -1,6 +1,6 @@
 # Static assets only: no `main`, no `run_worker_first`, so no Worker invocation.
 # Data is served from R2 (maps-data.gaetanraynaud.fr), never through this Worker.
-name = "osamaps"
+name = "gra-maps"
 compatibility_date = "2026-11-07"
 
 [assets]

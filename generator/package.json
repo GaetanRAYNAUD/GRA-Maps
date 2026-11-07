@@ -1,5 +1,5 @@
 {
-  "name": "@osamaps/generator",
+  "name": "@gra-maps/generator",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@osamaps/shared": "*",
+    "@gra-maps/shared": "*",
     "csv-parse": "^7.0.3",
     "p-limit": "^7.1.0",
     "read-excel-file": "^9.3.14",

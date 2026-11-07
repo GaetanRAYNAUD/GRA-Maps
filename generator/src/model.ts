@@ -1,4 +1,4 @@
-import type { Commune, Departement, Region } from '@osamaps/shared'
+import type { Commune, Departement, Region } from '@gra-maps/shared'
 
 /**
  * - partial: download only missing sources, write only output files that are

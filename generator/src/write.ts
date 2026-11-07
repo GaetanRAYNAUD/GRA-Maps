@@ -5,7 +5,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import { gzip } from 'node:zlib'
 import pLimit from 'p-limit'
-import { dataPaths, type Common } from '@osamaps/shared'
+import { dataPaths, type Common } from '@gra-maps/shared'
 import type { Data, Mode } from './model.ts'
 import { OUT_DIR } from './paths.ts'
 

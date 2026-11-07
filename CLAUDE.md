@@ -44,7 +44,7 @@ npm workspaces : `shared/` (types et chemins des JSON publiés), `generator/` (p
   librairie UI et graphiques au choix. `BrowserRouter` (le fallback SPA est géré par Cloudflare).
 - Données lues depuis `VITE_DATA_BASE_URL` : `common.json` et `jenks/*` au démarrage, région,
   département et commune à la demande, un seul `fetch` par fichier, cache mémoire.
-- Types et chemins des données importés depuis `@osamaps/shared`, jamais redéfinis.
+- Types et chemins des données importés depuis `@gra-maps/shared`, jamais redéfinis.
 
 ## Déploiement
 

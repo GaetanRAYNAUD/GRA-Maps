@@ -1,4 +1,4 @@
-# osamaps — maps.gaetanraynaud.fr
+# GRA-Maps — maps.gaetanraynaud.fr
 
 Cartes de la France (régions, départements, communes) : population, naissances, décès, densité, superficie.
 
