@@ -4,13 +4,13 @@ Cartes de la France (régions, départements, communes) : population, naissances
 
 ## Structure
 
-| Dossier       | Rôle                                                                                   |
-|---------------|----------------------------------------------------------------------------------------|
-| `web/`        | Front React + Vite + TypeScript, déployé en assets statiques sur Cloudflare Workers    |
-| `generator/`  | Node 26 + TypeScript : génère les JSON à partir de `generator/sources/` vers `out/`    |
-| `shared/`     | Types et chemins des fichiers de données, partagés entre `generator/` et `web/`        |
-| `scripts/`    | Publication des données vers R2 (`data.gaetanraynaud.fr`)                              |
-| `wrangler.toml` | Worker en assets uniquement (aucune invocation de Worker)                            |
+| Dossier         | Rôle                                                                                |
+| --------------- | ----------------------------------------------------------------------------------- |
+| `web/`          | Front React + Vite + TypeScript, déployé en assets statiques sur Cloudflare Workers |
+| `generator/`    | Node 26 + TypeScript : génère les JSON à partir de `generator/sources/` vers `out/` |
+| `shared/`       | Types et chemins des fichiers de données, partagés entre `generator/` et `web/`     |
+| `scripts/`      | Publication des données vers R2 (`maps-data.gaetanraynaud.fr`)                      |
+| `wrangler.toml` | Worker en assets uniquement (aucune invocation de Worker)                           |
 
 ## Commandes
 
@@ -43,14 +43,22 @@ Dans les deux modes, les fichiers de sortie qui ne sont plus produits sont suppr
 
 ## Sources des données
 
-| Source | Producteur |
-|--------|------------|
-| Régions, départements, communes | INSEE, code officiel géographique |
-| Codes postaux | La Poste, base officielle des codes postaux |
-| Superficies | Observatoire des territoires |
-| Populations historiques | INSEE |
-| Naissances, décès | INSEE |
-| Position des mairies | api.gouv.fr |
-| Population par sexe et âge | INSEE, fichiers `TD_POP1B_<année>` |
+| Source                          | Producteur                                                                               |
+| ------------------------------- | ---------------------------------------------------------------------------------------- |
+| Régions, départements, communes | INSEE, code officiel géographique                                                        |
+| Codes postaux                   | La Poste, base officielle des codes postaux                                              |
+| Superficies                     | Observatoire des territoires                                                             |
+| Populations historiques         | INSEE Melodi `DS_POPULATIONS_HISTORIQUES` (prioritaire), INSEE 3698339 (xlsx, 1876-1962) |
+| Naissances, décès               | INSEE Melodi `DS_ETAT_CIVIL_NAIS_COMMUNES`, `DS_ETAT_CIVIL_DECES_COMMUNES`               |
+| Position des mairies            | api.gouv.fr                                                                              |
 
-Les URLs de téléchargement restent à identifier sur le site de chaque producteur.
+Les jeux INSEE Melodi sont décrits par `https://api.insee.fr/melodi/catalog/all` (URL de
+téléchargement, millésime) et `https://api.insee.fr/melodi/range/{id}` (colonnes, codes). Le
+générateur lit l'URL dans le catalogue au moment du téléchargement et garde l'entrée du catalogue
+à côté du fichier (`<id>.catalog.json`). Les autres URLs restent à identifier.
+
+## Docs
+
+- [docs/hosting.md](docs/hosting.md) : Cloudflare (Workers, R2, cache, CORS), publication, vérifications
+- [docs/migration.md](docs/migration.md) : reprise de l'ancien site, ce qui reste à migrer
+- [docs/ideas.md](docs/ideas.md) : idées mises de côté (pyramide des âges)
