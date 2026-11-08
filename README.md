@@ -25,7 +25,8 @@ npm run deploy         # build + wrangler deploy
 ```
 
 Le front est déployé par Cloudflare Workers Builds à chaque push sur `master` (voir
-[docs/hosting.md](docs/hosting.md)). La génération et la publication des données restent manuelles.
+[docs/hosting.md](docs/hosting.md)). La génération et la publication des données restent manuelles. GitHub Actions vérifie chaque push (format, typecheck,
+tests, build), sans rien générer ni déployer.
 
 ## Générateur
 

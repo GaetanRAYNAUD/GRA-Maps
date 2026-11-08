@@ -52,7 +52,8 @@ npm workspaces : `shared/` (types et chemins des JSON publiés), `generator/` (p
 ## Déploiement
 
 - Front : Worker Cloudflare en assets statiques uniquement (pas de `main`), déployé par
-  Cloudflare Workers Builds à chaque push sur `master` (pas de CI GitHub). Détails et
+  Cloudflare Workers Builds à chaque push sur `master`. GitHub Actions (`check.yml`) ne fait
+  que les vérifications : format, typecheck, tests, build. Détails et
   vérifications : [docs/hosting.md](docs/hosting.md).
 - Données : génération (`npm run generate`) et publication (`npm run publish:data`) toujours
   manuelles, en local, jamais dans un build. Les données ne passent jamais par le Worker.

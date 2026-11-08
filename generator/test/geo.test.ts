@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { bordersReport } from '../src/compute/check-borders.ts'
 import { buildConverter, movesFrom, type Move } from '../src/geo.ts'
 
 const row = (MOD: string, DATE_EFF: string, COM_AV: string, COM_AP: string, TYPECOM_AV = 'COM', TYPECOM_AP = 'COM') => ({
@@ -55,5 +56,21 @@ describe('buildConverter', () => {
     const geo = buildConverter(moves, '2023-01-01', known)
     expect(geo.toCurrent('Z')).toBeUndefined()
     expect(geo.unknown).toEqual(new Set(['Z']))
+  })
+})
+
+describe('bordersReport', () => {
+  const moves: Move[] = [
+    { date: '2025-01-01', from: 'A', to: 'B' },
+    { date: '2026-01-01', from: 'C', to: 'D' },
+    { date: '2026-01-01', from: 'E', to: 'D' },
+  ]
+
+  it('lists the changes made after the tiles', () => {
+    expect(bordersReport(moves, '2025-04-17', new Set(['B', 'D']))).toEqual({ changed: ['D'], gone: ['C', 'E'] })
+  })
+
+  it('reports nothing when the tiles are up to date', () => {
+    expect(bordersReport(moves, '2026-03-01', new Set(['B', 'D']))).toEqual({ changed: [], gone: [] })
   })
 })

@@ -57,12 +57,14 @@ avril 2025, vraisemblablement en géographie 2025). La jointure se fait par code
 changement de nom ne casse rien, mais une fusion donne une commune nouvelle sans forme et des
 anciennes communes sans données.
 
-Parade prévue (à écrire) : à la génération, comparer les codes de communes du COG avec ceux des
-contours Etalab du même millésime
-(`https://etalab-datasets.geo.data.gouv.fr/contours-administratifs/{année}/geojson/`, publiés de
-2018 à aujourd'hui) et afficher un avertissement listant les écarts. Les contours contiennent en
-plus les arrondissements municipaux (Paris, Lyon, Marseille) et les collectivités d'outre-mer, à
-ignorer dans la comparaison.
+Contrôle à chaque génération (`generator/src/compute/check-borders.ts`) : le générateur date
+les tuiles (en-tête `Last-Modified` d'une tuile, 17/04/2025 au 08/11/2026) et liste les
+changements du COG (`v_mvt_commune`) entrés en vigueur depuis. Sans changement, il l'indique ;
+sinon, il avertit avec les communes dont la forme affichée est périmée et les anciens codes
+encore dessinés sans données. Il ne fait jamais échouer la génération (tuiles injoignables :
+simple avertissement). Les contours Etalab par année
+(`https://etalab-datasets.geo.data.gouv.fr/contours-administratifs/{année}/geojson/`, de 2018 à
+aujourd'hui) restent la source si on génère un jour nos propres tuiles.
 
 Si l'écart devient gênant :
 

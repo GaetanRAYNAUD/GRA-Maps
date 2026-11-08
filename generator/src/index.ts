@@ -1,4 +1,5 @@
 import { parseArgs } from 'node:util'
+import { checkBorders } from './compute/check-borders.ts'
 import { emptyData, type Mode } from './model.ts'
 import { ensureSources } from './sources/ensure.ts'
 import { steps } from './steps/index.ts'
@@ -18,6 +19,7 @@ async function main() {
     console.log(`${step.name} done in ${Math.round(performance.now() - start)} ms`)
   }
 
+  await checkBorders(data)
   await writeOutput(data, mode)
   console.log('Generation done')
 }

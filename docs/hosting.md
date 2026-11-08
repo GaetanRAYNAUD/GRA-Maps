@@ -12,8 +12,8 @@ Domaine : `maps.gaetanraynaud.fr` (route à ajouter dans `wrangler.toml` au mome
 
 ## Déploiement du front : Workers Builds
 
-Pas de CI GitHub : Cloudflare (Workers Builds, l'intégration Git des Workers) clone le repo, build
-et déploie à chaque push sur `master`. Logs et historique dans le dashboard Cloudflare, Worker
+Cloudflare (Workers Builds, l'intégration Git des Workers) clone le repo, build et déploie à
+chaque push sur `master` ; GitHub ne déploie rien. Logs et historique dans le dashboard Cloudflare, Worker
 `gra-maps` > Settings > Builds.
 
 Réglages du Worker :
@@ -116,14 +116,22 @@ Variables du `.env` : `CLOUDFLARE_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`,
 (zone `gaetanraynaud.fr`) et `CLOUDFLARE_PURGE_TOKEN` (token API avec la seule permission
 Zone > Cache Purge).
 
-## À vérifier après le premier déploiement
+## Vérifications
 
-1. `curl -I -H 'Accept-Encoding: br, gzip' https://maps-data.gaetanraynaud.fr/communes/<id>.json` :
-   `Content-Encoding: br` (ou gzip), `Content-Type: application/json`, ETag présent ; deuxième
-   requête avec `If-None-Match` → 304 ; une republication sans changement garde le même ETag.
-2. `curl -I https://maps.gaetanraynaud.fr/` et sur une route SPA (ex. `/commune/12345`) : le
+Les données ont été vérifiées le 08/11/2026, après la première publication complète :
+
+- `curl -I -H 'Accept-Encoding: br, gzip' https://maps-data.gaetanraynaud.fr/communes/<id>.json` :
+  `Content-Encoding: br`, `Content-Type: application/json`, `Cache-Control: public, max-age=300`,
+  CORS pour `https://maps.gaetanraynaud.fr`, ETag (faible après compression) ; deuxième requête
+  `cf-cache-status: HIT` ; `If-None-Match` (ETag fort ou faible) → 304.
+- Un `--dry-run` après publication annonce 0 fichier à envoyer : l'ETag de R2 est bien le MD5.
+- Contenu servi identique aux fichiers de `out/` (MD5 comparés sur un échantillon).
+- Plus gros fichier : `jenks/population.json`, 2,2 Mo transférés en brotli (à revoir pour le
+  front, voir [migration.md](migration.md)).
+- Sans `Accept-Encoding`, le fichier arrive non compressé (normal).
+
+Reste à vérifier au premier déploiement du front :
+
+1. `curl -I https://maps.gaetanraynaud.fr/` et sur une route SPA (ex. `/commune/12345`) : le
    `max-age=60` s'applique-t-il aussi au fallback ? Sinon corriger `_headers`.
-3. Les requêtes de données n'apparaissent pas dans les invocations Workers.
-4. La taille du plus gros fichier reste raisonnable pour le navigateur (jenks/population.json :
-   le plus lourd, une entrée par commune et par année).
-5. Sans `Accept-Encoding`, le fichier arrive non compressé (normal).
+2. Les requêtes de données n'apparaissent pas dans les invocations Workers.

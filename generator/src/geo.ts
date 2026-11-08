@@ -54,8 +54,13 @@ export function buildConverter(moves: readonly Move[], sourceDate: string, known
 
 let movesCache: Promise<Move[]> | undefined
 
+/** Moves of the downloaded change file (v_mvt_commune), read once per run. */
+export function loadMoves(): Promise<Move[]> {
+  movesCache ??= readCsv(sources.communeChanges.file).then(movesFrom)
+  return movesCache
+}
+
 /** Converter for a source in the geography of `sourceDate`, from the downloaded change file. */
 export async function geoConverter(sourceDate: string, known: ReadonlySet<string>): Promise<GeoConverter> {
-  movesCache ??= readCsv(sources.communeChanges.file).then(movesFrom)
-  return buildConverter(await movesCache, sourceDate, known)
+  return buildConverter(await loadMoves(), sourceDate, known)
 }
