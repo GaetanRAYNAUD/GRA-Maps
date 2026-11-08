@@ -1,5 +1,9 @@
 /**
- * Shape of the published JSON files.
+ * Shape of the published JSON files. Empty series (`{}`) are left out of the files, so every
+ * `Record<Year, number>` may be missing at runtime: read them with a fallback.
+ * Ranks start at 1 for the highest value; tied values share the last position of their tie
+ * (rank = number of values greater than or equal to the value).
+ * Percentages are shares of the parent total (country, region, departement), 3 decimals.
  */
 
 export type Year = number
@@ -17,19 +21,34 @@ export type Common = {
   regions: string[]
 }
 
-/** Jenks class index of every node, for one indicator (and one year). */
+/**
+ * Jenks class index (0-based, ascending values) of every node, for one indicator (and one
+ * year). A level without any value has no map at all (empty objects are left out), and nodes
+ * without a value are absent from their map. `nb*` is the highest class index of the level.
+ */
 export type DataJenksNode = {
-  regions: Record<string, number>
+  regions?: Record<string, number>
   nbRegions: number
-  departements: Record<string, number>
+  departements?: Record<string, number>
   nbDepartements: number
-  communes: Record<string, number>
+  communes?: Record<string, number>
   nbCommunes: number
 }
 
 /** `jenks/area.json` holds a single node; the others are keyed by year. */
 export type JenksArea = DataJenksNode
 export type JenksByYear = Record<Year, DataJenksNode>
+
+/** Content of every `jenks/*.json` file, keyed like the population series they classify. */
+export type Jenks = {
+  area: JenksArea
+  population: JenksByYear
+  density: JenksByYear
+  birth: JenksByYear
+  death: JenksByYear
+  birthPerCapita: JenksByYear
+  deathPerCapita: JenksByYear
+}
 
 export type Point = {
   lat: number
@@ -101,7 +120,7 @@ export type Departement = DataNode<DepartementPopulations> & {
 
 export type Commune = DataNode<CommunePopulations> & {
   departement: string
-  zipCode: string
+  zipCode?: string
   areaRegionRanks?: number
   areaDepartementRanks?: number
   /** Town hall position. */

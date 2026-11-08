@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises'
-import path from 'node:path'
+import { melodiCatalogFile } from '../read/melodi.ts'
 import { download, fetchWithTimeout } from './download.ts'
 
 /**
@@ -19,9 +19,9 @@ type CatalogEntry = { identifier: string; modified: string; product?: Product[] 
 /**
  * Downloads the French CSV of a Melodi dataset. The file is the zip served by INSEE,
  * kept as is (`<id>_data.csv` + `<id>_metadata.csv`). The catalog entry is saved
- * next to it as `<id>.catalog.json`, to know which vintage was downloaded.
+ * next to it as `<file>.catalog.json`, to know which vintage and geography were downloaded.
  */
-export const melodi = (datasetId: string) => async (dest: string) => {
+export const melodi = (datasetId: string) => async (dest: string, file: string) => {
   const res = await fetchWithTimeout(`${API}/catalog/${datasetId}`)
   if (!res.ok) throw new Error(`Melodi catalog ${datasetId}: HTTP ${res.status}`)
   const entry = (await res.json()) as CatalogEntry
@@ -33,5 +33,5 @@ export const melodi = (datasetId: string) => async (dest: string) => {
 
   console.log(`[melodi] ${product.id} (modified ${entry.modified}, ${product.byteSize ?? '?'} bytes)`)
   await download(product.accessURL, dest)
-  await writeFile(path.join(path.dirname(dest), `${datasetId}.catalog.json`), JSON.stringify(entry, null, 2))
+  await writeFile(melodiCatalogFile(file), JSON.stringify(entry, null, 2))
 }

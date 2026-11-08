@@ -55,7 +55,7 @@ Dans les deux modes, les fichiers de sortie qui ne sont plus produits sont suppr
 Les jeux INSEE Melodi sont décrits par `https://api.insee.fr/melodi/catalog/all` (URL de
 téléchargement, millésime) et `https://api.insee.fr/melodi/range/{id}` (colonnes, codes). Le
 générateur lit l'URL dans le catalogue au moment du téléchargement et garde l'entrée du catalogue
-à côté du fichier (`<id>.catalog.json`). Toutes les sources ont maintenant un téléchargement.
+à côté du fichier (`<fichier>.catalog.json`). Toutes les sources ont maintenant un téléchargement.
 
 ## Docs
 

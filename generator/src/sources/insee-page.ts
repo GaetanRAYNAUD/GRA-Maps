@@ -65,7 +65,7 @@ function latestCogVintage(): Promise<CogVintage> {
  * Downloads `v_{name}_{year}.csv` of the latest COG vintage. The file is the CSV served
  * by INSEE, kept as is (comma separated, quoted, UTF-8).
  */
-export const cogFile = (name: 'region' | 'departement' | 'commune') => async (dest: string) => {
+export const cogFile = (name: 'region' | 'departement' | 'commune' | 'mvt_commune') => async (dest: string) => {
   const { year, pageId } = await latestCogVintage()
   await downloadPageFile(`/fr/information/${pageId}`, pageId, new RegExp(`/v_${name}_${year}\\.csv$`), dest)
 }

@@ -17,8 +17,12 @@ export type Source = {
   file: string
   /** Producer and dataset, for humans. */
   origin: string
-  /** Downloads the source to `dest`. Undefined while the download is not identified yet. */
-  fetch?: (dest: string) => Promise<void>
+  /**
+   * Downloads the source to `dest` (a temporary file renamed to `file` afterwards). `file` is
+   * given for side files that must sit next to the final file. Undefined while the download
+   * is not identified yet.
+   */
+  fetch?: (dest: string, file: string) => Promise<void>
 }
 
 const def = (id: string, file: string, origin: string, fetch?: Source['fetch']): Source => ({ id, file: source(file), origin, fetch })
@@ -32,6 +36,12 @@ export const sources = {
     cogFile('departement'),
   ),
   communes: def('communes', 'list/v_commune.csv', 'INSEE, code officiel géographique (dernier millésime) : communes', cogFile('commune')),
+  communeChanges: def(
+    'communeChanges',
+    'list/v_mvt_commune.csv',
+    'INSEE, code officiel géographique (dernier millésime) : changements de communes depuis 1943',
+    cogFile('mvt_commune'),
+  ),
   zipCodes: def('zipCodes', 'zipCodes/019HexaSmal.csv', 'La Poste, base officielle des codes postaux', laposte('laposte-hexasmal')),
   area: def(
     'area',

@@ -25,7 +25,7 @@ export async function ensureSources(mode: Mode): Promise<void> {
     await mkdir(path.dirname(src.file), { recursive: true })
     const tmp = `${src.file}.tmp`
     try {
-      await src.fetch(tmp)
+      await src.fetch(tmp, src.file)
       await rename(tmp, src.file)
     } catch (e) {
       await rm(tmp, { force: true })

@@ -4,7 +4,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 import { gzip } from 'node:zlib'
 import pLimit from 'p-limit'
-import { dataPaths, type Common } from '@gra-maps/shared'
+import { dataPaths, jenksKeys, jenksKinds, type Common } from '@gra-maps/shared'
 import type { Data, Mode } from './model.ts'
 import { OUT_DIR } from './paths.ts'
 
@@ -20,13 +20,19 @@ function* outputFiles(data: Data): Generator<OutFile> {
   for (const r of data.regions.values()) yield { key: dataPaths.region(r.id), content: r }
   for (const d of data.departements.values()) yield { key: dataPaths.departement(d.id), content: d }
   for (const c of data.communes.values()) yield { key: dataPaths.commune(c.id), content: c }
-  // TODO: jenks/*.json
+  if (data.jenks) for (const kind of jenksKinds) yield { key: dataPaths.jenks(kind), content: data.jenks[jenksKeys[kind]] }
   const common: Common = {
     regions: [...data.regions.keys()],
     departements: [...data.departements.keys()],
     communes: [...data.communes.keys()],
   }
   yield { key: dataPaths.common(), content: common }
+}
+
+/** JSON replacer leaving out empty objects (empty series), to keep the files small. Arrays are kept. */
+function dropEmptyObjects(_key: string, value: unknown): unknown {
+  if (value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) return undefined
+  return value
 }
 
 async function readManifest(file: string): Promise<Manifest> {
@@ -81,7 +87,7 @@ export async function writeOutput(data: Data, mode: Mode, outDir = OUT_DIR): Pro
     // Serialize inside the task: only `limit` JSON strings exist at any time.
     tasks.push(
       limit(async () => {
-        const json = JSON.stringify(content)
+        const json = JSON.stringify(content, dropEmptyObjects)
         const hash = createHash('sha256').update(json).digest('hex')
         next[key] = hash
         if (present && previous[key] === hash) return

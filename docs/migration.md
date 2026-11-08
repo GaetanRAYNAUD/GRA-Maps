@@ -37,14 +37,29 @@ geo.api.gouv.fr, qui donne aussi le centre de chaque commune (`center`, nouveau 
 
 ## Parité
 
-Garder une copie de la dernière sortie Java (`data/`) dans `generator/reference/` et comparer
-fichier par fichier avec `generator/out/` (`npm run parity -w generator`, à écrire), avec une
-tolérance sur les flottants. Toute divergence est expliquée ou corrigée avant publication.
-Le dossier `data/` n'est pas dans le repo Java local : à récupérer, ou repartir des fichiers déjà
-publiés en prod.
+`npm run parity -w generator` compare `generator/out/` avec les fichiers placés dans
+`generator/reference/` (même arborescence), champ par champ, avec une tolérance sur les
+flottants. Le dossier `data/` du Java n'existe plus ; la référence disponible, ce sont les
+fichiers encore servis par l'ancien site (`https://maps.gaetanraynaud.fr/data/...`).
 
-Les types de `shared/src/types.ts` viennent de `osamapsfront/src/types/api.types.ts` : à confronter
-à la vraie sortie pendant la parité.
+Constats du 08/11/2026 (communes 01001 et 75056, département 01, région 11, Jenks) :
+
+- Les fichiers publiés sont incomplets : 01001 n'a aucune population, Paris n'a pas 2022-2023,
+  les totaux régionaux de naissances sont bien plus bas (part de Paris dans les naissances
+  d'Île-de-France : 45 % publiés contre 17 % calculés). Les écarts de rangs et de parts en
+  découlent.
+- Nouveaux champs : population 1876-1962 complète, densité, naissances et décès par habitant
+  et leurs rangs (absents des fichiers publiés), rangs de superficie (jamais calculés par le
+  Java), `center`.
+- Naissances et décès : Melodi donne des totaux un peu différents de l'ancien fichier (01 en
+  2008 : 7 323 naissances contre 7 019).
+- Superficies : 2 décimales au lieu de 1 (15,95 contre 15,9 km²).
+- Codes postaux : on garde le plus petit code de la commune (le Java gardait le dernier lu), et
+  Paris, Lyon, Marseille reçoivent le plus petit code de leurs arrondissements (absent avant).
+- Jenks : classes identiques pour régions et départements (superficie, population 2021),
+  97 % des communes identiques, le reste à une classe près.
+
+Les types de `shared/src/types.ts` ont été confrontés à ces fichiers : mêmes noms de champs.
 
 ## Front : à récupérer de l'ancien
 
@@ -57,8 +72,8 @@ Les types de `shared/src/types.ts` viennent de `osamapsfront/src/types/api.types
 
 ## Ordre de travail restant
 
-1. Générateur : List + Area + Population vers `common`/`regions`/`departements`, test de parité.
-2. Naissances, décès, points, agrégations, Jenks, communes.
-3. Publication R2 + règles Cloudflare (CORS, cache, purge), voir [hosting.md](hosting.md).
-4. Front : carte + une vue, puis le reste.
-5. Bascule du domaine `maps.gaetanraynaud.fr`.
+1. Générateur : écrit (toutes les étapes, Jenks, sortie). Reste à valider les écarts de parité
+   ci-dessus.
+2. Publication R2 + règles Cloudflare (CORS, cache, purge), voir [hosting.md](hosting.md).
+3. Front : carte + une vue, puis le reste.
+4. Bascule du domaine `maps.gaetanraynaud.fr`.

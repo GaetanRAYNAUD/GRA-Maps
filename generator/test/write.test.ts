@@ -4,13 +4,13 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { gunzipSync } from 'node:zlib'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import type { Region } from '@gra-maps/shared'
-import { emptyData, type Data } from '../src/model.ts'
+
+import { emptyData, type Data, type RegionNode } from '../src/model.ts'
 import { writeOutput } from '../src/write.ts'
 
-const region = (id: string, name: string) => ({ id, name }) as unknown as Region
+const region = (id: string, name: string) => ({ id, name }) as unknown as RegionNode
 
-const dataWith = (...regions: Region[]): Data => {
+const dataWith = (...regions: RegionNode[]): Data => {
   const data = emptyData()
   for (const r of regions) data.regions.set(r.id, r)
   return data
