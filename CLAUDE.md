@@ -32,7 +32,8 @@ npm workspaces : `shared/` (types et chemins des JSON publiés), `generator/` (p
 - Mode partiel (défaut) : télécharge les sources absentes, écrit les sorties absentes ou modifiées
   (hash dans `out/.manifest.json`). L'utilisateur rafraîchit une source en supprimant son fichier.
   Mode `--full` : tout retélécharger, tout réécrire.
-- Sortie : JSON gzip niveau 9, écriture atomique (tmp puis rename), en parallèle. Les chemins
+- Sortie : JSON brut (la compression est faite par le CDN Cloudflare), écriture atomique (tmp
+  puis rename), en parallèle. Les chemins
   publiés viennent de `dataPaths` dans `shared/`.
 - Jenks : ne pas traduire de code GPL ; utiliser `simple-statistics` (ckmeans) ou réimplémenter
   depuis l'algorithme.

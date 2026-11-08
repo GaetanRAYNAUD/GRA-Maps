@@ -1,14 +1,10 @@
 import { createHash } from 'node:crypto'
 import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { promisify } from 'node:util'
-import { gzip } from 'node:zlib'
 import pLimit from 'p-limit'
 import { dataPaths, jenksKeys, jenksKinds, type Common } from '@gra-maps/shared'
 import type { Data, Mode } from './model.ts'
 import { OUT_DIR } from './paths.ts'
-
-const gzipAsync = promisify(gzip)
 
 /** Published key (e.g. `communes/01001.json`) -> sha256 of the JSON written there. */
 type Manifest = Record<string, string>
@@ -63,7 +59,8 @@ async function atomicWrite(file: string, content: Buffer | string): Promise<void
 }
 
 /**
- * Writes every output file as gzip (level 9), atomically, in parallel.
+ * Writes every output file as plain JSON, atomically, in parallel. Files are published as
+ * is: compression is left to the Cloudflare CDN (gzip or brotli, negotiated per client).
  * - partial: a file is written only when it is missing or its JSON changed
  *   (compared with the hash kept in out/.manifest.json);
  * - full: every file is rewritten.
@@ -82,8 +79,7 @@ export async function writeOutput(data: Data, mode: Mode, outDir = OUT_DIR): Pro
 
   const tasks: Promise<void>[] = []
   for (const { key, content } of outputFiles(data)) {
-    const fileName = `${key}.gz`
-    const present = stale.delete(fileName)
+    const present = stale.delete(key)
     // Serialize inside the task: only `limit` JSON strings exist at any time.
     tasks.push(
       limit(async () => {
@@ -91,7 +87,7 @@ export async function writeOutput(data: Data, mode: Mode, outDir = OUT_DIR): Pro
         const hash = createHash('sha256').update(json).digest('hex')
         next[key] = hash
         if (present && previous[key] === hash) return
-        await atomicWrite(path.join(outDir, fileName), await gzipAsync(json, { level: 9 }))
+        await atomicWrite(path.join(outDir, key), json)
         written++
       }),
     )

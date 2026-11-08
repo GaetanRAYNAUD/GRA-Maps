@@ -69,6 +69,11 @@ Les types de `shared/src/types.ts` ont été confrontés à ces fichiers : même
 - i18n (react-intl, `src/i18n/fr/`), analytics react-ga4 (à confirmer).
 - Chargement : un `fetch` par fichier, `common.json` et `jenks/*` au démarrage,
   région/département/commune à la demande, cache mémoire.
+- À revoir en faisant le front : les fichiers Jenks sont lourds (08/11/2026, JSON brut :
+  `population.json` et `density.json` 12,9 Mo chacun, les quatre autres environ 24 Mo au
+  total ; environ 4 fois moins une fois compressés par le CDN). Tout charger au démarrage
+  représente une douzaine de Mo transférés. Pistes : ne charger que l'indicateur affiché, ou
+  découper les fichiers par année (`jenks/{indicateur}/{année}.json`).
 
 ## Ordre de travail restant
 

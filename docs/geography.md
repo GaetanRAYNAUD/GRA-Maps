@@ -21,11 +21,11 @@ fichiers existent), pour un gain limité :
 
 Chaque source a son propre millésime de géographie :
 
-| Source                                               | Où le lire                                                             | Au 08/11/2026                                             |
-| ---------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
-| COG (régions, départements, communes)                | Page des millésimes, année dans le nom du fichier (`v_commune_AAAA`)   | 2026                                                      |
+| Source                                               | Où le lire                                                                  | Au 08/11/2026                                             |
+| ---------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------- |
+| COG (régions, départements, communes)                | Page des millésimes, année dans le nom du fichier (`v_commune_AAAA`)        | 2026                                                      |
 | Melodi (naissances, décès, superficies, populations) | Champ `spatialTemporal` de l'entrée du catalogue (`<fichier>.catalog.json`) | 2026 (naissances, décès, superficies), 2025 (populations) |
-| Historique des populations 1876+ (xlsx)              | Ligne de titre « Géographie au 01/01/AAAA »                            | 2025                                                      |
+| Historique des populations 1876+ (xlsx)              | Ligne de titre « Géographie au 01/01/AAAA »                                 | 2025                                                      |
 
 Quand une source est en retard sur le COG, ses codes de communes sont convertis avec le fichier des
 changements du COG (`v_mvt_commune_AAAA.csv`, publié avec chaque millésime) :

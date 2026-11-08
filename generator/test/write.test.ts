@@ -2,7 +2,6 @@ import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { gunzipSync } from 'node:zlib'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { emptyData, type Data, type RegionNode } from '../src/model.ts'
@@ -24,12 +23,12 @@ afterEach(async () => {
   await rm(out, { recursive: true, force: true })
 })
 
-const file = (key: string) => path.join(out, `${key}.gz`)
-const read = async (key: string) => JSON.parse(gunzipSync(await readFile(file(key))).toString())
+const file = (key: string) => path.join(out, key)
+const read = async (key: string) => JSON.parse(await readFile(file(key), 'utf8'))
 const mtime = async (key: string) => (await stat(file(key))).mtimeMs
 
 describe('writeOutput', () => {
-  it('writes gzipped JSON and common.json', async () => {
+  it('writes plain JSON and common.json', async () => {
     await writeOutput(dataWith(region('11', 'Île-de-France')), 'partial', out)
     expect(await read('regions/11.json')).toEqual({ id: '11', name: 'Île-de-France' })
     expect(await read('common.json')).toEqual({ regions: ['11'], departements: [], communes: [] })

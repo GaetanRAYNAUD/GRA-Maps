@@ -70,31 +70,36 @@ Bucket public sur le domaine `maps-data.gaetanraynaud.fr` : le CDN sert sans Wor
 jamais router les données via le Worker. Le front lit `VITE_DATA_BASE_URL`.
 
 - CORS : origines `https://maps.gaetanraynaud.fr` et `http://localhost:5173`, méthode GET.
-- Chaque objet est un JSON gzippé, avec `Content-Type: application/json`,
-  `Content-Encoding: gzip`, `Cache-Control: public, max-age=300` : le navigateur revalide via
-  ETag/304.
+- Chaque objet est du JSON brut, avec `Content-Type: application/json` et
+  `Cache-Control: public, max-age=300` : le navigateur revalide via ETag/304.
+- Compression : faite par le CDN Cloudflare à la volée (gzip ou brotli selon le navigateur),
+  le JSON étant un type compressible par défaut. Une Compression Rule peut forcer brotli. On ne
+  stocke pas de gzip : Cloudflare ne recompresserait pas en brotli, et `Content-Encoding` sur
+  les objets ajoute un risque de mauvais service.
 - Cache Rule sur `maps-data.gaetanraynaud.fr` : Edge TTL long, purge par préfixe après chaque
   publication. Activer Tiered Cache (gratuit).
 - Clés : `common.json`, `regions/{id}.json`, `departements/{id}.json`, `communes/{id}.json`,
   `jenks/{area,population,density,birth,death,birth-per-capita,death-per-capita}.json`.
-- Volume attendu : ~35 000 fichiers communes, ≈ 150 Mo compressés au total.
+- Volume (08/11/2026) : 34 863 fichiers, 406 Mo de JSON brut stocké ; environ 114 Mo en gzip et
+  70 Mo en brotli transférés si tout était téléchargé.
 
 ## Publication (`scripts/publish-data.ts`, à écrire)
 
 - `rclone` (backend S3 R2) ou `@aws-sdk/client-s3` : synchroniser `generator/out/` vers le bucket
-  par checksum, en posant les trois en-têtes ci-dessus, clé sans l'extension `.gz`.
+  par checksum, en posant les deux en-têtes ci-dessus, clé identique au chemin dans `out/`
+  (sauf `out/.manifest.json`, interne au générateur).
 - Puis purge Cloudflare par préfixe (API, token dédié).
 - `common.json` en dernier, pour qu'un visiteur ne voie jamais un `common` qui référence des
   fichiers pas encore publiés.
 
 ## À vérifier après le premier déploiement
 
-1. `curl -I https://maps-data.gaetanraynaud.fr/communes/<id>.json` : `Content-Encoding: gzip`,
-   `Content-Type: application/json`, ETag présent ; deuxième requête avec `If-None-Match` → 304 ;
-   une republication sans changement garde le même ETag.
+1. `curl -I -H 'Accept-Encoding: br, gzip' https://maps-data.gaetanraynaud.fr/communes/<id>.json` :
+   `Content-Encoding: br` (ou gzip), `Content-Type: application/json`, ETag présent ; deuxième
+   requête avec `If-None-Match` → 304 ; une republication sans changement garde le même ETag.
 2. `curl -I https://maps.gaetanraynaud.fr/` et sur une route SPA (ex. `/commune/12345`) : le
    `max-age=60` s'applique-t-il aussi au fallback ? Sinon corriger `_headers`.
 3. Les requêtes de données n'apparaissent pas dans les invocations Workers.
-4. La taille décompressée du plus gros fichier reste raisonnable pour le navigateur.
-5. Si R2 sert mal `Content-Encoding: gzip` : repli sur des `.json.gz` bruts décompressés côté
-   client avec `DecompressionStream('gzip')`.
+4. La taille du plus gros fichier reste raisonnable pour le navigateur (jenks/population.json :
+   le plus lourd, une entrée par commune et par année).
+5. Sans `Accept-Encoding`, le fichier arrive non compressé (normal).

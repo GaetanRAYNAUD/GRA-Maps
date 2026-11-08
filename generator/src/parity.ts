@@ -3,7 +3,7 @@
  * on floats. Every difference must be explained or fixed before publishing.
  *
  * reference/ mirrors the published layout (`communes/01001.json`, `jenks/area.json`...),
- * files plain or gzipped. Differences are grouped by field (years folded into `YYYY`), with
+ * files plain or gzipped (out/ is plain JSON). Differences are grouped by field (years folded into `YYYY`), with
  * a count and a few examples. Usage: `npm run parity -w generator [-- --only communes/]`.
  */
 import { readdir, readFile } from 'node:fs/promises'
@@ -63,7 +63,7 @@ async function main() {
     const reference = flatten(await readJson(path.join(REFERENCE_DIR, entries.includes(key) ? key : `${key}.gz`)))
     let output: Flat
     try {
-      output = flatten(await readJson(path.join(OUT_DIR, `${key}.gz`)))
+      output = flatten(await readJson(path.join(OUT_DIR, key)))
     } catch {
       missingFiles++
       note('no file', key, '-', 'missing in out/')
