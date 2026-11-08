@@ -20,7 +20,7 @@ sources.
 | --------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `01-list`       | `service/insee/list/ListGenerationService`             | Ignorer les DROM-COM : régions dont l'id commence par `0`, départements `97x`                                                               |
 | `02-zip-codes`  | `service/laposte/ZipCodeGenerationService`             | Séparateur `;`, BOM dans le header                                                                                                          |
-| `03-area`       | `service/odt/AreaGenerationService`                    | Fichiers `superficie_{regions,departements,communes}`                                                                                       |
+| `03-area`       | `service/odt/AreaGenerationService`                    | Anciens fichiers `superficie_{regions,departements,communes}` (Observatoire des territoires), remplacés par Melodi `DS_RP_SERIE_HISTORIQUE` |
 | `04-population` | `service/insee/population/PopulationGenerationService` | Ancien fichier `base_pop_historiques`, remplacé par Melodi                                                                                  |
 | `05-birth`      | `service/insee/birth/BirthGenerationService`           | Ancien `base_naissances`, remplacé par Melodi                                                                                               |
 | `06-death`      | `service/insee/death/DeathGenerationService`           | Ancien `base_deces` (ISO-8859-1), remplacé par Melodi                                                                                       |
@@ -32,7 +32,7 @@ Jenks : le Java reprend du code GPL-3 (genepi/haplocheck, `common/Jenks.java`). 
 traduire ; vérifier seulement la parité des classes.
 
 Sources locales du Java copiées dans `generator/sources/` (non versionnées, à remplacer par des
-téléchargements) : `zipCodes/`, `area/`, `point/`.
+téléchargements) : `point/`.
 
 ## Parité
 
@@ -56,7 +56,7 @@ Les types de `shared/src/types.ts` viennent de `osamapsfront/src/types/api.types
 
 ## Ordre de travail restant
 
-1. Retrouver toutes les sources en téléchargement (reste : codes postaux, superficies,
+1. Retrouver toutes les sources en téléchargement (reste : position des
    mairies).
 2. Générateur : List + Area + Population vers `common`/`regions`/`departements`, test de parité.
 3. Naissances, décès, points, agrégations, Jenks, communes.

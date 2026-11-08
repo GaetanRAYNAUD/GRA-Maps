@@ -1,5 +1,6 @@
 import { source } from '../paths.ts'
 import { cogFile, inseePageFile } from './insee-page.ts'
+import { laposte } from './laposte.ts'
 import { melodi } from './melodi.ts'
 
 /**
@@ -30,14 +31,13 @@ export const sources = {
     cogFile('departement'),
   ),
   communes: def('communes', 'list/v_commune.csv', 'INSEE, code officiel géographique (dernier millésime) : communes', cogFile('commune')),
-  zipCodes: def('zipCodes', 'zipCodes/zipCodes.csv.gz', 'La Poste, base officielle des codes postaux'),
-  areaRegions: def('areaRegions', 'area/superficie_regions.csv.gz', 'Observatoire des territoires, superficie des régions'),
-  areaDepartements: def(
-    'areaDepartements',
-    'area/superficie_departements.csv.gz',
-    'Observatoire des territoires, superficie des départements',
+  zipCodes: def('zipCodes', 'zipCodes/019HexaSmal.csv', 'La Poste, base officielle des codes postaux', laposte('laposte-hexasmal')),
+  area: def(
+    'area',
+    'area/DS_RP_SERIE_HISTORIQUE.zip',
+    'INSEE Melodi, séries historiques du recensement (superficie)',
+    melodi('DS_RP_SERIE_HISTORIQUE'),
   ),
-  areaCommunes: def('areaCommunes', 'area/superficie_communes.csv.gz', 'Observatoire des territoires, superficie des communes'),
   population: def(
     'population',
     'pop/DS_POPULATIONS_HISTORIQUES.zip',
