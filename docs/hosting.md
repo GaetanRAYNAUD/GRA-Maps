@@ -76,8 +76,13 @@ jamais router les données via le Worker. Le front lit `VITE_DATA_BASE_URL`.
   le JSON étant un type compressible par défaut. Une Compression Rule peut forcer brotli. On ne
   stocke pas de gzip : Cloudflare ne recompresserait pas en brotli, et `Content-Encoding` sur
   les objets ajoute un risque de mauvais service.
-- Cache Rule sur `maps-data.gaetanraynaud.fr` : Edge TTL long, purge par préfixe après chaque
-  publication. Activer Tiered Cache (gratuit).
+- Cache Rule `maps-data` (en place) : filtre `http.host eq "maps-data.gaetanraynaud.fr"`,
+  « Eligible for cache » (sans elle, Cloudflare ne met pas les `.json` en cache), Edge TTL
+  « Ignore cache-control header » 1 mois. Pas de Browser TTL dans la règle (2 h minimum en
+  offre gratuite, trop long après une publication) : le navigateur suit le `Cache-Control:
+max-age=300` posé sur chaque objet par le script de publication. Un objet publié sans cet
+  en-tête prendrait le Browser Cache TTL de la zone (4 h par défaut). Cache vidé après chaque
+  publication. Tiered Cache activé.
 - Clés : `common.json`, `regions/{id}.json`, `departements/{id}.json`, `communes/{id}.json`,
   `jenks/{area,population,density,birth,death,birth-per-capita,death-per-capita}.json`.
 - Volume (08/11/2026) : 34 863 fichiers, 406 Mo de JSON brut stocké ; environ 114 Mo en gzip et
