@@ -32,7 +32,7 @@ Jenks : le Java reprend du code GPL-3 (genepi/haplocheck, `common/Jenks.java`). 
 traduire ; vérifier seulement la parité des classes.
 
 Sources locales du Java copiées dans `generator/sources/` (non versionnées, à remplacer par des
-téléchargements) : `list/`, `zipCodes/`, `area/`, `point/`.
+téléchargements) : `zipCodes/`, `area/`, `point/`.
 
 ## Parité
 
@@ -56,7 +56,7 @@ Les types de `shared/src/types.ts` viennent de `osamapsfront/src/types/api.types
 
 ## Ordre de travail restant
 
-1. Retrouver toutes les sources en téléchargement (reste : liste COG, codes postaux, superficies,
+1. Retrouver toutes les sources en téléchargement (reste : codes postaux, superficies,
    mairies).
 2. Générateur : List + Area + Population vers `common`/`regions`/`departements`, test de parité.
 3. Naissances, décès, points, agrégations, Jenks, communes.

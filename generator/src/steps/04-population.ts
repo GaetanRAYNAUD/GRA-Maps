@@ -14,6 +14,8 @@ import type { Step } from '../model.ts'
  * only fills the years Melodi lacks (1876-1962). Before 2006 the concept differs (population
  * sans double compte, then population totale). The xlsx has no row for Paris as a whole
  * (75056): sum its arrondissements for those years.
+ * Both files are in an older geography than the COG (2025 for COG 2026): convert their codes
+ * with v_mvt_commune before merging (see docs/geography.md).
  */
 export const populationStep: Step = {
   name: 'populationStep',

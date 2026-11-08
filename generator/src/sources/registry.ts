@@ -1,5 +1,5 @@
 import { source } from '../paths.ts'
-import { inseePageFile } from './insee-page.ts'
+import { cogFile, inseePageFile } from './insee-page.ts'
 import { melodi } from './melodi.ts'
 
 /**
@@ -22,9 +22,14 @@ export type Source = {
 const def = (id: string, file: string, origin: string, fetch?: Source['fetch']): Source => ({ id, file: source(file), origin, fetch })
 
 export const sources = {
-  regions: def('regions', 'list/region.csv.gz', 'INSEE, code officiel géographique : régions'),
-  departements: def('departements', 'list/departement.csv.gz', 'INSEE, code officiel géographique : départements'),
-  communes: def('communes', 'list/commune.csv.gz', 'INSEE, code officiel géographique : communes'),
+  regions: def('regions', 'list/v_region.csv', 'INSEE, code officiel géographique (dernier millésime) : régions', cogFile('region')),
+  departements: def(
+    'departements',
+    'list/v_departement.csv',
+    'INSEE, code officiel géographique (dernier millésime) : départements',
+    cogFile('departement'),
+  ),
+  communes: def('communes', 'list/v_commune.csv', 'INSEE, code officiel géographique (dernier millésime) : communes', cogFile('commune')),
   zipCodes: def('zipCodes', 'zipCodes/zipCodes.csv.gz', 'La Poste, base officielle des codes postaux'),
   areaRegions: def('areaRegions', 'area/superficie_regions.csv.gz', 'Observatoire des territoires, superficie des régions'),
   areaDepartements: def(
