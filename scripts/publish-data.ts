@@ -15,7 +15,9 @@
  * - `--dry-run`: lists the changes, writes nothing;
  * - `--purge`: purges the cache even when nothing changed (after a failed purge);
  * - `--allow-deletes`: allows deleting more than 5% of the bucket (an incomplete out/ would
- *   otherwise wipe the published data).
+ *   otherwise wipe the published data);
+ * - `--only <prefix>`: limits the sync (uploads and deletions) to keys starting with `prefix`,
+ *   e.g. `--only regions/`; common.json is then left alone unless the prefix matches it.
  * Reads its settings from the root `.env` (see .env.example). Manual only, never in a build.
  */
 import { createHash } from 'node:crypto'
@@ -40,7 +42,7 @@ function env(name: string): string {
   return value
 }
 
-async function localFiles(): Promise<LocalFile[]> {
+async function localFiles(only: string): Promise<LocalFile[]> {
   const entries = await readdir(OUT_DIR, { recursive: true, withFileTypes: true })
   const files = entries
     .filter((e) => e.isFile() && !e.name.startsWith('.') && !e.name.endsWith('.tmp'))
@@ -48,22 +50,24 @@ async function localFiles(): Promise<LocalFile[]> {
   if (!files.includes(dataPaths.common())) throw new Error(`${OUT_DIR} has no ${dataPaths.common()}: run npm run generate first`)
   const limit = pLimit(64)
   return Promise.all(
-    files.map((key) =>
-      limit(async () => ({
-        key,
-        md5: createHash('md5')
-          .update(await readFile(path.join(OUT_DIR, key)))
-          .digest('hex'),
-      })),
-    ),
+    files
+      .filter((key) => key.startsWith(only))
+      .map((key) =>
+        limit(async () => ({
+          key,
+          md5: createHash('md5')
+            .update(await readFile(path.join(OUT_DIR, key)))
+            .digest('hex'),
+        })),
+      ),
   )
 }
 
-async function remoteObjects(s3: S3Client, bucket: string): Promise<Map<string, string>> {
+async function remoteObjects(s3: S3Client, bucket: string, prefix: string): Promise<Map<string, string>> {
   const objects = new Map<string, string>()
   let token: string | undefined
   do {
-    const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, ContinuationToken: token }))
+    const page = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix || undefined, ContinuationToken: token }))
     for (const o of page.Contents ?? []) if (o.Key) objects.set(o.Key, (o.ETag ?? '').replaceAll('"', ''))
     token = page.IsTruncated ? page.NextContinuationToken : undefined
   } while (token)
@@ -99,6 +103,7 @@ async function main() {
       'dry-run': { type: 'boolean', default: false },
       purge: { type: 'boolean', default: false },
       'allow-deletes': { type: 'boolean', default: false },
+      only: { type: 'string', default: '' },
     },
   })
   const dryRun = values['dry-run']
@@ -115,7 +120,9 @@ async function main() {
   const zoneId = dryRun ? '' : env('CLOUDFLARE_ZONE_ID')
   const purgeToken = dryRun ? '' : env('CLOUDFLARE_PURGE_TOKEN')
 
-  const [local, remote] = await Promise.all([localFiles(), remoteObjects(s3, bucket)])
+  const only = values.only
+  const [local, remote] = await Promise.all([localFiles(only), remoteObjects(s3, bucket, only)])
+  if (only) console.log(`Limited to keys starting with "${only}"`)
   const plan = planPublish(local, remote, dataPaths.common())
   const toUpload = plan.uploads.length + (plan.last ? 1 : 0)
   console.log(`${local.length} files: ${toUpload} to upload, ${plan.unchanged} unchanged, ${plan.deletes.length} to delete`)
