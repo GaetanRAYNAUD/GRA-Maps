@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { download } from './download.ts'
+import { download, fetchWithTimeout } from './download.ts'
 
 /**
  * INSEE Melodi open data API (public, no key).
@@ -22,7 +22,7 @@ type CatalogEntry = { identifier: string; modified: string; product?: Product[] 
  * next to it as `<id>.catalog.json`, to know which vintage was downloaded.
  */
 export const melodi = (datasetId: string) => async (dest: string) => {
-  const res = await fetch(`${API}/catalog/${datasetId}`)
+  const res = await fetchWithTimeout(`${API}/catalog/${datasetId}`)
   if (!res.ok) throw new Error(`Melodi catalog ${datasetId}: HTTP ${res.status}`)
   const entry = (await res.json()) as CatalogEntry
 

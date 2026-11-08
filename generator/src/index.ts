@@ -25,6 +25,10 @@ async function main() {
 try {
   await main()
 } catch (e) {
-  console.error(e instanceof Error ? e.message : e)
+  // Print the whole cause chain: the root cause (HTTP status, network error...) is what matters.
+  for (let err: unknown = e, prefix = ''; err !== undefined; prefix = '  caused by: ') {
+    console.error(prefix + (err instanceof Error ? err.message : String(err)))
+    err = err instanceof Error ? err.cause : undefined
+  }
   process.exitCode = 1
 }

@@ -1,6 +1,5 @@
 import { createHash } from 'node:crypto'
-import { existsSync } from 'node:fs'
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { promisify } from 'node:util'
 import { gzip } from 'node:zlib'
@@ -13,7 +12,7 @@ const gzipAsync = promisify(gzip)
 
 /** Published key (e.g. `communes/01001.json`) -> sha256 of the JSON written there. */
 type Manifest = Record<string, string>
-const MANIFEST = path.join(OUT_DIR, '.manifest.json')
+const MANIFEST_NAME = '.manifest.json'
 
 type OutFile = { key: string; content: unknown }
 
@@ -30,13 +29,23 @@ function* outputFiles(data: Data): Generator<OutFile> {
   yield { key: dataPaths.common(), content: common }
 }
 
-const fileOf = (key: string) => path.join(OUT_DIR, `${key}.gz`)
-
-async function readManifest(): Promise<Manifest> {
+async function readManifest(file: string): Promise<Manifest> {
   try {
-    return JSON.parse(await readFile(MANIFEST, 'utf8')) as Manifest
+    return JSON.parse(await readFile(file, 'utf8')) as Manifest
   } catch {
     return {}
+  }
+}
+
+/** Every file currently in `dir` (relative paths, `/` separated), empty if `dir` does not exist. */
+async function listFiles(dir: string): Promise<Set<string>> {
+  try {
+    const entries = await readdir(dir, { recursive: true, withFileTypes: true })
+    return new Set(
+      entries.filter((e) => e.isFile()).map((e) => path.relative(dir, path.join(e.parentPath, e.name)).split(path.sep).join('/')),
+    )
+  } catch {
+    return new Set()
   }
 }
 
@@ -52,33 +61,39 @@ async function atomicWrite(file: string, content: Buffer | string): Promise<void
  * - partial: a file is written only when it is missing or its JSON changed
  *   (compared with the hash kept in out/.manifest.json);
  * - full: every file is rewritten.
- * Files produced by a previous run and no longer produced are deleted.
+ * Any other file found in the output directory (no longer produced, leftover `.tmp`
+ * of an interrupted run) is deleted, so the directory always mirrors this run.
  */
-export async function writeOutput(data: Data, mode: Mode): Promise<void> {
-  const old = await readManifest()
-  const previous = mode === 'full' ? {} : old
+export async function writeOutput(data: Data, mode: Mode, outDir = OUT_DIR): Promise<void> {
+  const manifestFile = path.join(outDir, MANIFEST_NAME)
+  const previous = mode === 'full' ? {} : await readManifest(manifestFile)
+  // What is left in this set after the loop is no longer produced and gets deleted.
+  const stale = await listFiles(outDir)
+  stale.delete(MANIFEST_NAME)
   const next: Manifest = {}
   const limit = pLimit(32)
   let written = 0
 
   const tasks: Promise<void>[] = []
   for (const { key, content } of outputFiles(data)) {
-    const json = JSON.stringify(content)
-    const hash = createHash('sha256').update(json).digest('hex')
-    next[key] = hash
-    if (previous[key] === hash && existsSync(fileOf(key))) continue
+    const fileName = `${key}.gz`
+    const present = stale.delete(fileName)
+    // Serialize inside the task: only `limit` JSON strings exist at any time.
     tasks.push(
       limit(async () => {
-        await atomicWrite(fileOf(key), await gzipAsync(json, { level: 9 }))
+        const json = JSON.stringify(content)
+        const hash = createHash('sha256').update(json).digest('hex')
+        next[key] = hash
+        if (present && previous[key] === hash) return
+        await atomicWrite(path.join(outDir, fileName), await gzipAsync(json, { level: 9 }))
         written++
       }),
     )
   }
   await Promise.all(tasks)
 
-  const stale = Object.keys(old).filter((key) => !(key in next))
-  await Promise.all(stale.map((key) => rm(fileOf(key), { force: true })))
+  await Promise.all([...stale].map((file) => rm(path.join(outDir, file), { force: true })))
 
-  await atomicWrite(MANIFEST, JSON.stringify(next))
-  console.log(`[write] ${written} written, ${Object.keys(next).length - written} unchanged, ${stale.length} deleted`)
+  await atomicWrite(manifestFile, JSON.stringify(next))
+  console.log(`[write] ${written} written, ${Object.keys(next).length - written} unchanged, ${stale.size} deleted`)
 }

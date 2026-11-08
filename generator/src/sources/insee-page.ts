@@ -1,4 +1,4 @@
-import { download } from './download.ts'
+import { download, fetchWithTimeout } from './download.ts'
 
 const SITE = 'https://www.insee.fr'
 
@@ -10,13 +10,14 @@ const SITE = 'https://www.insee.fr'
  */
 export const inseePageFile = (pageId: string, filePattern: RegExp) => async (dest: string) => {
   const page = `${SITE}/fr/statistiques/${pageId}`
-  const res = await fetch(page)
+  const res = await fetchWithTimeout(page)
   if (!res.ok) throw new Error(`GET ${page}: HTTP ${res.status}`)
   const html = await res.text()
 
   const links = [...html.matchAll(new RegExp(`href="(/fr/statistiques/fichier/${pageId}/[^"]+)"`, 'g'))]
     .map((m) => m[1]!)
-    .filter((href) => filePattern.test(href))
+    // search() ignores lastIndex, so a g/y flag on filePattern does not skip links
+    .filter((href) => href.search(filePattern) !== -1)
   const unique = [...new Set(links)]
   if (unique.length !== 1) throw new Error(`${page}: expected one file matching ${filePattern}, found ${unique.join(', ') || 'none'}`)
 
