@@ -1,4 +1,5 @@
 import type { CommunePopulations, DataJenksNode, Jenks, JenksByYear } from '@gra-maps/shared'
+import { checkTotals, logTotals } from '../compute/check-totals.ts'
 import { jenksClassifier } from '../compute/jenks.ts'
 import { floor1, percent, ranker } from '../compute/ranks.ts'
 import type { Data, Step } from '../model.ts'
@@ -12,7 +13,7 @@ type GroupOf = (node: Node) => string | undefined
 /**
  * Everything computed from the sources:
  * 1. population, births and deaths of departements (sum of their communes) and regions (sum
- *    of their departements);
+ *    of their departements), checked against the totals INSEE publishes;
  * 2. density (inhabitants per km², floored to 1 decimal) and births and deaths per 1,000
  *    inhabitants (floored to 1 decimal, only for years with a population);
  * 3. ranks within the country, the region and the departement, and shares of the parent
@@ -24,6 +25,7 @@ export const internStep: Step = {
   name: 'internStep',
   run(data) {
     aggregate(data)
+    logTotals(checkTotals(data))
     derive(data)
     rankAll(data)
     data.jenks = computeJenks(data)

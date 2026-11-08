@@ -53,7 +53,7 @@ Modèle du `.env` : [`.env.example`](../.env.example) à la racine.
 L'identifiant de compte Cloudflare n'est pas un secret : il peut aussi aller dans `wrangler.toml`
 (`account_id = "..."`).
 
-Variables prévues dans `.env` pour la publication (noms à confirmer en écrivant le script) :
+Variables du `.env` pour la publication (lues par `scripts/publish-data.ts`) :
 
 ```bash
 CLOUDFLARE_ACCOUNT_ID=
@@ -88,14 +88,26 @@ max-age=300` posé sur chaque objet par le script de publication. Un objet publi
 - Volume (08/11/2026) : 34 863 fichiers, 406 Mo de JSON brut stocké ; environ 114 Mo en gzip et
   70 Mo en brotli transférés si tout était téléchargé.
 
-## Publication (`scripts/publish-data.ts`, à écrire)
+## Publication (`npm run publish:data`)
 
-- `rclone` (backend S3 R2) ou `@aws-sdk/client-s3` : synchroniser `generator/out/` vers le bucket
-  par checksum, en posant les deux en-têtes ci-dessus, clé identique au chemin dans `out/`
-  (sauf `out/.manifest.json`, interne au générateur).
-- Puis purge Cloudflare par préfixe (API, token dédié).
-- `common.json` en dernier, pour qu'un visiteur ne voie jamais un `common` qui référence des
-  fichiers pas encore publiés.
+`scripts/publish-data.ts`, avec `@aws-sdk/client-s3` sur l'API S3 de R2. Lancer d'abord avec
+`npm run publish:data -- --dry-run` : liste ce qui serait envoyé et supprimé, n'écrit rien (ne
+demande que les variables R2).
+
+1. Compare chaque fichier de `generator/out/` au bucket par MD5 (l'ETag que R2 donne aux envois
+   en une partie) : seuls les fichiers nouveaux ou modifiés partent.
+2. Clé identique au chemin dans `out/` (sauf `.manifest.json` et les `.tmp`), avec les deux
+   en-têtes ci-dessus.
+3. `common.json` en dernier, pour qu'un visiteur ne voie jamais un `common` qui référence des
+   fichiers pas encore publiés ; les objets qui ne sont plus produits sont supprimés ensuite.
+4. Purge du cache de `maps-data.gaetanraynaud.fr` (purge par hôte, API Cloudflare), seulement si
+   quelque chose a changé. À vérifier au premier lancement : si l'offre refuse la purge par
+   hôte, passer à une purge par URL des fichiers modifiés, ou purger toute la zone.
+
+Variables du `.env` : `CLOUDFLARE_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`,
+`R2_SECRET_ACCESS_KEY` (token R2 « Object Read & Write » limité au bucket), `CLOUDFLARE_ZONE_ID`
+(zone `gaetanraynaud.fr`) et `CLOUDFLARE_PURGE_TOKEN` (token API avec la seule permission
+Zone > Cache Purge).
 
 ## À vérifier après le premier déploiement
 

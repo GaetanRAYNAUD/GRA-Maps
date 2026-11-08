@@ -22,6 +22,8 @@ export type Data = {
   communes: Map<string, CommuneNode>
   /** Municipal arrondissement code (Paris, Lyon, Marseille) -> code of its commune. */
   arrondissements: Map<string, string>
+  /** Totals published by INSEE for departements and regions, keyed by `totalKey`. */
+  inseeTotals: Map<string, number>
   /** Jenks classes, computed by the last step. */
   jenks?: Jenks
 }
@@ -31,6 +33,7 @@ export const emptyData = (): Data => ({
   departements: new Map(),
   communes: new Map(),
   arrondissements: new Map(),
+  inseeTotals: new Map(),
 })
 
 export type Step = {

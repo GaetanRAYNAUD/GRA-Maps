@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { checkTotals } from '../src/compute/check-totals.ts'
 import { emptyData, newCommune, newDepartement, newRegion, type Data } from '../src/model.ts'
 import { internStep } from '../src/steps/08-intern.ts'
 
@@ -82,5 +83,17 @@ describe('internStep', () => {
     expect(Object.keys(jenks.population)).toEqual(['2020'])
     expect(jenks.population[2020]!.communes!['69001']).toBeGreaterThan(jenks.population[2020]!.communes!['01001']!)
     expect(Object.keys(jenks.area.communes!).sort()).toEqual(['01001', '01002', '69001'])
+  })
+})
+
+describe('checkTotals', () => {
+  it('reports totals that differ from INSEE', () => {
+    const data = sample()
+    internStep.run(data)
+    data.inseeTotals.set('population:DEP:01:2020', 400)
+    data.inseeTotals.set('population:REG:84:2020', 999)
+    const population = checkTotals(data).find((r) => r.series === 'population')!
+    expect(population.compared).toBe(2)
+    expect(population.mismatches).toEqual(['REG 84 2020: INSEE 999, generated 1000'])
   })
 })

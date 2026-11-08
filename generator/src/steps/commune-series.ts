@@ -6,10 +6,17 @@ import { melodiGeography, melodiValue, readMelodi } from '../read/melodi.ts'
 
 type SeriesKey = 'population' | 'birth' | 'death'
 
+const TOTAL_LEVELS = new Set(['COM', 'DEP', 'REG'])
+
+/** Key of an INSEE total in `data.inseeTotals`, e.g. `birth:DEP:01:2008`. */
+export const totalKey = (series: string, level: string, id: string, year: number) => `${series}:${level}:${id}:${year}`
+
 /**
  * Reads one yearly measure of a Melodi dataset into `commune.population[series]`, for
  * GEO_OBJECT=COM rows whose measure column is in `measures`. Codes are converted to the
- * current geography (values of merged communes are summed). Returns the years read.
+ * current geography (values of merged communes are summed). The DEP and REG rows of the same
+ * file (INSEE's own totals) are kept in `data.inseeTotals` to check the aggregation.
+ * Returns the years read.
  */
 export async function readCommuneSeries(
   data: Data,
@@ -25,13 +32,18 @@ export async function readCommuneSeries(
     file,
     (row) => {
       const value = melodiValue(row)
+      if (value === undefined) return
+      if (row.GEO_OBJECT !== 'COM') {
+        data.inseeTotals.set(totalKey(series, row.GEO_OBJECT!, row.GEO!, Number(row.TIME_PERIOD)), Math.round(value))
+        return
+      }
       const code = geo.toCurrent(row.GEO!)
-      if (value === undefined || !code) return
+      if (!code) return
       const year = Number(row.TIME_PERIOD)
       addTo(data.communes.get(code)!.population[series], year, Math.round(value))
       years.add(year)
     },
-    { prefilter: '"COM"', keep: (row) => row.GEO_OBJECT === 'COM' && measures.has(row[measureColumn]!) },
+    { keep: (row) => TOTAL_LEVELS.has(row.GEO_OBJECT!) && measures.has(row[measureColumn]!) },
   )
 
   logUnknown(series, geo.unknown)

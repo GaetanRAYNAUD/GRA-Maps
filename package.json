@@ -18,14 +18,17 @@
     "publish:data": "node --env-file-if-exists=.env scripts/publish-data.ts",
     "deploy": "npm run build && wrangler deploy",
     "typecheck": "npm run typecheck --workspaces --if-present && tsc -p scripts --noEmit",
-    "test": "npm run test --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present && vitest run scripts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1164.0",
     "@types/node": "^26.6.6",
+    "p-limit": "^7.3.3",
     "prettier": "^3.6.0",
     "typescript": "^5.9.0",
+    "vitest": "^5.1.0",
     "wrangler": "^4.40.0"
   },
   "allowScripts": {

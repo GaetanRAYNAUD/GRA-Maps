@@ -20,7 +20,7 @@ npm run dev            # front sur http://localhost:5173
 npm run build          # build du front dans web/dist
 npm run generate       # mode partiel : sources manquantes et fichiers manquants ou modifiés
 npm run generate:full  # mode full : retélécharge toutes les sources, réécrit tout
-npm run publish:data   # synchronise generator/out/ vers R2 (manuel uniquement)
+npm run publish:data   # synchronise generator/out/ vers R2 (manuel ; -- --dry-run pour voir sans écrire)
 npm run deploy         # build + wrangler deploy
 ```
 

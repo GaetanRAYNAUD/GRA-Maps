@@ -42,22 +42,37 @@ geo.api.gouv.fr, qui donne aussi le centre de chaque commune (`center`, nouveau 
 flottants. Le dossier `data/` du Java n'existe plus ; la référence disponible, ce sont les
 fichiers encore servis par l'ancien site (`https://maps.gaetanraynaud.fr/data/...`).
 
-Constats du 08/11/2026 (communes 01001 et 75056, département 01, région 11, Jenks) :
+### Bilan du 08/11/2026 : écarts expliqués, rien à corriger côté générateur
 
-- Les fichiers publiés sont incomplets : 01001 n'a aucune population, Paris n'a pas 2022-2023,
-  les totaux régionaux de naissances sont bien plus bas (part de Paris dans les naissances
-  d'Île-de-France : 45 % publiés contre 17 % calculés). Les écarts de rangs et de parts en
-  découlent.
+**Référence INSEE.** Les fichiers Melodi contiennent aussi les totaux par département et par
+région. Les sommes calculées par le générateur leur sont identiques sur toutes les valeurs :
+population 2 507, naissances 1 962, décès 1 962, 0 écart. Les chiffres du nouveau générateur
+sont donc ceux de l'INSEE, et les écarts avec l'ancien site viennent de l'ancien site.
+
+**Anciens fichiers publiés**, comparés sur les 96 départements et un échantillon de
+348 communes :
+
+- Population : 9 % des communes de l'échantillon n'ont aucune population (01001 par exemple), et
+  aucune n'a 2022-2023. Les totaux départementaux sont égaux, ou plus bas de 0,7 % au plus
+  (communes fusionnées perdues par l'ancien traitement, qui ignorait les codes absents de sa
+  liste de communes ; le nouveau les additionne dans la commune actuelle).
+- Naissances et décès 2008-2013 : valeurs rattachées au mauvais département dans 84 départements
+  (Seine-Saint-Denis 249 naissances en 2011 au lieu de 28 362, Haute-Saône 27 349 au lieu de
+  2 643). Les autres années sont proches à 0,3 % près (même effet des fusions).
+- Les rangs et les parts publiés en découlent (exemple : part de Paris dans les naissances
+  d'Île-de-France, 45 % publiés contre 17 % réels).
+
+**Différences voulues** :
+
 - Nouveaux champs : population 1876-1962 complète, densité, naissances et décès par habitant
-  et leurs rangs (absents des fichiers publiés), rangs de superficie (jamais calculés par le
-  Java), `center`.
-- Naissances et décès : Melodi donne des totaux un peu différents de l'ancien fichier (01 en
-  2008 : 7 323 naissances contre 7 019).
-- Superficies : 2 décimales au lieu de 1 (15,95 contre 15,9 km²).
-- Codes postaux : on garde le plus petit code de la commune (le Java gardait le dernier lu), et
-  Paris, Lyon, Marseille reçoivent le plus petit code de leurs arrondissements (absent avant).
-- Jenks : classes identiques pour régions et départements (superficie, population 2021),
-  97 % des communes identiques, le reste à une classe près.
+  et leurs rangs (absents des fichiers publiés), rangs de superficie (jamais calculés avant),
+  `center`.
+- Superficies à 2 décimales, comme l'INSEE (15,95 contre 15,9 km²).
+- Codes postaux : le plus petit code de la commune (l'ancien gardait le dernier lu) ; Paris,
+  Lyon, Marseille reçoivent le plus petit code de leurs arrondissements (absent avant).
+- Jenks : classes identiques pour les régions et départements (superficie, population 2021),
+  97 % des communes identiques, le reste à une classe près (données différentes, et `ckmeans`
+  au lieu de l'ancien algorithme).
 
 Les types de `shared/src/types.ts` ont été confrontés à ces fichiers : mêmes noms de champs.
 
@@ -77,8 +92,8 @@ Les types de `shared/src/types.ts` ont été confrontés à ces fichiers : même
 
 ## Ordre de travail restant
 
-1. Générateur : écrit (toutes les étapes, Jenks, sortie). Reste à valider les écarts de parité
-   ci-dessus.
-2. Publication R2 + règles Cloudflare (CORS, cache, purge), voir [hosting.md](hosting.md).
+1. Générateur : écrit et validé contre les totaux INSEE (voir Parité).
+2. Publication R2 : bucket, CORS et règle de cache en place, script écrit ; reste à créer les
+   tokens et à faire la première publication, voir [hosting.md](hosting.md).
 3. Front : carte + une vue, puis le reste.
 4. Bascule du domaine `maps.gaetanraynaud.fr`.
