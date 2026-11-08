@@ -43,14 +43,14 @@ Dans les deux modes, les fichiers de sortie qui ne sont plus produits sont suppr
 
 ## Sources des données
 
-| Source                          | Producteur                                                                               |
-| ------------------------------- | ---------------------------------------------------------------------------------------- |
-| Régions, départements, communes | INSEE, code officiel géographique                                                        |
-| Codes postaux                   | La Poste, base officielle des codes postaux                                              |
-| Superficies                     | Observatoire des territoires                                                             |
-| Populations historiques         | INSEE Melodi `DS_POPULATIONS_HISTORIQUES` (prioritaire), INSEE 3698339 (xlsx, 1876-1962) |
-| Naissances, décès               | INSEE Melodi `DS_ETAT_CIVIL_NAIS_COMMUNES`, `DS_ETAT_CIVIL_DECES_COMMUNES`               |
-| Position des mairies            | api.gouv.fr                                                                              |
+| Source                          | Producteur                                                                                          |
+| ------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Régions, départements, communes | INSEE, [code officiel géographique](https://www.insee.fr/fr/information/2560452), dernier millésime |
+| Codes postaux                   | La Poste, base officielle des codes postaux                                                         |
+| Superficies                     | Observatoire des territoires                                                                        |
+| Populations historiques         | INSEE Melodi `DS_POPULATIONS_HISTORIQUES` (prioritaire), INSEE 3698339 (xlsx, 1876-1962)            |
+| Naissances, décès               | INSEE Melodi `DS_ETAT_CIVIL_NAIS_COMMUNES`, `DS_ETAT_CIVIL_DECES_COMMUNES`                          |
+| Position des mairies            | api.gouv.fr                                                                                         |
 
 Les jeux INSEE Melodi sont décrits par `https://api.insee.fr/melodi/catalog/all` (URL de
 téléchargement, millésime) et `https://api.insee.fr/melodi/range/{id}` (colonnes, codes). Le
@@ -61,4 +61,5 @@ générateur lit l'URL dans le catalogue au moment du téléchargement et garde 
 
 - [docs/hosting.md](docs/hosting.md) : Cloudflare (Workers, R2, cache, CORS), publication, vérifications
 - [docs/migration.md](docs/migration.md) : reprise de l'ancien site, ce qui reste à migrer
-- [docs/ideas.md](docs/ideas.md) : idées mises de côté (pyramide des âges)
+- [docs/ideas.md](docs/ideas.md) : idées mises de côté (pyramide des âges, nos propres tuiles)
+- [docs/geography.md](docs/geography.md) : millésimes de géographie, rapprochement des sources, frontières affichées

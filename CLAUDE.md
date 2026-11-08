@@ -37,6 +37,8 @@ npm workspaces : `shared/` (types et chemins des JSON publiés), `generator/` (p
 - Jenks : ne pas traduire de code GPL ; utiliser `simple-statistics` (ckmeans) ou réimplémenter
   depuis l'algorithme.
 - La population par sexe et âge est volontairement absente : voir [docs/ideas.md](docs/ideas.md).
+- Géographie : tout est calculé et affiché dans le dernier COG ; une source en retard est convertie
+  avec `v_mvt_commune`. Frontières : tuiles data.gouv.fr. Voir [docs/geography.md](docs/geography.md).
 
 ## Front
 
