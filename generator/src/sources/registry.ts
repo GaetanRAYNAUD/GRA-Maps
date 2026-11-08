@@ -1,4 +1,5 @@
 import { source } from '../paths.ts'
+import { geoApiCommunes } from './geo-api.ts'
 import { cogFile, inseePageFile } from './insee-page.ts'
 import { laposte } from './laposte.ts'
 import { melodi } from './melodi.ts'
@@ -62,6 +63,5 @@ export const sources = {
     'INSEE Melodi, décès annuels par commune',
     melodi('DS_ETAT_CIVIL_DECES_COMMUNES'),
   ),
-  points: def('points', 'point/points.json.gz', 'api.gouv.fr, position des mairies'),
-  pointsParis: def('pointsParis', 'point/paris.json.gz', 'api.gouv.fr, position des mairies d’arrondissement de Paris'),
+  points: def('points', 'point/communes.json', 'geo.api.gouv.fr, position des mairies et centre des communes', geoApiCommunes()),
 } satisfies Record<string, Source>

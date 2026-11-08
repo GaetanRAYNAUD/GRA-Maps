@@ -104,5 +104,8 @@ export type Commune = DataNode<CommunePopulations> & {
   zipCode: string
   areaRegionRanks?: number
   areaDepartementRanks?: number
+  /** Town hall position. */
   point?: Point
+  /** Centre of the commune. */
+  center?: Point
 }

@@ -24,15 +24,16 @@ sources.
 | `04-population` | `service/insee/population/PopulationGenerationService` | Ancien fichier `base_pop_historiques`, remplacé par Melodi                                                                                  |
 | `05-birth`      | `service/insee/birth/BirthGenerationService`           | Ancien `base_naissances`, remplacé par Melodi                                                                                               |
 | `06-death`      | `service/insee/death/DeathGenerationService`           | Ancien `base_deces` (ISO-8859-1), remplacé par Melodi                                                                                       |
-| `07-points`     | `service/gouv/point/PointGenerationService`            | `points.json` + `paris.json`, coordonnées `[lon, lat]` vers `{ lat, lon }`                                                                  |
+| `07-points`     | `service/gouv/point/PointGenerationService`            | Ancienne API `etablissements-publics` (`mairie`, `paris_mairie`), remplacée par geo.api.gouv.fr ; `[lon, lat]` vers `{ lat, lon }`          |
 | `08-intern`     | `service/intern/InternPopGenerationService`            | Agrégation commune, département, région ; rangs et pourcentages (pays/région/département), densité, naissances et décès par habitant, Jenks |
 | (abandonné)     | `service/insee/population/all/PopAllService`           | Voir [ideas.md](ideas.md)                                                                                                                   |
 
 Jenks : le Java reprend du code GPL-3 (genepi/haplocheck, `common/Jenks.java`). Ne pas le
 traduire ; vérifier seulement la parité des classes.
 
-Sources locales du Java copiées dans `generator/sources/` (non versionnées, à remplacer par des
-téléchargements) : `point/`.
+Toutes les sources du Java sont remplacées par des téléchargements (voir le README pour la liste).
+Les mairies venaient de `etablissements-publics.api.gouv.fr` (fermée) ; elles viennent maintenant de
+geo.api.gouv.fr, qui donne aussi le centre de chaque commune (`center`, nouveau champ).
 
 ## Parité
 
@@ -56,10 +57,8 @@ Les types de `shared/src/types.ts` viennent de `osamapsfront/src/types/api.types
 
 ## Ordre de travail restant
 
-1. Retrouver toutes les sources en téléchargement (reste : position des
-   mairies).
-2. Générateur : List + Area + Population vers `common`/`regions`/`departements`, test de parité.
-3. Naissances, décès, points, agrégations, Jenks, communes.
-4. Publication R2 + règles Cloudflare (CORS, cache, purge), voir [hosting.md](hosting.md).
-5. Front : carte + une vue, puis le reste.
-6. Bascule du domaine `maps.gaetanraynaud.fr`.
+1. Générateur : List + Area + Population vers `common`/`regions`/`departements`, test de parité.
+2. Naissances, décès, points, agrégations, Jenks, communes.
+3. Publication R2 + règles Cloudflare (CORS, cache, purge), voir [hosting.md](hosting.md).
+4. Front : carte + une vue, puis le reste.
+5. Bascule du domaine `maps.gaetanraynaud.fr`.

@@ -50,12 +50,12 @@ Dans les deux modes, les fichiers de sortie qui ne sont plus produits sont suppr
 | Superficies                     | INSEE Melodi `DS_RP_SERIE_HISTORIQUE` (mesure `SUP`, km²)                                           |
 | Populations historiques         | INSEE Melodi `DS_POPULATIONS_HISTORIQUES` (prioritaire), INSEE 3698339 (xlsx, 1876-1962)            |
 | Naissances, décès               | INSEE Melodi `DS_ETAT_CIVIL_NAIS_COMMUNES`, `DS_ETAT_CIVIL_DECES_COMMUNES`                          |
-| Position des mairies            | api.gouv.fr                                                                                         |
+| Mairies, centre des communes    | [geo.api.gouv.fr](https://geo.api.gouv.fr/communes) (`mairie`, `centre`)                            |
 
 Les jeux INSEE Melodi sont décrits par `https://api.insee.fr/melodi/catalog/all` (URL de
 téléchargement, millésime) et `https://api.insee.fr/melodi/range/{id}` (colonnes, codes). Le
 générateur lit l'URL dans le catalogue au moment du téléchargement et garde l'entrée du catalogue
-à côté du fichier (`<id>.catalog.json`). Les autres URLs restent à identifier.
+à côté du fichier (`<id>.catalog.json`). Toutes les sources ont maintenant un téléchargement.
 
 ## Docs
 
