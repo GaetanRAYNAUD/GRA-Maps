@@ -104,6 +104,10 @@ demande que les variables R2).
    quelque chose a changé. À vérifier au premier lancement : si l'offre refuse la purge par
    hôte, passer à une purge par URL des fichiers modifiés, ou purger toute la zone.
 
+Garde-fous : le script refuse de supprimer plus de 5 % du bucket sans `--allow-deletes` (un
+`out/` incomplet effacerait les données publiées). Si la purge échoue après l'envoi, la
+corriger puis relancer avec `--purge` : sans changement à envoyer, le script ne purge pas.
+
 Variables du `.env` : `CLOUDFLARE_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`,
 `R2_SECRET_ACCESS_KEY` (token R2 « Object Read & Write » limité au bucket), `CLOUDFLARE_ZONE_ID`
 (zone `gaetanraynaud.fr`) et `CLOUDFLARE_PURGE_TOKEN` (token API avec la seule permission

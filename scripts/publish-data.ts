@@ -11,14 +11,18 @@
  * 4. The Cloudflare cache of the data host is purged (dedicated API token), only if something
  *    changed.
  *
- * Usage: `npm run publish:data [-- --dry-run]` (`--dry-run` lists the changes, writes nothing).
+ * Usage: `npm run publish:data [-- options]`:
+ * - `--dry-run`: lists the changes, writes nothing;
+ * - `--purge`: purges the cache even when nothing changed (after a failed purge);
+ * - `--allow-deletes`: allows deleting more than 5% of the bucket (an incomplete out/ would
+ *   otherwise wipe the published data).
  * Reads its settings from the root `.env` (see .env.example). Manual only, never in a build.
  */
 import { createHash } from 'node:crypto'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
-import { DeleteObjectsCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import pLimit from 'p-limit'
 import { dataPaths } from '@gra-maps/shared'
 import { OUT_DIR } from '../generator/src/paths.ts'
@@ -27,6 +31,8 @@ import { planPublish, type LocalFile } from './publish-plan.ts'
 const DATA_HOST = 'maps-data.gaetanraynaud.fr'
 const CACHE_CONTROL = 'public, max-age=300'
 const CONCURRENCY = 16
+/** Above this share of the bucket, deletions need `--allow-deletes` (guards against an incomplete out/). */
+const MAX_DELETE_SHARE = 0.05
 
 function env(name: string): string {
   const value = process.env[name]
@@ -88,7 +94,13 @@ async function purge(zoneId: string, token: string): Promise<void> {
 }
 
 async function main() {
-  const { values } = parseArgs({ options: { 'dry-run': { type: 'boolean', default: false } } })
+  const { values } = parseArgs({
+    options: {
+      'dry-run': { type: 'boolean', default: false },
+      purge: { type: 'boolean', default: false },
+      'allow-deletes': { type: 'boolean', default: false },
+    },
+  })
   const dryRun = values['dry-run']
 
   const bucket = env('R2_BUCKET')
@@ -114,8 +126,17 @@ async function main() {
     console.log('Dry run: nothing written')
     return
   }
+  if (remote.size > 0 && plan.deletes.length > remote.size * MAX_DELETE_SHARE && !values['allow-deletes'])
+    throw new Error(
+      `${plan.deletes.length} of ${remote.size} published files would be deleted: is out/ complete? Rerun with --allow-deletes if this is expected.`,
+    )
   if (toUpload === 0 && plan.deletes.length === 0) {
-    console.log('Nothing to publish')
+    if (!values.purge) {
+      console.log('Nothing to publish (use --purge to purge the cache anyway)')
+      return
+    }
+    await purge(zoneId, purgeToken)
+    console.log(`Nothing to publish, cache of ${DATA_HOST} purged`)
     return
   }
 
@@ -132,15 +153,16 @@ async function main() {
   if (plan.last) await upload(s3, bucket, plan.last)
   console.log(`${toUpload} uploaded`)
 
-  for (let i = 0; i < plan.deletes.length; i += 1000) {
-    const batch = plan.deletes.slice(i, i + 1000)
-    const res = await s3.send(new DeleteObjectsCommand({ Bucket: bucket, Delete: { Objects: batch.map((Key) => ({ Key })), Quiet: true } }))
-    if (res.Errors?.length)
-      throw new Error(`Delete failed for ${res.Errors.length} objects, e.g. ${res.Errors[0]?.Key}: ${res.Errors[0]?.Message}`)
-  }
+  // One request per object: deletions are rare and few, and DeleteObjects (batch) requires a
+  // body checksum whose header R2 has not always accepted.
+  await Promise.all(plan.deletes.map((Key) => limit(() => s3.send(new DeleteObjectCommand({ Bucket: bucket, Key })))))
   if (plan.deletes.length) console.log(`${plan.deletes.length} deleted`)
 
-  await purge(zoneId, purgeToken)
+  try {
+    await purge(zoneId, purgeToken)
+  } catch (e) {
+    throw new Error('Files are published but the cache still serves the old ones: fix the purge, then rerun with --purge', { cause: e })
+  }
   console.log(`Cache of ${DATA_HOST} purged`)
 }
 

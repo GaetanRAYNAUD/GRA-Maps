@@ -49,19 +49,25 @@ export async function readMelodi(
   onRow: (row: MelodiRow) => void,
   { keep = () => true, prefilter }: { keep?: (row: MelodiRow) => boolean; prefilter?: string } = {},
 ): Promise<void> {
-  const lines = createInterface({ input: await openEntry(zipFile, '_data.csv'), crlfDelay: Infinity })
-  let columns: string[] | undefined
-  for await (const raw of lines) {
-    const line = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
-    if (!columns) {
-      columns = line.split(';').map(unquote)
-      continue
+  const input = await openEntry(zipFile, '_data.csv')
+  const lines = createInterface({ input, crlfDelay: Infinity })
+  try {
+    let columns: string[] | undefined
+    for await (const raw of lines) {
+      const line = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw
+      if (!columns) {
+        columns = line.split(';').map(unquote)
+        continue
+      }
+      if (!line || (prefilter && !line.includes(prefilter))) continue
+      const fields = line.split(';')
+      const row: MelodiRow = {}
+      for (let i = 0; i < columns.length; i++) row[columns[i]!] = unquote(fields[i] ?? '')
+      if (keep(row)) onRow(row)
     }
-    if (!line || (prefilter && !line.includes(prefilter))) continue
-    const fields = line.split(';')
-    const row: MelodiRow = {}
-    for (let i = 0; i < columns.length; i++) row[columns[i]!] = unquote(fields[i] ?? '')
-    if (keep(row)) onRow(row)
+  } finally {
+    // Ends the entry stream even when reading stopped early, which closes the zip.
+    input.destroy()
   }
 }
 
@@ -70,7 +76,13 @@ export const melodiCatalogFile = (file: string) => `${file}.catalog.json`
 
 /** Geography date (`YYYY-MM-DD`) of a Melodi source, from its catalog entry (`spatialTemporal`, e.g. `2026-01-01T01:00:00`). */
 export async function melodiGeography(file: string): Promise<string> {
-  const entry = JSON.parse(await readFile(melodiCatalogFile(file), 'utf8')) as { identifier?: string; spatialTemporal?: string }
+  let text: string
+  try {
+    text = await readFile(melodiCatalogFile(file), 'utf8')
+  } catch (e) {
+    throw new Error(`${melodiCatalogFile(file)} is missing: delete ${path.basename(file)} and rerun to download both again`, { cause: e })
+  }
+  const entry = JSON.parse(text) as { identifier?: string; spatialTemporal?: string }
   if (!entry.spatialTemporal) throw new Error(`${entry.identifier ?? path.basename(file)}: no spatialTemporal in the catalog entry`)
   return entry.spatialTemporal.slice(0, 10)
 }
