@@ -19,9 +19,10 @@ type CatalogEntry = { identifier: string; modified: string; product?: Product[] 
 /**
  * Downloads the French CSV of a Melodi dataset. The file is the zip served by INSEE,
  * kept as is (`<id>_data.csv` + `<id>_metadata.csv`). The catalog entry is saved
- * next to it as `<file>.catalog.json`, to know which vintage and geography were downloaded.
+ * next to it as `<file>.catalog.json` (a side file, see Source.fetch), to know which vintage and
+ * geography were downloaded.
  */
-export const melodi = (datasetId: string) => async (dest: string, file: string) => {
+export const melodi = (datasetId: string) => async (dest: string) => {
   const res = await fetchWithTimeout(`${API}/catalog/${datasetId}`)
   if (!res.ok) throw new Error(`Melodi catalog ${datasetId}: HTTP ${res.status}`)
   const entry = (await res.json()) as CatalogEntry
@@ -33,5 +34,5 @@ export const melodi = (datasetId: string) => async (dest: string, file: string) 
 
   console.log(`[melodi] ${product.id} (modified ${entry.modified}, ${product.byteSize ?? '?'} bytes)`)
   await download(product.accessURL, dest)
-  await writeFile(melodiCatalogFile(file), JSON.stringify(entry, null, 2))
+  await writeFile(melodiCatalogFile(dest), JSON.stringify(entry, null, 2))
 }

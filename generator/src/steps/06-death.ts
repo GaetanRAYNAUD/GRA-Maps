@@ -9,7 +9,7 @@ import { readCommuneSeries } from './commune-series.ts'
 export const deathStep: Step = {
   name: 'deathStep',
   async run(data) {
-    const years = await readCommuneSeries(data, sources.death.file, 'death', 'EC_MEASURE', new Set(['DTH']))
+    const years = await readCommuneSeries(data, sources.death.file, 'death', 'EC_MEASURE', ['DTH'])
     console.log(`[death] ${years.size} years`)
   },
 }

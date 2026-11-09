@@ -13,7 +13,9 @@ export const totalKey = (series: string, level: string, id: string, year: number
 
 /**
  * Reads one yearly measure of a Melodi dataset into `commune.population[series]`, for
- * GEO_OBJECT=COM rows whose measure column is in `measures`. Codes are converted to the
+ * GEO_OBJECT=COM rows whose measure column is in `measures`. `measures` is in order of
+ * preference: when a territory has several of them for the same year, only the first is kept
+ * (never added up). Codes are converted to the
  * current geography (values of merged communes are summed). The DEP and REG rows of the same
  * file (INSEE's own totals) are kept in `data.inseeTotals` to check the aggregation.
  * Returns the years read.
@@ -23,28 +25,38 @@ export async function readCommuneSeries(
   file: string,
   series: SeriesKey,
   measureColumn: string,
-  measures: ReadonlySet<string>,
+  measures: readonly string[],
 ): Promise<Set<number>> {
   const geo = await geoConverter(await melodiGeography(file), new Set(data.communes.keys()))
   const years = new Set<number>()
 
+  // `${GEO_OBJECT}:${GEO}:${year}` -> best measure found so far (lowest index) and its value.
+  const best = new Map<string, { rank: number; value: number }>()
   await readMelodi(
     file,
     (row) => {
       const value = melodiValue(row)
       if (value === undefined) return
-      if (row.GEO_OBJECT !== 'COM') {
-        data.inseeTotals.set(totalKey(series, row.GEO_OBJECT!, row.GEO!, Number(row.TIME_PERIOD)), Math.round(value))
-        return
-      }
-      const code = geo.toCurrent(row.GEO!)
-      if (!code) return
-      const year = Number(row.TIME_PERIOD)
-      addTo(data.communes.get(code)!.population[series], year, Math.round(value))
-      years.add(year)
+      const key = `${row.GEO_OBJECT}:${row.GEO}:${row.TIME_PERIOD}`
+      const rank = measures.indexOf(row[measureColumn]!)
+      const current = best.get(key)
+      if (!current || rank < current.rank) best.set(key, { rank, value: Math.round(value) })
     },
-    { keep: (row) => TOTAL_LEVELS.has(row.GEO_OBJECT!) && measures.has(row[measureColumn]!) },
+    { keep: (row) => TOTAL_LEVELS.has(row.GEO_OBJECT!) && measures.includes(row[measureColumn]!) },
   )
+
+  for (const [key, { value }] of best) {
+    const [level, id, period] = key.split(':') as [string, string, string]
+    const year = Number(period)
+    if (level !== 'COM') {
+      data.inseeTotals.set(totalKey(series, level, id, year), value)
+      continue
+    }
+    const code = geo.toCurrent(id)
+    if (!code) continue
+    addTo(data.communes.get(code)!.population[series], year, value)
+    years.add(year)
+  }
 
   logUnknown(series, geo.unknown)
   return years

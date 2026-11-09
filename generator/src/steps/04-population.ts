@@ -24,7 +24,7 @@ import { logUnknown, readCommuneSeries, withoutSeries } from './commune-series.t
 export const populationStep: Step = {
   name: 'populationStep',
   async run(data) {
-    const melodiYears = await readCommuneSeries(data, sources.population.file, 'population', 'POPREF_MEASURE', new Set(['PMUN', 'PSDC']))
+    const melodiYears = await readCommuneSeries(data, sources.population.file, 'population', 'POPREF_MEASURE', ['PMUN', 'PSDC'])
     // Snapshot of what Melodi gave each commune: the xlsx only fills the other (commune, year) pairs.
     const fromMelodi = new Map([...data.communes.values()].map((c) => [c.id, new Set(Object.keys(c.population.population).map(Number))]))
     const historyYears = await readHistory(data, fromMelodi)

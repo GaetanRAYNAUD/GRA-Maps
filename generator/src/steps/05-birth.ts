@@ -11,7 +11,7 @@ import { readCommuneSeries } from './commune-series.ts'
 export const birthStep: Step = {
   name: 'birthStep',
   async run(data) {
-    const years = await readCommuneSeries(data, sources.birth.file, 'birth', 'EC_MEASURE', new Set(['LVB']))
+    const years = await readCommuneSeries(data, sources.birth.file, 'birth', 'EC_MEASURE', ['LVB'])
     console.log(`[birth] ${years.size} years`)
   },
 }

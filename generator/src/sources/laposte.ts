@@ -1,5 +1,4 @@
 import { writeFile } from 'node:fs/promises'
-import path from 'node:path'
 import { download, fetchWithTimeout } from './download.ts'
 
 /**
@@ -16,7 +15,8 @@ type Dataset = { id: string; dataUpdatedAt?: string; file?: { encoding?: string 
  * Downloads a file of a La Poste dataset, `original` by default (the file as published by
  * La Poste, as opposed to the `full` file enriched by the portal). The file URL is read from
  * the data-files listing at download time. The dataset metadata is saved next to it as
- * `<id>.dataset.json`, to know which update was downloaded and the file encoding.
+ * `<file>.dataset.json` (a side file, see Source.fetch), to know which update was downloaded
+ * and the file encoding.
  */
 export const laposte =
   (datasetId: string, fileKey = 'original') =>
@@ -33,5 +33,5 @@ export const laposte =
 
     console.log(`[laposte] ${file.name} (data updated ${dataset.dataUpdatedAt ?? '?'}, ${file.size ?? '?'} bytes)`)
     await download(file.url, dest)
-    await writeFile(path.join(path.dirname(dest), `${datasetId}.dataset.json`), JSON.stringify(dataset, null, 2))
+    await writeFile(`${dest}.dataset.json`, JSON.stringify(dataset, null, 2))
   }

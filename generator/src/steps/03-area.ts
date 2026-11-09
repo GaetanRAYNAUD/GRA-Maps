@@ -6,9 +6,10 @@ import { sources } from '../sources/registry.ts'
 /**
  * Areas in km² from sources.area (Melodi DS_RP_SERIE_HISTORIQUE): zip with `<id>_data.csv`,
  * `;` separated (GEO;GEO_OBJECT;FREQ;RP_MEASURE;OCS;OBS_STATUS;UNIT_MEASURE;TIME_PERIOD;OBS_VALUE).
- * Keep RP_MEASURE=SUP with GEO_OBJECT COM, DEP and REG: one row per territory, for the latest
- * census year. The file is large (about 180 MB unzipped, mostly other measures): it is
- * streamed and filtered on the fly. Commune codes go through the geography converter;
+ * Keep RP_MEASURE=SUP with GEO_OBJECT COM, DEP and REG, latest census year only (one year
+ * today; if INSEE publishes several, older ones are ignored rather than added up). The file
+ * is large (about 180 MB unzipped, mostly other measures): it is streamed and filtered on the
+ * fly. Commune codes go through the geography converter;
  * departement and region areas are taken as published.
  */
 export const areaStep: Step = {
@@ -17,25 +18,33 @@ export const areaStep: Step = {
     const file = sources.area.file
     const geo = await geoConverter(await melodiGeography(file), new Set(data.communes.keys()))
 
+    // Latest census year of each territory: `${GEO_OBJECT}:${GEO}` -> { year, value }.
+    const latest = new Map<string, { year: number; value: number }>()
     await readMelodi(
       file,
       (row) => {
         const value = melodiValue(row)
         if (value === undefined) return
-        if (row.GEO_OBJECT === 'COM') {
-          const code = geo.toCurrent(row.GEO!)
-          const commune = code ? data.communes.get(code) : undefined
-          if (commune) commune.area = Math.round(((commune.area ?? 0) + value) * 100) / 100
-        } else if (row.GEO_OBJECT === 'DEP') {
-          const departement = data.departements.get(row.GEO!)
-          if (departement) departement.area = value
-        } else if (row.GEO_OBJECT === 'REG') {
-          const region = data.regions.get(row.GEO!)
-          if (region) region.area = value
-        }
+        const key = `${row.GEO_OBJECT}:${row.GEO}`
+        const year = Number(row.TIME_PERIOD)
+        const current = latest.get(key)
+        if (!current || year > current.year) latest.set(key, { year, value })
       },
-      { prefilter: '"SUP"', keep: (row) => row.RP_MEASURE === 'SUP' },
+      { prefilter: '"SUP"', keep: (row) => row.RP_MEASURE === 'SUP' && ['COM', 'DEP', 'REG'].includes(row.GEO_OBJECT!) },
     )
+
+    for (const [key, { value }] of latest) {
+      const [level, id] = key.split(':') as [string, string]
+      if (level === 'COM') {
+        const code = geo.toCurrent(id)
+        const commune = code ? data.communes.get(code) : undefined
+        // Merged communes: their areas are added up.
+        if (commune) commune.area = Math.round(((commune.area ?? 0) + value) * 100) / 100
+      } else {
+        const node = level === 'DEP' ? data.departements.get(id) : data.regions.get(id)
+        if (node) node.area = value
+      }
+    }
 
     const missing = [...data.communes.values()].filter((c) => c.area === undefined).length
     console.log(`[area] ${data.communes.size - missing} communes with an area${missing ? `, ${missing} without` : ''}`)

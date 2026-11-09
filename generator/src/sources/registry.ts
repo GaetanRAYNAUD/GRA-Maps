@@ -18,29 +18,48 @@ export type Source = {
   /** Producer and dataset, for humans. */
   origin: string
   /**
-   * Downloads the source to `dest` (a temporary file renamed to `file` afterwards). `file` is
-   * given for side files that must sit next to the final file. Undefined while the download
-   * is not identified yet.
+   * Downloads the source to `dest`, a temporary file renamed to `file` afterwards. Side files
+   * (metadata saved with the download) are written as `<dest><suffix>` and renamed to
+   * `<file><suffix>` with it. Undefined while the download is not identified yet.
    */
-  fetch?: (dest: string, file: string) => Promise<void>
+  fetch?: (dest: string) => Promise<void>
+  /**
+   * Sources that must come from the same vintage: when one of them is missing, the whole group
+   * is downloaded again (e.g. the COG lists and their change file).
+   */
+  group?: string
 }
 
-const def = (id: string, file: string, origin: string, fetch?: Source['fetch']): Source => ({ id, file: source(file), origin, fetch })
+const def = (id: string, file: string, origin: string, fetch?: Source['fetch'], group?: string): Source => ({
+  id,
+  file: source(file),
+  origin,
+  fetch,
+  group,
+})
 
 export const sources = {
-  regions: def('regions', 'list/v_region.csv', 'INSEE, code officiel géographique (dernier millésime) : régions', cogFile('region')),
+  regions: def('regions', 'list/v_region.csv', 'INSEE, code officiel géographique (dernier millésime) : régions', cogFile('region'), 'cog'),
   departements: def(
     'departements',
     'list/v_departement.csv',
     'INSEE, code officiel géographique (dernier millésime) : départements',
     cogFile('departement'),
+    'cog',
   ),
-  communes: def('communes', 'list/v_commune.csv', 'INSEE, code officiel géographique (dernier millésime) : communes', cogFile('commune')),
+  communes: def(
+    'communes',
+    'list/v_commune.csv',
+    'INSEE, code officiel géographique (dernier millésime) : communes',
+    cogFile('commune'),
+    'cog',
+  ),
   communeChanges: def(
     'communeChanges',
     'list/v_mvt_commune.csv',
     'INSEE, code officiel géographique (dernier millésime) : changements de communes depuis 1943',
     cogFile('mvt_commune'),
+    'cog',
   ),
   zipCodes: def('zipCodes', 'zipCodes/019HexaSmal.csv', 'La Poste, base officielle des codes postaux', laposte('laposte-hexasmal')),
   area: def(

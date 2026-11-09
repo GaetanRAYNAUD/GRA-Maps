@@ -92,9 +92,10 @@ async function purge(zoneId: string, token: string): Promise<void> {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ hosts: [DATA_HOST] }),
   })
-  const body = (await res.json()) as { success?: boolean; errors?: { message: string }[] }
+  // The body may not be JSON (proxy or 5xx error page): fall back to the HTTP status.
+  const body = (await res.json().catch(() => ({}))) as { success?: boolean; errors?: { message: string }[] }
   if (!res.ok || !body.success)
-    throw new Error(`Cache purge failed (HTTP ${res.status}): ${body.errors?.map((e) => e.message).join(', ') || 'unknown error'}`)
+    throw new Error(`Cache purge failed (HTTP ${res.status}): ${body.errors?.map((e) => e.message).join(', ') || 'no error details'}`)
 }
 
 async function main() {
