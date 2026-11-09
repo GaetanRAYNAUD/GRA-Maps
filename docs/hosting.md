@@ -133,8 +133,14 @@ Les données ont été vérifiées le 08/11/2026, après la première publicatio
   front, voir [migration.md](migration.md)).
 - Sans `Accept-Encoding`, le fichier arrive non compressé (normal).
 
-Reste à vérifier au premier déploiement du front :
+Front vérifié le 09/11/2026, après le premier déploiement par Workers Builds :
 
-1. `curl -I https://maps.gaetanraynaud.fr/` et sur une route SPA (ex. `/commune/12345`) : le
-   `max-age=60` s'applique-t-il aussi au fallback ? Sinon corriger `_headers`.
-2. Les requêtes de données n'apparaissent pas dans les invocations Workers.
+- `/` : `Cache-Control: public, max-age=60` (règle de `_headers`).
+- Routes servies par le fallback SPA (`/commune/88160`) et fichiers de `public/` hors
+  `/assets/` (favicon, manifeste) : `public, max-age=0, must-revalidate`, la valeur par défaut
+  des assets Workers ; la règle `/` ne s'applique pas au fallback. Gardé tel quel : le navigateur
+  revalide le HTML à chaque visite (304), ce qui est le bon comportement pour un `index.html`.
+- `/assets/*` : `public, max-age=31536000, immutable`.
+- Données : `Access-Control-Allow-Origin: https://maps.gaetanraynaud.fr` sur les GET, brotli,
+  `cf-cache-status: HIT`. Elles viennent de `maps-data.gaetanraynaud.fr` (R2), jamais du Worker.
+- Le site charge sans erreur dans le navigateur (carte, fiche, noms de lieux).

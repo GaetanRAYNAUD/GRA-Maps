@@ -97,4 +97,5 @@ Jenks, survol, fiche (rangs, parts, courbe), recherche commune et adresse, URL p
 2. Publication R2 : bucket, CORS et règle de cache en place, script écrit ; reste à créer les
    tokens et à faire la première publication, voir [hosting.md](hosting.md).
 3. Front : carte, légende avec bornes, fiche et recherche en place.
-4. Bascule du domaine `maps.gaetanraynaud.fr`.
+4. Bascule du domaine `maps.gaetanraynaud.fr` : faite le 09/11/2026 (Worker `gra-maps`, domaine
+   personnalisé).
