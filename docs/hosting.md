@@ -8,7 +8,10 @@
 Cache (`web/public/_headers`) : `/` et `/index.html` en `max-age=60`, `/assets/*` (fichiers hashés
 par Vite) en `max-age=31536000, immutable`.
 
-Domaine : `maps.gaetanraynaud.fr` (route à ajouter dans `wrangler.toml` au moment de la bascule).
+Domaine : `maps.gaetanraynaud.fr`, déclaré en domaine personnalisé du Worker dans `wrangler.toml`
+(`routes`, `custom_domain = true`) : Cloudflare crée l'enregistrement DNS et le certificat au
+déploiement. L'hôte ne doit porter aucun autre enregistrement DNS (l'ancien tunnel a été retiré le
+09/11/2026).
 
 ## Déploiement du front : Workers Builds
 

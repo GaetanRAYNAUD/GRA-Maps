@@ -3,6 +3,10 @@
 name = "gra-maps"
 compatibility_date = "2026-11-07"
 
+# Custom domain: Cloudflare creates the DNS record and the certificate. The hostname must not
+# have any other DNS record (the former tunnel CNAME was removed).
+routes = [{ pattern = "maps.gaetanraynaud.fr", custom_domain = true }]
+
 [assets]
 directory = "./web/dist"
 not_found_handling = "single-page-application"
