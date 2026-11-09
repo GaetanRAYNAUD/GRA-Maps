@@ -3,9 +3,16 @@ export const wash = ['#f7e6e8', '#efc9ce', '#e1a0aa', '#cd6f7f', '#b4425a', '#8c
 
 export const noData = '#e5e9ee'
 export const ink = '#26231e'
-export const prussian = '#1f3a5f'
+/** Shell colour (band, controls, selection): sapin green, the complement of the carmine wash. */
+export const sapin = '#1f4a3d'
 export const seam = '#ffffff'
 export const ground = '#f3f5f8'
+export const plate = '#ffffff'
+/** World background: neutral land, pale cool sea, grey country borders and names. */
+export const land = '#eceef1'
+export const sea = '#d6e1ec'
+export const landLine = '#a9b2bd'
+export const seaInk = '#6c7f94'
 
 /** Colour of a class position t in [0, 1]. */
 export function washAt(t: number): string {

@@ -6,6 +6,7 @@ const paths = {
   chevron: <path d="m6 9 6 6 6-6" />,
   expand: <path d="m6 15 6-6 6 6" />,
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+  check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
 } as const
 
 export type IconName = keyof typeof paths

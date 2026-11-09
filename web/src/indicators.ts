@@ -13,6 +13,9 @@ export type Indicator = {
   unit: string
   /** Phrase after the headline value, before the year: "habitants en 2022". */
   phrase: string
+  /** One line under the label in the indicator picker. */
+  hint: string
+  group: 'Population' | 'État civil'
   decimals: number
   /** Area has a single value, the others one value per year. */
   yearly: boolean
@@ -24,6 +27,8 @@ export type Indicator = {
 export const indicators: Indicator[] = [
   {
     slug: 'population',
+    hint: "Nombre d'habitants",
+    group: 'Population',
     kind: 'population',
     label: 'Population',
     unit: 'hab.',
@@ -36,6 +41,8 @@ export const indicators: Indicator[] = [
   },
   {
     slug: 'densite',
+    hint: 'Habitants par km²',
+    group: 'Population',
     kind: 'density',
     label: 'Densité',
     unit: 'hab./km²',
@@ -47,6 +54,8 @@ export const indicators: Indicator[] = [
   },
   {
     slug: 'naissances',
+    hint: 'Naissances dans l’année',
+    group: 'État civil',
     kind: 'birth',
     label: 'Naissances',
     unit: 'naiss.',
@@ -59,6 +68,8 @@ export const indicators: Indicator[] = [
   },
   {
     slug: 'deces',
+    hint: 'Décès dans l’année',
+    group: 'État civil',
     kind: 'death',
     label: 'Décès',
     unit: 'décès',
@@ -71,6 +82,8 @@ export const indicators: Indicator[] = [
   },
   {
     slug: 'natalite',
+    hint: 'Naissances pour 1 000 habitants',
+    group: 'État civil',
     kind: 'birth-per-capita',
     label: 'Natalité',
     unit: '‰',
@@ -86,6 +99,8 @@ export const indicators: Indicator[] = [
   },
   {
     slug: 'mortalite',
+    hint: 'Décès pour 1 000 habitants',
+    group: 'État civil',
     kind: 'death-per-capita',
     label: 'Mortalité',
     unit: '‰',
@@ -101,6 +116,8 @@ export const indicators: Indicator[] = [
   },
   {
     slug: 'superficie',
+    hint: 'Surface en km², sans année',
+    group: 'Population',
     kind: 'area',
     label: 'Superficie',
     unit: 'km²',

@@ -251,7 +251,7 @@ function FicheBody({ loaded, countryCounts, communeIds, indicator, year, onIndic
         </tbody>
       </table>
 
-      <p className="fiche-credit">Sources : INSEE. Frontières : DINUM (data.gouv.fr).</p>
+      <p className="fiche-credit">Données INSEE. Contours Etalab, DINUM. Fond © OpenStreetMap (OpenFreeMap), IGN.</p>
     </div>
   )
 }

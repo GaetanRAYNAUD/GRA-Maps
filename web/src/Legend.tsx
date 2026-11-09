@@ -104,9 +104,6 @@ export function Legend({
         <div className="ramp-foot">
           <span className="swatch" style={{ background: noData }} aria-hidden="true" />
           Sans donnée
-          <span className="ramp-classes" title="Classes calculées par la méthode de Jenks (seuils naturels)">
-            {nb + 1} classes, de la plus faible à la plus forte
-          </span>
         </div>
       </div>
 
@@ -162,7 +159,7 @@ export function Legend({
           ) : null}
         </p>
       ) : null}
-      <p className="legend-credit">Sources : INSEE. Frontières : DINUM (data.gouv.fr).</p>
+      <p className="legend-credit">Données INSEE. Contours Etalab, DINUM. Fond © OpenStreetMap (OpenFreeMap), IGN.</p>
     </section>
   )
 }

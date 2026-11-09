@@ -15,6 +15,9 @@ import { Legend } from './Legend.tsx'
 import { Search } from './Search.tsx'
 import { useMediaQuery } from './useMediaQuery.ts'
 import { Icon } from './Icon.tsx'
+import { IndicatorPicker } from './IndicatorPicker.tsx'
+import { BasemapPicker } from './BasemapPicker.tsx'
+import { basemapById, defaultBasemap } from './basemaps.ts'
 
 export function App() {
   return (
@@ -55,6 +58,7 @@ function MapPage() {
   const mobile = useMediaQuery('(max-width: 767px)')
 
   const indicator = indicatorBySlug(search.get('indicateur'))
+  const basemap = basemapById(search.get('fond'))
   const selectionLevel = levelFromSegment(params['segment'])
   const selection: Selection | undefined = selectionLevel && params['id'] ? { level: selectionLevel, id: params['id'] } : undefined
   const level = parseMapLevel(search.get('niveau')) ?? (selection ? mapLevelOf(selection.level) : defaultLevel)
@@ -234,28 +238,20 @@ function MapPage() {
               </button>
             ))}
           </div>
-          <label className="select">
-            <span className="visually-hidden">Indicateur</span>
-            <select
-              value={indicator.slug}
-              onChange={(event) => {
-                setIndicator(indicatorBySlug(event.target.value))
-                setMenuOpen(false)
-              }}
-            >
-              {indicators.map((option) => (
-                <option key={option.slug} value={option.slug}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <IndicatorPicker
+            value={indicator}
+            onChange={(next) => {
+              setIndicator(next)
+              setMenuOpen(false)
+            }}
+          />
         </div>
       </header>
 
       <main className="stage">
         <MapView
           level={level}
+          basemap={basemap}
           ids={ids}
           classes={classes}
           nb={nb}
@@ -266,6 +262,8 @@ function MapPage() {
           onSelect={(mapLevel, id) => select({ level: levelOf(mapLevel), id })}
           onView={setView}
         />
+
+        <BasemapPicker value={basemap} onChange={(next) => update({ fond: next === defaultBasemap ? undefined : next.id })} />
 
         {hover && !mobile ? (
           <div className="tip" style={{ left: hover.x, top: hover.y }} aria-hidden="true">

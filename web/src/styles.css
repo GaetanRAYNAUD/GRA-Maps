@@ -1,9 +1,9 @@
 :root {
-  --prussian: #1f3a5f;
-  --prussian-deep: #162b47;
-  --prussian-line: #4f6b8f;
-  --on-prussian: #f4f6f8;
-  --on-prussian-soft: #c5d1e0;
+  --sapin: #1f4a3d;
+  --sapin-deep: #163a2f;
+  --sapin-line: #4f7366;
+  --on-sapin: #f3f6f4;
+  --on-sapin-soft: #c6d6cf;
   --ground: #f3f5f8;
   --plate: #ffffff;
   --ink: #26231e;
@@ -15,6 +15,10 @@
   --radius: 4px;
   --font: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
   --band-h: 60px;
+  /* Height shared by the band controls: level, indicator. */
+  --control-h: 42px;
+  /* The outlined level control reads smaller than the solid picker: a touch taller. */
+  --segmented-h: 45px;
   --fiche-w: 420px;
   --space-1: 4px;
   --space-2: 8px;
@@ -45,7 +49,7 @@ body {
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
-  caret-color: var(--prussian);
+  caret-color: var(--sapin);
 }
 
 ::selection {
@@ -54,7 +58,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--prussian);
+  outline: 2px solid var(--sapin);
   outline-offset: 2px;
 }
 
@@ -100,11 +104,11 @@ ul {
   border: 0;
   padding: 0;
   background: none;
-  color: var(--prussian);
+  color: var(--sapin);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
-  text-decoration-color: var(--prussian-line);
+  text-decoration-color: var(--sapin-line);
 }
 
 .link:hover {
@@ -128,12 +132,12 @@ ul {
   gap: var(--space-5);
   min-height: var(--band-h);
   padding: 0 var(--space-5);
-  background: var(--prussian);
-  color: var(--on-prussian);
+  background: var(--sapin);
+  color: var(--on-sapin);
 }
 
 .band :focus-visible {
-  outline-color: var(--on-prussian);
+  outline-color: var(--on-sapin);
 }
 
 .brand {
@@ -155,7 +159,8 @@ ul {
 
 .segmented {
   display: flex;
-  border: 1px solid var(--prussian-line);
+  height: var(--segmented-h);
+  border: 1px solid var(--sapin-line);
   border-radius: var(--radius);
   padding: 2px;
   gap: 2px;
@@ -165,45 +170,23 @@ ul {
   border: 0;
   border-radius: 2px;
   background: none;
-  padding: 6px 12px;
+  padding: 0 12px;
   font-size: 15px;
-  color: var(--on-prussian-soft);
+  color: var(--on-sapin-soft);
   transition:
     background-color 160ms var(--ease-out),
     color 160ms var(--ease-out);
 }
 
 .segmented button:hover {
-  color: var(--on-prussian);
-  background: var(--prussian-deep);
+  color: var(--on-sapin);
+  background: var(--sapin-deep);
 }
 
 .segmented button.is-on {
-  background: var(--on-prussian);
-  color: var(--prussian);
+  background: var(--on-sapin);
+  color: var(--sapin);
   font-weight: 600;
-}
-
-.select select {
-  appearance: none;
-  border: 1px solid var(--prussian-line);
-  border-radius: var(--radius);
-  background: var(--prussian)
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f4f6f8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
-    no-repeat right 8px center / 18px;
-  padding: 7px 34px 7px 12px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--on-prussian);
-}
-
-.select select:hover {
-  background-color: var(--prussian-deep);
-}
-
-.select option {
-  color: var(--ink);
-  background: var(--plate);
 }
 
 /* Search */
@@ -222,7 +205,7 @@ ul {
 }
 
 .search:focus-within {
-  outline: 2px solid var(--on-prussian);
+  outline: 2px solid var(--on-sapin);
   outline-offset: 2px;
 }
 
@@ -420,10 +403,6 @@ ul {
   border-radius: 1px;
 }
 
-.ramp-classes {
-  margin-left: auto;
-}
-
 .years {
   display: flex;
   align-items: center;
@@ -439,10 +418,10 @@ ul {
   width: 40px;
   height: 40px;
   flex: none;
-  border: 1px solid var(--prussian);
+  border: 1px solid var(--sapin);
   border-radius: 50%;
   background: var(--plate);
-  color: var(--prussian);
+  color: var(--sapin);
   transition:
     background-color 160ms var(--ease-out),
     color 160ms var(--ease-out);
@@ -450,8 +429,8 @@ ul {
 
 .play:hover,
 .play[aria-pressed='true'] {
-  background: var(--prussian);
-  color: var(--on-prussian);
+  background: var(--sapin);
+  color: var(--on-sapin);
 }
 
 .slider {
@@ -487,8 +466,8 @@ ul {
   margin-top: -8px;
   border-radius: 50%;
   border: 3px solid var(--plate);
-  background: var(--prussian);
-  box-shadow: 0 0 0 1px var(--prussian);
+  background: var(--sapin);
+  box-shadow: 0 0 0 1px var(--sapin);
 }
 
 .slider input::-moz-range-thumb {
@@ -496,8 +475,8 @@ ul {
   height: 14px;
   border-radius: 50%;
   border: 3px solid var(--plate);
-  background: var(--prussian);
-  box-shadow: 0 0 0 1px var(--prussian);
+  background: var(--sapin);
+  box-shadow: 0 0 0 1px var(--sapin);
 }
 
 .slider-ends {
@@ -512,7 +491,7 @@ ul {
   font-size: 30px;
   line-height: 1;
   font-weight: 700;
-  color: var(--prussian);
+  color: var(--sapin);
 }
 
 .legend-static,
@@ -738,13 +717,13 @@ ul {
 }
 
 .chart-cursor {
-  stroke: var(--prussian);
+  stroke: var(--sapin);
   stroke-dasharray: 2 3;
 }
 
 .chart-current {
   fill: var(--plate);
-  stroke: var(--prussian);
+  stroke: var(--sapin);
   stroke-width: 2;
 }
 
@@ -853,11 +832,7 @@ ul {
 
   .segmented button {
     flex: 1;
-    padding: 6px 4px;
-    font-size: 14px;
-  }
-
-  .select select {
+    padding: 0 4px;
     font-size: 14px;
   }
 
@@ -904,7 +879,8 @@ ul {
     right: 0;
   }
 
-  .maplibregl-ctrl-group {
+  /* Pinch zooms on phones: keep only the way back to the whole map. */
+  .maplibregl-ctrl-group.camera-control button:not(:last-child) {
     display: none;
   }
 
@@ -1057,13 +1033,13 @@ ul {
     position: relative;
     height: 38px;
     padding: 0 30px 0 10px;
-    border: 1px solid var(--prussian-line);
+    border: 1px solid var(--sapin-line);
     border-radius: var(--radius);
-    background: var(--prussian);
+    background: var(--sapin);
     font-size: 14px;
     font-weight: 600;
     line-height: 1.1;
-    color: var(--on-prussian);
+    color: var(--on-sapin);
   }
 
   .menu-toggle .icon {
@@ -1076,7 +1052,7 @@ ul {
   .menu-toggle-level {
     font-size: 12px;
     font-weight: 400;
-    color: var(--on-prussian-soft);
+    color: var(--on-sapin-soft);
   }
 
   .controls {
@@ -1088,20 +1064,12 @@ ul {
     flex-wrap: wrap;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3) var(--space-3);
-    background: var(--prussian);
-    border-top: 1px solid var(--prussian-line);
+    background: var(--sapin);
+    border-top: 1px solid var(--sapin-line);
   }
 
   .controls.is-open {
     display: flex;
-  }
-
-  .controls .select {
-    width: 100%;
-  }
-
-  .controls .select select {
-    width: 100%;
   }
 
   .maplibregl-ctrl-attrib {
@@ -1132,4 +1100,218 @@ ul {
 .ramp-range {
   font-weight: 400;
   color: var(--ink-soft);
+}
+
+/* Indicator picker */
+
+.picker {
+  position: relative;
+}
+
+.picker-button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: var(--space-3);
+  min-width: 210px;
+  height: var(--control-h);
+  padding: 0 var(--space-3) 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--plate);
+  color: var(--ink);
+  text-align: left;
+  transition: background-color 160ms var(--ease-out);
+}
+
+.picker-button:hover {
+  background: var(--ground);
+}
+
+.picker-button .icon {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--sapin);
+}
+
+.picker-label {
+  font-size: 12px;
+  line-height: 1.1;
+  color: var(--ink-soft);
+}
+
+.picker-value {
+  font-size: 17px;
+  line-height: 1.15;
+  font-weight: 700;
+  color: var(--sapin);
+}
+
+.picker-list {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 300px;
+  margin: 0;
+  padding: var(--space-1) 0 var(--space-2);
+  list-style: none;
+  background: var(--plate);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius);
+  color: var(--ink);
+  outline: none;
+}
+
+.picker-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.picker-group {
+  display: block;
+  padding: var(--space-3) var(--space-4) var(--space-1);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.picker-option {
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  column-gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+}
+
+.picker-option.is-active {
+  background: var(--ground);
+}
+
+.picker-list:focus-visible .picker-option.is-active {
+  box-shadow: inset 2px 0 0 var(--sapin);
+}
+
+.picker-option-label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.picker-option-hint {
+  grid-column: 1;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.picker-option .icon {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: var(--sapin);
+}
+
+.picker-option[aria-selected='true'] .picker-option-label {
+  color: var(--sapin);
+}
+
+/* Camera buttons, beside the map */
+
+/* Doubled class: MapLibre's own button rule loads after this sheet. */
+.maplibregl-ctrl-group.camera-control button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--ink);
+}
+
+.maplibregl-ctrl-group.camera-control button:hover {
+  background: var(--ground);
+}
+
+@media (max-width: 767px) {
+  .controls .picker,
+  .controls .picker-button {
+    width: 100%;
+  }
+
+  .picker-list {
+    left: 0;
+    width: auto;
+  }
+}
+
+.picker-list > li + li {
+  margin-top: var(--space-2);
+  border-top: 1px solid var(--hairline);
+}
+
+/* Background switcher, above the camera buttons */
+
+.basemap {
+  position: absolute;
+  z-index: 3;
+  right: 10px;
+  bottom: 150px;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  transition: right 240ms var(--ease-out);
+}
+
+.has-fiche .basemap {
+  right: calc(var(--fiche-w) + 10px);
+}
+
+.basemap-toggle,
+.basemap-toggle:hover {
+  border-color: var(--sapin-line);
+}
+
+.basemap-thumb {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 2px;
+  object-fit: cover;
+  background: var(--ground);
+}
+
+.basemap-thumb-plain {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 2px;
+  background: var(--plate);
+}
+
+.basemap-thumb-plain i {
+  border-radius: 1px;
+}
+
+.basemap-toggle-label {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  padding: 2px 0;
+  border-radius: 0 0 2px 2px;
+  background: var(--ink);
+  color: var(--plate);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  /* The docked legend changes height: keep the switch clear of it, in the top corner. */
+  .basemap {
+    top: var(--space-3);
+    bottom: auto;
+  }
+
+  .has-fiche .basemap {
+    display: none;
+  }
 }

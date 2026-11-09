@@ -1,19 +1,37 @@
 import { useEffect, useRef } from 'react'
-import { AttributionControl, Map as MapLibre, NavigationControl } from 'maplibre-gl'
-import type { ExpressionSpecification, FilterSpecification, MapGeoJSONFeature, StyleSpecification } from 'maplibre-gl'
+import { AttributionControl, Map as MapLibre } from 'maplibre-gl'
+import type { ExpressionSpecification, FilterSpecification, IControl, MapGeoJSONFeature, StyleSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { dataPaths } from '@gra-maps/shared'
+import { basemaps, tileUrl } from './basemaps.ts'
+import type { Basemap } from './basemaps.ts'
+import { dataUrl } from './data.ts'
 import { workerReady } from './maplibre-worker.ts'
 import { communesMinZoom, franceBounds, mapLevels } from './geo.ts'
 import type { MapLevel } from './geo.ts'
-import { ground, ink, prussian, seam, washExpression } from './palette.ts'
+import { ink, sapin, seam, washExpression } from './palette.ts'
+import { background, basemapSources, glyphs, overLayers, underLayers } from './basemapStyle.ts'
 
-const source = 'admin'
+/** data.gouv.fr boundary tiles: the communes, and the departements around them. */
+const tiles = 'admin'
+
+/**
+ * Regions and departements are drawn from our simplified outlines (shapes/*.json), the communes
+ * from the tiles: the tiles keep 5 m detail at every zoom and simplify each level on its own,
+ * which blurs the borders and offsets the region lines from the departement seams.
+ */
+const sourceOf = (level: MapLevel) => (level === 'communes' ? { source: tiles, 'source-layer': 'communes' } : { source: `shape-${level}` })
+
+/** Feature state target of a territory. */
+const target = (level: MapLevel, id: string) =>
+  level === 'communes' ? { source: tiles, sourceLayer: 'communes', id } : { source: `shape-${level}`, id }
 
 export type Hover = { level: MapLevel; id: string; name: string; x: number; y: number }
 export type Focus = { center: [number, number]; zoom: number; key: number }
 
 type Props = {
   level: MapLevel
+  basemap: Basemap
   /** Every id of the level, so ids without a class are reset. */
   ids: string[] | undefined
   classes: Record<string, number> | undefined
@@ -38,9 +56,26 @@ const metropolitan: Record<MapLevel, FilterSpecification> = {
 const flag = (key: string): ExpressionSpecification => ['boolean', ['feature-state', key], false]
 
 function buildStyle(): StyleSpecification {
-  const layers: StyleSpecification['layers'] = [{ id: 'ground', type: 'background', paint: { 'background-color': ground } }]
+  const layers: StyleSpecification['layers'] = [background, ...underLayers]
+  const rasters: StyleSpecification['sources'] = {}
+  for (const basemap of basemaps) {
+    if (!basemap.layer) continue
+    rasters[`basemap-${basemap.id}`] = {
+      type: 'raster',
+      tiles: [tileUrl(basemap.layer)],
+      tileSize: 256,
+      maxzoom: basemap.layer.maxzoom,
+      attribution: '© IGN',
+    }
+    layers.push({
+      id: `basemap-${basemap.id}`,
+      type: 'raster',
+      source: `basemap-${basemap.id}`,
+      layout: { visibility: 'none' },
+    })
+  }
   for (const { value: level } of mapLevels) {
-    const common = { source, 'source-layer': level, filter: metropolitan[level], layout: { visibility: 'none' as const } }
+    const common = { ...sourceOf(level), filter: metropolitan[level], layout: { visibility: 'none' as const } }
     layers.push(
       { id: `fill-${level}`, type: 'fill', ...common, paint: { 'fill-color': washExpression as ExpressionSpecification } },
       {
@@ -54,20 +89,24 @@ function buildStyle(): StyleSpecification {
       },
     )
   }
-  // Parent boundaries drawn in fine ink, for orientation.
+  // Parent boundaries in ink over the child seams, for orientation. The region outlines are the
+  // union of the departement shapes, so they sit exactly on the departement seams; around the
+  // communes the departement tiles follow the commune tiles closely enough at those zooms.
   for (const parent of ['regions', 'departements'] as const) {
     layers.push({
       id: `context-${parent}`,
       type: 'line',
-      source,
-      'source-layer': parent,
+      ...(parent === 'regions' ? sourceOf('regions') : { source: tiles, 'source-layer': 'departements' }),
       filter: metropolitan[parent],
-      layout: { visibility: 'none' },
-      paint: { 'line-color': prussian, 'line-opacity': 0.55, 'line-width': ['interpolate', ['linear'], ['zoom'], 4, 0.6, 10, 1.4] },
+      layout: { visibility: 'none', 'line-join': 'round', 'line-cap': 'round' },
+      paint: {
+        'line-color': sapin,
+        'line-width': ['interpolate', ['linear'], ['zoom'], 4, 1.1, 8, 1.6, 12, 2.2],
+      },
     })
   }
   for (const { value: level } of mapLevels) {
-    const common = { source, 'source-layer': level, filter: metropolitan[level], layout: { visibility: 'none' as const } }
+    const common = { ...sourceOf(level), filter: metropolitan[level], layout: { visibility: 'none' as const } }
     layers.push(
       {
         id: `hover-${level}`,
@@ -79,33 +118,81 @@ function buildStyle(): StyleSpecification {
         id: `selected-${level}`,
         type: 'line',
         ...common,
-        paint: { 'line-color': prussian, 'line-width': 3, 'line-opacity': ['case', flag('selected'), 1, 0] },
+        paint: { 'line-color': sapin, 'line-width': 3, 'line-opacity': ['case', flag('selected'), 1, 0] },
       },
     )
   }
   return {
     version: 8,
     sources: {
-      [source]: {
+      [tiles]: {
         type: 'vector',
         url: 'https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json',
         promoteId: 'code',
-        attribution: 'Frontières © DINUM (data.gouv.fr) · Données INSEE',
+        attribution: 'Contours © DINUM, Etalab · Données INSEE',
       },
+      'shape-regions': { type: 'geojson', data: dataUrl(dataPaths.shapes('regions')), promoteId: 'code' },
+      'shape-departements': { type: 'geojson', data: dataUrl(dataPaths.shapes('departements')), promoteId: 'code' },
+      ...rasters,
+      ...basemapSources,
     },
-    layers,
+    glyphs,
+    layers: [...layers, ...overLayers],
+  }
+}
+
+/** Line icons matching Icon.tsx, for the buttons MapLibre renders outside React. */
+const controlIcon = (path: string) =>
+  `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${path}</svg>`
+
+/** Zoom in, zoom out, and back to the whole of France, in one group. */
+class CameraControl implements IControl {
+  private container: HTMLDivElement | undefined
+  private readonly recenter: () => void
+
+  constructor(recenter: () => void) {
+    this.recenter = recenter
+  }
+
+  onAdd(map: MapLibre): HTMLElement {
+    const container = document.createElement('div')
+    container.className = 'maplibregl-ctrl maplibregl-ctrl-group camera-control'
+    const button = (label: string, path: string, action: () => void) => {
+      const element = document.createElement('button')
+      element.type = 'button'
+      element.title = label
+      element.setAttribute('aria-label', label)
+      element.innerHTML = controlIcon(path)
+      element.addEventListener('click', action)
+      container.append(element)
+    }
+    button('Zoomer', '<path d="M12 5v14M5 12h14" />', () => map.zoomIn())
+    button('Dézoomer', '<path d="M5 12h14" />', () => map.zoomOut())
+    button(
+      'Voir toute la France',
+      '<path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4" /><circle cx="12" cy="12" r="2.5" />',
+      this.recenter,
+    )
+    this.container = container
+    return container
+  }
+
+  onRemove(): void {
+    this.container?.remove()
   }
 }
 
 const featureName = (feature: MapGeoJSONFeature): string => String(feature.properties['nom'] ?? feature.id ?? '')
 
-export function MapView({ level, ids, classes, nb, selected, focus, inset, onHover, onSelect, onView }: Props) {
+export function MapView({ level, basemap, ids, classes, nb, selected, focus, inset, onHover, onSelect, onView }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<MapLibre | undefined>(undefined)
   const ready = useRef(false)
   const pending = useRef(new Set<() => void>())
   const viewEmitter = useRef<() => void>(() => {})
   const hovered = useRef<{ level: MapLevel; id: string } | undefined>(undefined)
+  const insetRef = useRef(inset)
+  insetRef.current = inset
   const callbacks = useRef({ onHover, onSelect, onView })
   callbacks.current = { onHover, onSelect, onView }
 
@@ -131,9 +218,7 @@ export function MapView({ level, ids, classes, nb, selected, focus, inset, onHov
       container: element,
       style: buildStyle(),
       bounds: franceBounds,
-      fitBoundsOptions: {
-        padding: { top: 24, right: 24 + inset.right, bottom: 24 + inset.bottom, left: 24 + inset.left },
-      },
+      fitBoundsOptions: { padding: fitPadding(inset) },
       minZoom: 3.5,
       maxZoom: 13,
       dragRotate: false,
@@ -142,14 +227,22 @@ export function MapView({ level, ids, classes, nb, selected, focus, inset, onHov
       attributionControl: false,
     })
     instance.touchZoomRotate.disableRotation()
-    instance.addControl(new NavigationControl({ showCompass: false }), 'bottom-right')
+    instance.addControl(
+      new CameraControl(() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        // The camera padding already keeps the fiche and the phone legend out of the frame.
+        const padding = { ...fitPadding(insetRef.current), right: 24, bottom: 24 }
+        instance.fitBounds(franceBounds, { padding, animate: !reduce, duration: 900 })
+      }),
+      'bottom-right',
+    )
     instance.addControl(new AttributionControl({ compact: true }), 'bottom-right')
     instance.getCanvas().setAttribute('aria-label', 'Carte de France')
     map.current = instance
 
     const clearHover = () => {
       if (hovered.current) {
-        instance.setFeatureState({ source, sourceLayer: hovered.current.level, id: hovered.current.id }, { hover: false })
+        instance.setFeatureState(target(hovered.current.level, hovered.current.id), { hover: false })
         hovered.current = undefined
       }
     }
@@ -162,7 +255,7 @@ export function MapView({ level, ids, classes, nb, selected, focus, inset, onHov
         if (hovered.current?.id !== id || hovered.current.level !== value) {
           clearHover()
           hovered.current = { level: value, id }
-          instance.setFeatureState({ source, sourceLayer: value, id }, { hover: true })
+          instance.setFeatureState(target(value, id), { hover: true })
         }
         instance.getCanvas().style.cursor = 'pointer'
         callbacks.current.onHover({ level: value, id, name: featureName(feature), x: event.point.x, y: event.point.y })
@@ -221,24 +314,52 @@ export function MapView({ level, ids, classes, nb, selected, focus, inset, onHov
     [level],
   )
 
+  // Background: one raster layer shown, and the wash lightened so it shows through.
+  useEffect(
+    () =>
+      whenReady((instance) => {
+        for (const other of basemaps) {
+          if (other.layer) instance.setLayoutProperty(`basemap-${other.id}`, 'visibility', other.id === basemap.id ? 'visible' : 'none')
+        }
+        for (const { value } of mapLevels) instance.setPaintProperty(`fill-${value}`, 'fill-opacity', basemap.washOpacity)
+        // Sapin lines vanish on the photos: draw the parent borders in white there.
+        const photo = Boolean(basemap.layer)
+        for (const parent of ['regions', 'departements']) {
+          instance.setPaintProperty(`context-${parent}`, 'line-color', photo ? seam : sapin)
+          instance.setPaintProperty(`context-${parent}`, 'line-width', [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            4,
+            photo ? 1.6 : 1.1,
+            8,
+            photo ? 2.2 : 1.6,
+            12,
+            photo ? 3 : 2.2,
+          ])
+        }
+      }),
+    [basemap.id],
+  )
+
   // Class position of every territory, as feature state: recolouring needs no style change.
   useEffect(() => {
     if (!ids) return
     return whenReady((instance) => {
       for (const id of ids) {
         const cls = classes?.[id]
-        instance.setFeatureState({ source, sourceLayer: level, id }, { t: cls === undefined ? null : nb === 0 ? 1 : cls / nb })
+        instance.setFeatureState(target(level, id), { t: cls === undefined ? null : nb === 0 ? 1 : cls / nb })
       }
     })
   }, [ids, classes, nb, level])
 
   useEffect(() => {
     if (!selected) return
-    const target = { source, sourceLayer: selected.level, id: selected.id }
-    const cancel = whenReady((instance) => instance.setFeatureState(target, { selected: true }))
+    const feature = target(selected.level, selected.id)
+    const cancel = whenReady((instance) => instance.setFeatureState(feature, { selected: true }))
     return () => {
       cancel()
-      if (map.current && ready.current) map.current.setFeatureState(target, { selected: false })
+      if (map.current && ready.current) map.current.setFeatureState(feature, { selected: false })
     }
   }, [selected?.level, selected?.id])
 
@@ -273,4 +394,9 @@ export function MapView({ level, ids, classes, nb, selected, focus, inset, onHov
   )
 
   return <div ref={container} className="map" />
+}
+
+/** Room around France when it is framed whole, beside the legend and the fiche. */
+function fitPadding(inset: Props['inset']) {
+  return { top: 24, right: 24 + inset.right, bottom: 24 + inset.bottom, left: 24 + inset.left }
 }

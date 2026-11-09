@@ -3,13 +3,16 @@ import type { Common, Commune, Departement, Jenks, JenksKind, Region } from '@gr
 
 const baseUrl = (import.meta.env.VITE_DATA_BASE_URL ?? '').replace(/\/$/, '')
 
+/** Absolute URL of a published file. */
+export const dataUrl = (path: string) => `${baseUrl}/${path}`
+
 /** One request per file for the whole session: the promise itself is cached, failures are evicted. */
 const cache = new Map<string, Promise<unknown>>()
 
 function load<T>(path: string): Promise<T> {
   const cached = cache.get(path)
   if (cached) return cached as Promise<T>
-  const promise = fetch(`${baseUrl}/${path}`).then((response) => {
+  const promise = fetch(dataUrl(path)).then((response) => {
     if (!response.ok) throw new Error(`${response.status} on ${path}`)
     return response.json() as Promise<T>
   })

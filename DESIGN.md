@@ -2,11 +2,11 @@
 name: Cartes de France
 description: Cartes de la France par région, département et commune, lavées au carmin comme un plan cadastral.
 colors:
-  prussian: '#1f3a5f'
-  prussian-deep: '#162b47'
-  prussian-line: '#4f6b8f'
-  on-prussian: '#f4f6f8'
-  on-prussian-soft: '#c5d1e0'
+  sapin: '#1f4a3d'
+  sapin-deep: '#163a2f'
+  sapin-line: '#4f7366'
+  on-sapin: '#f3f6f4'
+  on-sapin-soft: '#c6d6cf'
   carmine: '#8c2440'
   carmine-tint: '#f7e6e8'
   wash-1: '#f7e6e8'
@@ -84,27 +84,27 @@ spacing:
   '6': '32px'
 components:
   band:
-    backgroundColor: '{colors.prussian}'
-    textColor: '{colors.on-prussian}'
+    backgroundColor: '{colors.sapin}'
+    textColor: '{colors.on-sapin}'
     height: '60px'
     padding: '0 24px'
   segmented-option:
-    textColor: '{colors.on-prussian-soft}'
+    textColor: '{colors.on-sapin-soft}'
     rounded: '{rounded.inner}'
     padding: '6px 12px'
   segmented-option-hover:
-    backgroundColor: '{colors.prussian-deep}'
-    textColor: '{colors.on-prussian}'
+    backgroundColor: '{colors.sapin-deep}'
+    textColor: '{colors.on-sapin}'
   segmented-option-on:
-    backgroundColor: '{colors.on-prussian}'
-    textColor: '{colors.prussian}'
+    backgroundColor: '{colors.on-sapin}'
+    textColor: '{colors.sapin}'
     rounded: '{rounded.inner}'
-  select-band:
-    backgroundColor: '{colors.prussian}'
-    textColor: '{colors.on-prussian}'
-    typography: '{typography.control}'
+  indicator-picker:
+    backgroundColor: '{colors.plate}'
+    textColor: '{colors.sapin}'
     rounded: '{rounded.base}'
-    padding: '7px 34px 7px 12px'
+    height: 44px
+    padding: '0 12px 0 16px'
   search-field:
     backgroundColor: '{colors.plate}'
     textColor: '{colors.ink}'
@@ -124,12 +124,12 @@ components:
     width: '420px'
   play-button:
     backgroundColor: '{colors.plate}'
-    textColor: '{colors.prussian}'
+    textColor: '{colors.sapin}'
     rounded: '{rounded.round}'
     size: '40px'
   play-button-active:
-    backgroundColor: '{colors.prussian}'
-    textColor: '{colors.on-prussian}'
+    backgroundColor: '{colors.sapin}'
+    textColor: '{colors.on-sapin}'
   icon-button:
     backgroundColor: '{colors.plate}'
     textColor: '{colors.ink-soft}'
@@ -151,13 +151,13 @@ components:
 
 **Creative North Star: "Le plan cadastral lavé"**
 
-La carte est une planche du cadastre napoléonien : chaque territoire est lavé au carmin, comme le plan colorié à la main que chaque commune garde encore dans ses archives, et la classe se lit à la profondeur du lavis. Tout le reste est l'outillage du géomètre : un bandeau bleu de Prusse, de l'encre, du papier blanc, des filets fins. La carte occupe tout l'écran ; la légende et la fiche sont des planches posées dessus, pas des widgets.
+La carte est une planche du cadastre napoléonien : chaque territoire est lavé au carmin, comme le plan colorié à la main que chaque commune garde encore dans ses archives, et la classe se lit à la profondeur du lavis. Tout le reste est l'outillage du géomètre : un bandeau vert sapin, de l'encre, du papier blanc, des filets fins. La carte occupe tout l'écran ; la légende et la fiche sont des planches posées dessus, pas des widgets.
 
 Le système refuse le défaut de la catégorie : pas de fond de carte gris, pas de barre latérale de réglages, pas de rampe bleue, pas de cartes KPI. La densité vient des tableaux à filets (rangs, parts, tous les indicateurs), pas de tuiles. Le monde est clair uniquement, par direction : il n'y a pas de thème sombre (`color-scheme: light`).
 
 **Key Characteristics:**
 
-- La couleur est réservée aux données : lavis carmin sur la carte, valeur carmin dans la fiche, courbe carmin. Le chrome n'utilise que le bleu de Prusse, l'encre et le blanc.
+- La couleur est réservée aux données : lavis carmin sur la carte, valeur carmin dans la fiche, courbe carmin. Le chrome n'utilise que le vert sapin, l'encre et le blanc.
 - Fond blanc froid, délibérément pas crème.
 - Des coutures blanches entre territoires, jamais de contours noirs.
 - Une seule linéale de travail, chiffres tabulaires partout ; noms de territoires en capitales espacées.
@@ -165,14 +165,14 @@ Le système refuse le défaut de la catégorie : pas de fond de carte gris, pas 
 
 ## Colors
 
-Une palette d'archive : bleu de Prusse pour l'outillage, carmin pour la donnée, encre brun-noir sur papier blanc froid.
+Une palette d'archive : vert sapin pour l'outillage, carmin pour la donnée, encre brun-noir sur papier blanc froid.
 
 ### Primary
 
-- **Bleu de Prusse** (prussian) : la seule couleur du chrome. Bandeau supérieur, contrôles du bandeau, bouton lecture, curseur et année du défilement, lien, anneau de focus, tracé de la sélection sur la carte, limites du niveau parent (à 55 % d'opacité), curseur du graphique.
-- **Prusse profond** (prussian-deep) : survol des options et du sélecteur dans le bandeau.
-- **Trait de Prusse** (prussian-line) : bordure du contrôle segmenté, du sélecteur et du menu mobile ; soulignement des liens au repos.
-- **Blanc sur Prusse** (on-prussian) et **Bleu-gris sur Prusse** (on-prussian-soft) : texte du bandeau, actif et inactif.
+- **Vert sapin** (sapin) : la seule couleur du chrome, complémentaire du carmin, le vert des bois et des prés sur les cartes anciennes. Il a remplacé le bleu de Prusse (#1f3a5f) du premier jet, le 09/11/2026. Bandeau supérieur, contrôles du bandeau, bouton lecture, curseur et année du défilement, lien, anneau de focus, tracé de la sélection et limites du niveau parent sur la carte, valeur et coche du sélecteur d'indicateur, curseur du graphique.
+- **Sapin profond** (sapin-deep) : survol des options et du sélecteur dans le bandeau.
+- **Trait de sapin** (sapin-line) : bordure du contrôle segmenté, du sélecteur et du menu mobile ; soulignement des liens au repos.
+- **Blanc sur sapin** (on-sapin) et **Vert pâle sur sapin** (on-sapin-soft) : texte du bandeau, actif et inactif.
 
 ### Secondary
 
@@ -194,9 +194,9 @@ Une palette d'archive : bleu de Prusse pour l'outillage, carmin pour la donnée,
 
 ### Named Rules
 
-**The Data Owns Colour Rule.** Le carmin et son lavis ne servent qu'à la donnée. Aucun bouton, aucun état, aucune décoration ne prend du carmin ; le chrome reste Prusse, encre et blanc.
+**The Data Owns Colour Rule.** Le carmin et son lavis ne servent qu'à la donnée. Aucun bouton, aucun état, aucune décoration ne prend du carmin ; le chrome reste sapin, encre et blanc.
 
-**The Paper Seam Rule.** Les territoires se séparent par des coutures blanches (0,8 à 2px selon le zoom, 0,3 à 1px pour les communes), jamais par des contours sombres. Seuls le parent (Prusse à 55 %), le survol (encre, 1,5px) et la sélection (Prusse, 3px) tracent une ligne colorée.
+**The Paper Seam Rule.** Les territoires se séparent par des coutures blanches (0,8 à 2px selon le zoom, 0,3 à 1px pour les communes), jamais par des contours sombres. Les limites du niveau parent sont un trait fin de sapin à 85 % (0,9 à 2px selon le zoom), posé sur les coutures et qui dessine aussi les côtes. Les régions étant la fusion des départements simplifiés, ce trait tombe exactement sur les coutures. Seuls le survol (encre, 1,5px) et la sélection (sapin, 3px) tracent une ligne colorée.
 
 **The Cool Paper Rule.** Le fond est blanc froid, jamais crème ni beige.
 
@@ -211,7 +211,7 @@ Une palette d'archive : bleu de Prusse pour l'outillage, carmin pour la donnée,
 
 - **Display** (700, 46px, 1,05, -0,01em ; 36px sur téléphone) : la valeur principale de la fiche, en carmin, unité à 26px.
 - **Headline** (700, 30px, 1,1, 0,04em, capitales ; 24px sur téléphone) : le nom du territoire dans la fiche.
-- **Year** (700, 30px, 1 ; 24px sur téléphone) : l'année courante du défilement, en bleu de Prusse.
+- **Year** (700, 30px, 1 ; 24px sur téléphone) : l'année courante du défilement, en vert sapin.
 - **Title** (700, 17px) : titre de la légende (indicateur, puis niveau en encre douce).
 - **Body** (400, 16px, 1,4) : texte courant, champ de recherche, phrase sous la valeur.
 - **Control** (600, 15px) : sélecteur d'indicateur, option active du segmenté ; tableaux de la fiche à 15px.
@@ -240,7 +240,7 @@ Points de rupture :
 
 ## Elevation & Depth
 
-Le système est plat. Il n'y a aucune ombre portée : la profondeur se lit par superposition de planches blanches bordées d'un filet sur la carte, et par l'ordre d'empilement (carte, légende, fiche, bandeau). Les ombres par défaut des contrôles MapLibre sont explicitement supprimées et remplacées par un filet. Le seul `box-shadow` du système est un anneau de 1px en bleu de Prusse autour du curseur du défilement, qui fait office de filet.
+Le système est plat. Il n'y a aucune ombre portée : la profondeur se lit par superposition de planches blanches bordées d'un filet sur la carte, et par l'ordre d'empilement (carte, légende, fiche, bandeau). Les ombres par défaut des contrôles MapLibre sont explicitement supprimées et remplacées par un filet. Le seul `box-shadow` du système est un anneau de 1px en vert sapin autour du curseur du défilement, qui fait office de filet.
 
 ### Named Rules
 
@@ -256,17 +256,31 @@ Les icônes sont des tracés au trait dessinés pour le projet : grille 24, affi
 
 ### Bandeau
 
-Le seul aplat de couleur du chrome. Fond bleu de Prusse, texte blanc ; l'anneau de focus y passe en blanc.
+Le seul aplat de couleur du chrome. Fond vert sapin, texte blanc ; l'anneau de focus y passe en blanc.
 
 ### Contrôle segmenté (niveaux)
 
-- **Forme :** cadre en trait de Prusse, rayon 4px, 2px de jeu ; options à 2px de rayon, 6px 12px.
-- **États :** inactif en bleu-gris sur Prusse ; survol en Prusse profond et blanc ; actif en blanc avec texte Prusse, graisse 600. Transitions de 160ms.
+- **Forme :** cadre en trait de sapin, rayon 4px, 2px de jeu ; options à 2px de rayon, 6px 12px.
+- **États :** inactif en vert pâle sur sapin ; survol en sapin profond et blanc ; actif en blanc avec texte sapin, graisse 600. Transitions de 160ms.
 - **Téléphone :** les options se partagent la largeur, à 14px.
 
 ### Sélecteur d'indicateur
 
-Liste native restylée : fond Prusse, bordure trait de Prusse, rayon 4px, chevron dessiné en blanc à droite, texte 15px/600 ; survol en Prusse profond. Les options s'affichent en encre sur blanc.
+Bouton planche blanche dans le bandeau, 44px de haut, au moins 210px de large : petite étiquette « Indicateur » en 12px encre douce au-dessus de la valeur en 17px/700 sapin, chevron sapin à droite ; survol en fond froid. Il ouvre une liste (listbox) blanche à filet appuyé, sans ombre, en deux groupes séparés d'un filet (« Population » : population, densité, superficie ; « État civil » : naissances, décès, natalité, mortalité). Chaque option : nom en 15px/600, précision en 13px encre douce, coche sapin sur l'option courante, fond froid sur l'option active. Clavier : flèches, Début, Fin, Entrée, Échap. Sur téléphone, le bouton prend toute la largeur du panneau du menu.
+
+### Fond et noms de lieux
+
+Fond « Carte » par défaut : un monde discret tiré d'OpenFreeMap (OpenStreetMap), terres #eceef1, mer #d6e1ec, frontières des pays en #a9b2bd, sans routes ; les pays voisins et leurs villes sont nommés en gris #6c7f94 (les noms des micro-États, qui tomberaient sur le lavis, sont retirés). La France est couverte par le lavis ; ses noms viennent de nos données (`shapes/places.json` : chefs-lieux et communes de 5 000 habitants et plus), en encre avec un halo blanc, par paliers : chefs-lieux de région et villes de 200 000 habitants dès le zoom 4, préfectures et villes de 50 000 dès 5,5, puis 20 000 dès 7 et le reste dès 8,5. Les villes d'OpenStreetMap passent sous le lavis, qui cache les françaises.
+
+Bascule à la Google Maps au-dessus des boutons de caméra (en haut à droite sur téléphone) : une vignette de 64px qui montre l'autre fond (« Photos » ou « Carte ») ; un clic bascule, le choix se garde dans l'URL (`?fond=photo`). Sur les photos aériennes IGN, le lavis tombe à 55 % d'opacité et les limites du niveau parent passent en blanc, plus épaisses. Plan IGN et relief ont été essayés et retirés.
+
+### Icône du site
+
+Une planche cadastrale sur fond vert sapin : trois parcelles lavées du plus clair au plus foncé (#efc9ce, #cd6f7f, #8c2440), cernées et séparées de blanc. Source `web/public/favicon.svg` (onglets) ; `favicon.ico` (16, 32, 48 px, le 16 px sans les coutures intérieures), `apple-touch-icon.png` (180 px) et les icônes du manifeste (192, 512, et une version maskable à marge plus large) sont des rendus de ce même dessin, plein cadre pour les écrans d'accueil. Couleur de thème : vert sapin.
+
+### Boutons de caméra
+
+Un seul groupe en bas à droite de la carte : zoomer, dézoomer, voir toute la France (icône de cadre avec un point central), boutons de 36px en encre, fond froid au survol. « Voir toute la France » recadre la métropole et la Corse à côté de la légende et de la fiche. Sur téléphone, seul ce dernier bouton reste (le zoom se fait au pincement).
 
 ### Recherche (combobox)
 
@@ -276,8 +290,8 @@ Liste native restylée : fond Prusse, bordure trait de Prusse, rayon 4px, chevro
 ### Planche de légende
 
 - **Surface :** blanche, filet, rayon 4px, sans ombre.
-- **Contenu :** titre (indicateur · niveau), unité, rampe de cases jointives (18px, 2px d'écart) colorées par le lavis, extrémités à la plus petite et à la plus grande valeur du niveau (« Moins » et « Plus » si les bornes manquent), au centre le nom du territoire survolé ou sélectionné suivi des bornes de sa classe en encre douce ; sa case est marquée d'un contour encre de 2px et grandit verticalement (×1,35), chaque case donne ses bornes au survol. Pied : pastille « Sans donnée » et nombre de classes.
-- **Défilement des années :** sous un filet, bouton lecture rond, curseur à piste fine et poignée Prusse cerclée de blanc, bornes de la série en 13px, année en grand chiffre Prusse. Un pas toutes les 650ms.
+- **Contenu :** titre (indicateur · niveau), unité, rampe de cases jointives (18px, 2px d'écart) colorées par le lavis, extrémités à la plus petite et à la plus grande valeur du niveau (« Moins » et « Plus » si les bornes manquent), au centre le nom du territoire survolé ou sélectionné suivi des bornes de sa classe en encre douce ; sa case est marquée d'un contour encre de 2px et grandit verticalement (×1,35), chaque case donne ses bornes au survol. Pied : pastille « Sans donnée ».
+- **Défilement des années :** sous un filet, bouton lecture rond, curseur à piste fine et poignée sapin cerclée de blanc, bornes de la série en 13px, année en grand chiffre sapin. Un pas toutes les 650ms.
 
 ### Fiche
 
@@ -288,7 +302,7 @@ Liste native restylée : fond Prusse, bordure trait de Prusse, rayon 4px, chevro
 
 ### Graphique historique
 
-Axe temporel vrai : les recensements sont placés à leur date, et un écart de plus de 12 ans (1936 à 1954) coupe la courbe pour que la lacune se voie. Ligne carmin de 2px, aire en teinte carmin, points de 1,6px, grille des décennies en filet, curseur pointillé en Prusse, point courant blanc cerclé de Prusse.
+Axe temporel vrai : les recensements sont placés à leur date, et un écart de plus de 12 ans (1936 à 1954) coupe la courbe pour que la lacune se voie. Ligne carmin de 2px, aire en teinte carmin, points de 1,6px, grille des décennies en filet, curseur pointillé en sapin, point courant blanc cerclé de sapin.
 
 ### Info-bulle de survol
 
@@ -296,7 +310,7 @@ Pastille encre, texte blanc 14px/600 en capitales espacées (0,06em), rayon 4px,
 
 ### Liens et boutons-icônes
 
-Lien : texte Prusse, soulignement de 1px décalé de 3px en trait de Prusse, plein au survol. Bouton-icône : 36px, blanc, icône en encre douce, fond froid et encre au survol.
+Lien : texte sapin, soulignement de 1px décalé de 3px en trait de sapin, plein au survol. Bouton-icône : 36px, blanc, icône en encre douce, fond froid et encre au survol.
 
 ## Do's and Don'ts
 
@@ -304,7 +318,7 @@ Lien : texte Prusse, soulignement de 1px décalé de 3px en trait de Prusse, ple
 
 - **Do** réserver le carmin et le lavis aux valeurs : carte, valeur de la fiche, courbe, ligne courante.
 - **Do** tirer toute couleur de classe de `washAt()` dans `palette.ts`, pour que la carte et la légende restent identiques quel que soit le nombre de classes publiées.
-- **Do** séparer les territoires par des coutures blanches et tracer la sélection en bleu de Prusse (3px), le survol à l'encre (1,5px).
+- **Do** séparer les territoires par des coutures blanches et tracer la sélection en vert sapin (3px), le survol à l'encre (1,5px).
 - **Do** détacher les surfaces par un filet de 1px et garder un rayon de 4px, feuille mobile comprise.
 - **Do** montrer une valeur absente comme absente (gris « Sans donnée » sur la carte, « Pas de donnée » dans la fiche), jamais comme la classe la plus faible ni comme zéro.
 - **Do** placer toute série temporelle sur un axe de temps vrai et laisser les lacunes de recensement visibles.
@@ -315,7 +329,7 @@ Lien : texte Prusse, soulignement de 1px décalé de 3px en trait de Prusse, ple
 - **Don't** ajouter d'ombre portée, de flou ou de dégradé décoratif ; seul le filet sépare.
 - **Don't** utiliser de fond crème ou beige : le fond est blanc froid.
 - **Don't** introduire de thème sombre : la carte est claire uniquement, par direction.
-- **Don't** colorer le chrome en dehors du bleu de Prusse, de l'encre et du blanc.
+- **Don't** colorer le chrome en dehors du vert sapin, de l'encre et du blanc.
 - **Don't** tracer de contours noirs ou gris foncé entre territoires, ni poser de fond de carte gris.
 - **Don't** composer de cartes KPI, de tuiles ou de barre latérale de réglages : les chiffres vont dans des tableaux à filets.
 - **Don't** utiliser de sur-titres ou d'étiquettes en capitales espacées au-dessus des titres ; les capitales sont réservées aux noms propres.
