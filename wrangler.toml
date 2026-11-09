@@ -10,3 +10,8 @@ routes = [{ pattern = "maps.gaetanraynaud.fr", custom_domain = true }]
 [assets]
 directory = "./web/dist"
 not_found_handling = "single-page-application"
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+persist = true
