@@ -134,3 +134,30 @@ export type Commune = DataNode<CommunePopulations> & {
   /** Centre of the commune. */
   center?: Point
 }
+
+/**
+ * `shapes/{regions,departements}.json`: GeoJSON FeatureCollection of the simplified outlines,
+ * one feature per territory. The regions are the union of their departements, so both share
+ * exactly the same borders. Coordinates are WGS84 `[lon, lat]`, 4 decimals.
+ */
+export type ShapeProperties = { code: string; nom: string }
+export type Shapes = {
+  type: 'FeatureCollection'
+  features: {
+    type: 'Feature'
+    properties: ShapeProperties
+    geometry: { type: 'Polygon' | 'MultiPolygon'; coordinates: unknown }
+  }[]
+}
+
+/**
+ * `shapes/places.json`: GeoJSON FeatureCollection of points, the communes named on the map
+ * (every chef-lieu, and the communes above a population threshold), at their centre.
+ * `chefLieu`: 2 for a region, 1 for a departement, 0 otherwise. `population` is the latest
+ * census value, used to size and order the names.
+ */
+export type PlaceProperties = { code: string; nom: string; population: number; chefLieu: 0 | 1 | 2 }
+export type Places = {
+  type: 'FeatureCollection'
+  features: { type: 'Feature'; properties: PlaceProperties; geometry: { type: 'Point'; coordinates: [number, number] } }[]
+}

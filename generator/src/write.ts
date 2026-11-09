@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import pLimit from 'p-limit'
-import { dataPaths, jenksKeys, jenksKinds, type Common } from '@gra-maps/shared'
+import { dataPaths, jenksKeys, jenksKinds, shapeLevels, type Common } from '@gra-maps/shared'
 import type { Data, Mode } from './model.ts'
 import { OUT_DIR } from './paths.ts'
 
@@ -17,6 +17,8 @@ function* outputFiles(data: Data): Generator<OutFile> {
   for (const d of data.departements.values()) yield { key: dataPaths.departement(d.id), content: d }
   for (const c of data.communes.values()) yield { key: dataPaths.commune(c.id), content: c }
   if (data.jenks) for (const kind of jenksKinds) yield { key: dataPaths.jenks(kind), content: data.jenks[jenksKeys[kind]] }
+  if (data.shapes) for (const level of shapeLevels) yield { key: dataPaths.shapes(level), content: data.shapes[level] }
+  if (data.places) yield { key: dataPaths.places(), content: data.places }
   const common: Common = {
     regions: [...data.regions.keys()],
     departements: [...data.departements.keys()],

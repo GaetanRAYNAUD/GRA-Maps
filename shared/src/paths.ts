@@ -25,4 +25,11 @@ export const dataPaths = {
   departement: (id: string) => `departements/${id}.json`,
   commune: (id: string) => `communes/${id}.json`,
   jenks: (kind: JenksKind) => `jenks/${kind}.json`,
+  /** Simplified outlines (GeoJSON) drawn on the map for the regions and the departements. */
+  shapes: (level: ShapeLevel) => `shapes/${level}.json`,
+  /** Place names drawn over the map: the main communes (GeoJSON points). */
+  places: () => 'shapes/places.json',
 }
+
+export const shapeLevels = ['regions', 'departements'] as const
+export type ShapeLevel = (typeof shapeLevels)[number]

@@ -12,6 +12,7 @@ describe('pipeline', () => {
       'deathStep',
       'pointsStep',
       'internStep',
+      'shapesStep',
     ])
   })
 })

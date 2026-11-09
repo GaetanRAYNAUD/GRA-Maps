@@ -42,9 +42,33 @@ changements du COG (`v_mvt_commune_AAAA.csv`, publié avec chaque millésime) :
 Au millésime 2026, le fichier des changements ne contient aucune fusion ni création au
 1er janvier 2026 : pas de trou entre les populations (géographie 2025) et le COG 2026.
 
-## Frontières affichées : tuiles data.gouv.fr
+## Frontières affichées
 
-La carte utilise les tuiles vectorielles de data.gouv.fr :
+### Régions et départements : nos contours simplifiés
+
+Depuis le 09/11/2026, les régions et les départements sont dessinés depuis
+`shapes/regions.json` et `shapes/departements.json`, produits par l'étape `09-shapes` du
+générateur :
+
+- source : contours Etalab des départements, précision 100 m
+  (`contours-administratifs/latest/geojson/departements-100m.geojson.gz`) ;
+- simplification avec mapshaper (Visvalingam pondéré, 10 % des points gardés, topologie
+  conservée), coordonnées à 4 décimales ;
+- régions = fusion de leurs départements : les deux niveaux ont exactement les mêmes frontières.
+
+La même étape écrit `shapes/places.json`, les noms de lieux dessinés sur la carte : chefs-lieux
+et communes d'au moins 5 000 habitants, au centre de la commune (geo.api.gouv.fr).
+
+Le fond du monde (terres, mer, pays voisins) vient d'OpenFreeMap (OpenStreetMap, sans clé).
+
+Pourquoi : les tuiles gardent le détail du 5 m à toutes les échelles et simplifient chaque
+niveau à part. Vue de loin, les contours « bavaient » et le trait des régions ne tombait pas sur
+les coutures des départements.
+
+### Communes : tuiles data.gouv.fr
+
+Les communes (et les limites de départements dessinées autour d'elles) viennent toujours des
+tuiles vectorielles de data.gouv.fr :
 `https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json` (couches `regions`,
 `departements`, `communes`, identifiants `code`). Elles sont générées à partir des contours
 administratifs d'Etalab (version 5 m).

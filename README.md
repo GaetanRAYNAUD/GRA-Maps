@@ -44,14 +44,15 @@ Dans les deux modes, les fichiers de sortie qui ne sont plus produits sont suppr
 
 ## Sources des données
 
-| Source                          | Producteur                                                                                          |
-| ------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Régions, départements, communes | INSEE, [code officiel géographique](https://www.insee.fr/fr/information/2560452), dernier millésime |
-| Codes postaux                   | La Poste, base officielle des codes postaux (data-fair `laposte-hexasmal`, fichier `original`)      |
-| Superficies                     | INSEE Melodi `DS_RP_SERIE_HISTORIQUE` (mesure `SUP`, km²)                                           |
-| Populations historiques         | INSEE Melodi `DS_POPULATIONS_HISTORIQUES` (prioritaire), INSEE 3698339 (xlsx, 1876-1962)            |
-| Naissances, décès               | INSEE Melodi `DS_ETAT_CIVIL_NAIS_COMMUNES`, `DS_ETAT_CIVIL_DECES_COMMUNES`                          |
-| Mairies, centre des communes    | [geo.api.gouv.fr](https://geo.api.gouv.fr/communes) (`mairie`, `centre`)                            |
+| Source                          | Producteur                                                                                                                 |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Régions, départements, communes | INSEE, [code officiel géographique](https://www.insee.fr/fr/information/2560452), dernier millésime                        |
+| Codes postaux                   | La Poste, base officielle des codes postaux (data-fair `laposte-hexasmal`, fichier `original`)                             |
+| Superficies                     | INSEE Melodi `DS_RP_SERIE_HISTORIQUE` (mesure `SUP`, km²)                                                                  |
+| Populations historiques         | INSEE Melodi `DS_POPULATIONS_HISTORIQUES` (prioritaire), INSEE 3698339 (xlsx, 1876-1962)                                   |
+| Naissances, décès               | INSEE Melodi `DS_ETAT_CIVIL_NAIS_COMMUNES`, `DS_ETAT_CIVIL_DECES_COMMUNES`                                                 |
+| Mairies, centre des communes    | [geo.api.gouv.fr](https://geo.api.gouv.fr/communes) (`mairie`, `centre`)                                                   |
+| Contours régions, départements  | Etalab, [contours administratifs](https://etalab-datasets.geo.data.gouv.fr/contours-administratifs/) (départements, 100 m) |
 
 Les jeux INSEE Melodi sont décrits par `https://api.insee.fr/melodi/catalog/all` (URL de
 téléchargement, millésime) et `https://api.insee.fr/melodi/range/{id}` (colonnes, codes). Le

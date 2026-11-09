@@ -1,4 +1,5 @@
 import { source } from '../paths.ts'
+import { etalabContours } from './etalab.ts'
 import { geoApiCommunes } from './geo-api.ts'
 import { cogFile, inseePageFile } from './insee-page.ts'
 import { laposte } from './laposte.ts'
@@ -91,6 +92,12 @@ export const sources = {
     'death/DS_ETAT_CIVIL_DECES_COMMUNES.zip',
     'INSEE Melodi, décès annuels par commune',
     melodi('DS_ETAT_CIVIL_DECES_COMMUNES'),
+  ),
+  shapes: def(
+    'shapes',
+    'shapes/departements-100m.geojson.gz',
+    'Etalab, contours administratifs (dernier millésime) : départements, précision 100 m',
+    etalabContours('departements-100m'),
   ),
   points: def('points', 'point/communes.json', 'geo.api.gouv.fr, position des mairies et centre des communes', geoApiCommunes()),
 } satisfies Record<string, Source>

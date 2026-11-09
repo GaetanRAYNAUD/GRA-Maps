@@ -1,4 +1,14 @@
-import { Level, type Commune, type CommunePopulations, type Departement, type Jenks, type Region } from '@gra-maps/shared'
+import {
+  Level,
+  type Commune,
+  type CommunePopulations,
+  type Departement,
+  type Jenks,
+  type Places,
+  type Region,
+  type ShapeLevel,
+  type Shapes,
+} from '@gra-maps/shared'
 
 /**
  * - partial: download only missing sources, write only output files that are
@@ -26,6 +36,10 @@ export type Data = {
   inseeTotals: Map<string, number>
   /** Jenks classes, computed by the last step. */
   jenks?: Jenks
+  /** Simplified outlines of the regions and departements, computed by the shapes step. */
+  shapes?: Record<ShapeLevel, Shapes>
+  /** Communes named on the map, computed by the shapes step. */
+  places?: Places
 }
 
 export const emptyData = (): Data => ({

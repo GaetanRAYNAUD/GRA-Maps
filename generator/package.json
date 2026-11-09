@@ -13,6 +13,7 @@
   "dependencies": {
     "@gra-maps/shared": "*",
     "csv-parse": "^7.0.3",
+    "mapshaper": "^0.7.101",
     "p-limit": "^7.1.0",
     "read-excel-file": "^9.3.14",
     "simple-statistics": "^7.8.0",
