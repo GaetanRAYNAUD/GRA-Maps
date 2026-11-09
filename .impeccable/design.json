@@ -1,0 +1,554 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-09T16:56:21.990Z",
+  "title": "Design System: Cartes de France",
+  "extensions": {
+    "colorMeta": {
+      "prussian": {
+        "role": "primary",
+        "displayName": "Bleu de Prusse",
+        "canonical": "#1f3a5f",
+        "tonalRamp": [
+          "#09111d",
+          "#101d30",
+          "#162943",
+          "#1a3151",
+          "#1f3a5f",
+          "#6d7f97",
+          "#b1bac7",
+          "#e9ebef"
+        ]
+      },
+      "prussian-deep": {
+        "role": "primary",
+        "displayName": "Prusse profond",
+        "canonical": "#162b47",
+        "tonalRamp": [
+          "#070d15",
+          "#0b1624",
+          "#0f1e32",
+          "#13253c",
+          "#162b47",
+          "#687587",
+          "#adb5bf",
+          "#e8eaed"
+        ]
+      },
+      "prussian-line": {
+        "role": "primary",
+        "displayName": "Trait de Prusse",
+        "canonical": "#4f6b8f",
+        "tonalRamp": [
+          "#18202b",
+          "#283648",
+          "#374b64",
+          "#435b7a",
+          "#4f6b8f",
+          "#8d9fb6",
+          "#c1cbd8",
+          "#edf0f4"
+        ]
+      },
+      "on-prussian": {
+        "role": "primary",
+        "displayName": "Blanc sur Prusse",
+        "canonical": "#f4f6f8",
+        "tonalRamp": [
+          "#494a4a",
+          "#7a7b7c",
+          "#abacae",
+          "#cfd1d3",
+          "#f4f6f8",
+          "#f8f9fa",
+          "#fbfcfd",
+          "#fefefe"
+        ]
+      },
+      "on-prussian-soft": {
+        "role": "primary",
+        "displayName": "Bleu-gris sur Prusse",
+        "canonical": "#c5d1e0",
+        "tonalRamp": [
+          "#3b3f43",
+          "#636970",
+          "#8a929d",
+          "#a7b2be",
+          "#c5d1e0",
+          "#d9e1eb",
+          "#ebeff4",
+          "#f9fafc"
+        ]
+      },
+      "carmine": {
+        "role": "secondary",
+        "displayName": "Carmin",
+        "canonical": "#8c2440",
+        "tonalRamp": [
+          "#2a0b13",
+          "#461220",
+          "#62192d",
+          "#771f36",
+          "#8c2440",
+          "#b47183",
+          "#d7b2bc",
+          "#f4e9ec"
+        ]
+      },
+      "carmine-tint": {
+        "role": "secondary",
+        "displayName": "Teinte carmin",
+        "canonical": "#f7e6e8",
+        "tonalRamp": [
+          "#4a4546",
+          "#7c7374",
+          "#ada1a2",
+          "#d2c4c5",
+          "#f7e6e8",
+          "#faeff0",
+          "#fcf6f7",
+          "#fefdfd"
+        ]
+      },
+      "wash-1": {
+        "role": "tertiary",
+        "displayName": "Lavis carmin 1/7",
+        "canonical": "#f7e6e8",
+        "tonalRamp": [
+          "#5f1229",
+          "#8c2440",
+          "#b4425a",
+          "#cd6f7f",
+          "#e1a0aa",
+          "#efc9ce",
+          "#f7e6e8"
+        ]
+      },
+      "wash-2": {
+        "role": "tertiary",
+        "displayName": "Lavis carmin 2/7",
+        "canonical": "#efc9ce",
+        "tonalRamp": [
+          "#5f1229",
+          "#8c2440",
+          "#b4425a",
+          "#cd6f7f",
+          "#e1a0aa",
+          "#efc9ce",
+          "#f7e6e8"
+        ]
+      },
+      "wash-3": {
+        "role": "tertiary",
+        "displayName": "Lavis carmin 3/7",
+        "canonical": "#e1a0aa",
+        "tonalRamp": [
+          "#5f1229",
+          "#8c2440",
+          "#b4425a",
+          "#cd6f7f",
+          "#e1a0aa",
+          "#efc9ce",
+          "#f7e6e8"
+        ]
+      },
+      "wash-4": {
+        "role": "tertiary",
+        "displayName": "Lavis carmin 4/7",
+        "canonical": "#cd6f7f",
+        "tonalRamp": [
+          "#5f1229",
+          "#8c2440",
+          "#b4425a",
+          "#cd6f7f",
+          "#e1a0aa",
+          "#efc9ce",
+          "#f7e6e8"
+        ]
+      },
+      "wash-5": {
+        "role": "tertiary",
+        "displayName": "Lavis carmin 5/7",
+        "canonical": "#b4425a",
+        "tonalRamp": [
+          "#5f1229",
+          "#8c2440",
+          "#b4425a",
+          "#cd6f7f",
+          "#e1a0aa",
+          "#efc9ce",
+          "#f7e6e8"
+        ]
+      },
+      "wash-6": {
+        "role": "tertiary",
+        "displayName": "Lavis carmin 6/7",
+        "canonical": "#8c2440",
+        "tonalRamp": [
+          "#5f1229",
+          "#8c2440",
+          "#b4425a",
+          "#cd6f7f",
+          "#e1a0aa",
+          "#efc9ce",
+          "#f7e6e8"
+        ]
+      },
+      "wash-7": {
+        "role": "tertiary",
+        "displayName": "Lavis carmin 7/7",
+        "canonical": "#5f1229",
+        "tonalRamp": [
+          "#5f1229",
+          "#8c2440",
+          "#b4425a",
+          "#cd6f7f",
+          "#e1a0aa",
+          "#efc9ce",
+          "#f7e6e8"
+        ]
+      },
+      "no-data": {
+        "role": "tertiary",
+        "displayName": "Sans donnée",
+        "canonical": "#e5e9ee",
+        "tonalRamp": [
+          "#454647",
+          "#737577",
+          "#a0a3a7",
+          "#c3c6ca",
+          "#e5e9ee",
+          "#eef1f4",
+          "#f6f7f9",
+          "#fcfdfd"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Fond froid",
+        "canonical": "#f3f5f8",
+        "tonalRamp": [
+          "#494a4a",
+          "#7a7b7c",
+          "#aaacae",
+          "#cfd0d3",
+          "#f3f5f8",
+          "#f7f9fa",
+          "#fbfcfd",
+          "#fefefe"
+        ]
+      },
+      "plate": {
+        "role": "neutral",
+        "displayName": "Planche",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#4d4d4d",
+          "#808080",
+          "#b3b3b3",
+          "#d9d9d9",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Encre",
+        "canonical": "#26231e",
+        "tonalRamp": [
+          "#0b0b09",
+          "#13120f",
+          "#1b1915",
+          "#201e1a",
+          "#26231e",
+          "#72706d",
+          "#b3b2b0",
+          "#e9e9e9"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Encre douce",
+        "canonical": "#5b564e",
+        "tonalRamp": [
+          "#1b1a17",
+          "#2e2b27",
+          "#403c37",
+          "#4d4942",
+          "#5b564e",
+          "#94918c",
+          "#c6c4c1",
+          "#efeeed"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Filet",
+        "canonical": "#dcded8",
+        "tonalRamp": [
+          "#424341",
+          "#6e6f6c",
+          "#9a9b97",
+          "#bbbdb8",
+          "#dcded8",
+          "#e8eae6",
+          "#f3f3f1",
+          "#fcfcfb"
+        ]
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Filet appuyé",
+        "canonical": "#c4c7c0",
+        "tonalRamp": [
+          "#3b3c3a",
+          "#626460",
+          "#898b86",
+          "#a7a9a3",
+          "#c4c7c0",
+          "#d9dbd6",
+          "#eaebe9",
+          "#f9f9f9"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Valeur",
+        "purpose": "Valeur principale de la fiche, en carmin (36px sur téléphone)."
+      },
+      "headline": {
+        "displayName": "Nom de territoire",
+        "purpose": "Nom dans la fiche, capitales espacées (24px sur téléphone)."
+      },
+      "year": {
+        "displayName": "Année",
+        "purpose": "Année courante du défilement, en bleu de Prusse (24px sur téléphone)."
+      },
+      "title": {
+        "displayName": "Titre de légende",
+        "purpose": "Indicateur et niveau en tête de la légende."
+      },
+      "body": {
+        "displayName": "Texte",
+        "purpose": "Texte courant, recherche, phrase de lecture."
+      },
+      "control": {
+        "displayName": "Contrôle",
+        "purpose": "Sélecteur d'indicateur, option active, tableaux."
+      },
+      "label": {
+        "displayName": "Étiquette",
+        "purpose": "Unités, extrémités de rampe, contexte, légende du graphique."
+      },
+      "caption": {
+        "displayName": "Note",
+        "purpose": "En-têtes de tableaux, bornes du curseur, pied de rampe ; 12px pour les crédits."
+      },
+      "wordmark": {
+        "displayName": "Marque",
+        "purpose": "« Cartes de France » dans le bandeau."
+      }
+    },
+    "shadows": [
+      {
+        "name": "thumb-ring",
+        "value": "0 0 0 1px #1f3a5f",
+        "purpose": "Anneau-filet du curseur du défilement ; seul box-shadow du système. Aucune ombre portée."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Courbe unique de toutes les transitions."
+      },
+      {
+        "name": "state",
+        "value": "160ms",
+        "purpose": "Survol et activation des contrôles, marque de classe dans la rampe."
+      },
+      {
+        "name": "controls-shift",
+        "value": "240ms",
+        "purpose": "Décalage des contrôles de carte à l'ouverture de la fiche."
+      },
+      {
+        "name": "panel",
+        "value": "280ms",
+        "purpose": "Entrée de la fiche (glissement 24px) ou de la feuille mobile (40px), dépliage de la feuille."
+      },
+      {
+        "name": "year-step",
+        "value": "650ms",
+        "purpose": "Pas du défilement automatique des années."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "1ms",
+        "purpose": "Toutes les animations et transitions sous prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "max-width: 767px"
+      },
+      {
+        "name": "narrow",
+        "value": "768px to 1060px"
+      }
+    ],
+    "map": {
+      "ground": "#f3f5f8",
+      "fill": "interpolate linear sur feature-state t (position de classe 0..1) entre les 7 jalons wash-1..wash-7 ; no-data si t absent",
+      "seams": {
+        "color": "#ffffff",
+        "width": "zoom 4 -> 10 : 0.8 -> 2px (communes 0.3 -> 1px)"
+      },
+      "parent": {
+        "color": "#1f3a5f",
+        "opacity": 0.55,
+        "width": "zoom 4 -> 10 : 0.6 -> 1.4px"
+      },
+      "hover": {
+        "color": "#26231e",
+        "width": "1.5px"
+      },
+      "selection": {
+        "color": "#1f3a5f",
+        "width": "3px"
+      },
+      "classes": "Jenks publiés : 17 classes (départements, communes), 13 (régions)"
+    }
+  },
+  "components": [
+    {
+      "name": "Bandeau",
+      "kind": "nav",
+      "refersTo": "band",
+      "description": "Bandeau bleu de Prusse : marque, niveaux, indicateur. Seul aplat de couleur du chrome.",
+      "html": "<header class=\"ds-band\"><span class=\"ds-brand\">Cartes de France</span><div class=\"ds-seg\"><button>Régions</button><button>Départements</button><button class=\"is-on\">Communes</button></div></header>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-band { display:flex; align-items:center; gap:24px; min-height:60px; padding:0 24px; background:var(--prussian); color:var(--on-prussian); font-family: var(--font); font-variant-numeric: tabular-nums; } .ds-brand { font-weight:700; font-size:15px; letter-spacing:0.14em; text-transform:uppercase; } .ds-seg { display:flex; margin-left:auto; border:1px solid var(--prussian-line); border-radius:var(--radius); padding:2px; gap:2px; } .ds-seg button { border:0; border-radius:2px; background:none; padding:6px 12px; font:inherit; font-size:15px; color:var(--on-prussian-soft); cursor:pointer; transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out); } .ds-seg button:hover { color:var(--on-prussian); background:var(--prussian-deep); } .ds-seg button.is-on { background:var(--on-prussian); color:var(--prussian); font-weight:600; } .ds-seg button:focus-visible { outline:2px solid var(--on-prussian); outline-offset:2px; }"
+    },
+    {
+      "name": "Sélecteur d'indicateur",
+      "kind": "input",
+      "refersTo": "select-band",
+      "description": "Liste native sur le bandeau, fond Prusse, chevron blanc.",
+      "html": "<div class=\"ds-wrap\"><select class=\"ds-select\"><option>Population</option><option>Densité</option><option>Naissances</option></select></div>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-wrap { background:var(--prussian); padding:12px; } .ds-select { appearance:none; border:1px solid var(--prussian-line); border-radius:var(--radius); background:var(--prussian) url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f4f6f8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\") no-repeat right 8px center / 18px; padding:7px 34px 7px 12px; font-family:var(--font); font-size:15px; font-weight:600; color:var(--on-prussian); cursor:pointer; } .ds-select:hover { background-color:var(--prussian-deep); } .ds-select:focus-visible { outline:2px solid var(--on-prussian); outline-offset:2px; } .ds-select option { color:var(--ink); background:var(--plate); }"
+    },
+    {
+      "name": "Recherche",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Champ blanc de 38px posé sur le bandeau, loupe en encre douce, anneau blanc au focus.",
+      "html": "<div class=\"ds-wrap\"><label class=\"ds-search\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13ZM15.5 15.5 20 20\"/></svg><input type=\"search\" placeholder=\"Commune, adresse…\" aria-label=\"Rechercher\"></label></div>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-wrap { background:var(--prussian); padding:12px; } .ds-search { display:flex; align-items:center; gap:8px; width:min(360px,100%); height:38px; padding:0 12px; border-radius:var(--radius); background:var(--plate); color:var(--ink-soft); } .ds-search:focus-within { outline:2px solid var(--on-prussian); outline-offset:2px; } .ds-search input { flex:1; min-width:0; border:0; outline:0; background:none; color:var(--ink); font-family:var(--font); font-size:16px; } .ds-search input::placeholder { color:var(--ink-soft); }"
+    },
+    {
+      "name": "Planche de légende",
+      "kind": "custom",
+      "refersTo": "legend-plate",
+      "description": "Légende flottante : rampe du lavis carmin, classe marquée, défilement des années avec l'année en grand chiffre Prusse.",
+      "html": "<section class=\"ds-legend\"><div class=\"ds-head\"><strong>Population<span> · Communes</span></strong><small>hab.</small></div><div class=\"ds-ramp\"><i style=\"background:#f7e6e8\"></i><i style=\"background:#efc9ce\"></i><i style=\"background:#e1a0aa\"></i><i style=\"background:#cd6f7f\" class=\"is-marked\"></i><i style=\"background:#b4425a\"></i><i style=\"background:#8c2440\"></i><i style=\"background:#5f1229\"></i></div><div class=\"ds-ends\"><span>Moins</span><b>Épinal</b><span>Plus</span></div><div class=\"ds-years\"><button class=\"ds-play\" aria-label=\"Faire défiler les années\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 5.5v13l10-6.5-10-6.5Z\"/></svg></button><div class=\"ds-track\"><span></span></div><output class=\"ds-year\">2023</output></div></section>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-legend { width:440px; padding:16px 24px; background:var(--plate); border:1px solid var(--hairline); border-radius:var(--radius); color:var(--ink); font-family: var(--font); font-variant-numeric: tabular-nums; } .ds-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; } .ds-head strong { font-size:17px; } .ds-head strong span { font-weight:400; color:var(--ink-soft); } .ds-head small { font-size:14px; color:var(--ink-soft); } .ds-ramp { display:flex; height:18px; gap:2px; } .ds-ramp i { flex:1; border-radius:1px; transition: transform 160ms var(--ease-out); } .ds-ramp i.is-marked { outline:2px solid var(--ink); outline-offset:1px; transform:scaleY(1.35); } .ds-ends { display:flex; justify-content:space-between; margin-top:8px; font-size:14px; color:var(--ink-soft); } .ds-ends b { color:var(--ink); font-weight:600; } .ds-years { display:flex; align-items:center; gap:16px; margin-top:16px; padding-top:16px; border-top:1px solid var(--hairline); } .ds-play { display:grid; place-items:center; width:40px; height:40px; flex:none; border:1px solid var(--prussian); border-radius:50%; background:var(--plate); color:var(--prussian); cursor:pointer; transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out); } .ds-play:hover { background:var(--prussian); color:var(--on-prussian); } .ds-play:focus-visible { outline:2px solid var(--prussian); outline-offset:2px; } .ds-track { flex:1; position:relative; height:4px; border-radius:2px; background:var(--hairline-strong); } .ds-track span { position:absolute; right:0; top:-8px; width:20px; height:20px; box-sizing:border-box; border-radius:50%; border:3px solid var(--plate); background:var(--prussian); box-shadow:0 0 0 1px var(--prussian); } .ds-year { font-size:30px; line-height:1; font-weight:700; color:var(--prussian); }"
+    },
+    {
+      "name": "Tête de fiche et rangs",
+      "kind": "card",
+      "refersTo": "fiche-panel",
+      "description": "Fiche : nom en capitales espacées, valeur carmin, tableau des rangs à filets. Pas de carte KPI.",
+      "html": "<article class=\"ds-fiche\"><h2>Épinal</h2><p class=\"ds-ctx\">Commune · <a href=\"#\">Vosges (88)</a> · 88000</p><p class=\"ds-value\">32 251</p><p class=\"ds-phrase\">habitants en 2023</p><table class=\"ds-ranks\"><thead><tr><td></td><th>Rang</th><th>Part</th></tr></thead><tbody><tr><th>France</th><td class=\"r\"><b>239<sup>e</sup></b> <span>/ 34 746</span></td><td class=\"s\">&lt; 0,1 %</td></tr><tr><th>Vosges</th><td class=\"r\"><b>1<sup>re</sup></b> <span>/ 506</span></td><td class=\"s\">9 %</td></tr></tbody></table></article>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-fiche { width:420px; padding:32px; background:var(--plate); border-left:1px solid var(--hairline); color:var(--ink); font-family: var(--font); font-variant-numeric: tabular-nums; } .ds-fiche h2 { margin:0; font-size:30px; line-height:1.1; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; } .ds-ctx { margin:8px 0 0; font-size:15px; color:var(--ink-soft); } .ds-ctx a { color:var(--prussian); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px; text-decoration-color:var(--prussian-line); } .ds-ctx a:hover { text-decoration-color:currentColor; } .ds-value { margin:24px 0 0; font-size:46px; line-height:1.05; font-weight:700; letter-spacing:-0.01em; color:var(--carmine); } .ds-phrase { margin:4px 0 0; color:var(--ink-soft); } .ds-ranks { width:100%; margin-top:24px; border-collapse:collapse; font-size:15px; } .ds-ranks th, .ds-ranks td { padding:9px 0; border-top:1px solid var(--hairline); text-align:left; font-weight:400; } .ds-ranks thead th, .ds-ranks thead td { border-top:0; padding:0 0 4px; font-size:13px; color:var(--ink-soft); text-align:right; } .ds-ranks .r, .ds-ranks .s { text-align:right; white-space:nowrap; } .ds-ranks .r span, .ds-ranks .s { color:var(--ink-soft); } .ds-ranks sup { font-size:0.7em; }"
+    },
+    {
+      "name": "Info-bulle de survol",
+      "kind": "custom",
+      "refersTo": "map-tip",
+      "description": "Nom du territoire survolé, pastille encre, capitales espacées.",
+      "html": "<span class=\"ds-tip\">Épinal</span>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-tip { display:inline-block; padding:4px 8px; background:var(--ink); color:var(--plate); border-radius:var(--radius); font-family:var(--font); font-size:14px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }"
+    },
+    {
+      "name": "Bouton-icône",
+      "kind": "button",
+      "refersTo": "icon-button",
+      "description": "Bouton 36px de fermeture de la fiche, icône au trait.",
+      "html": "<button class=\"ds-icon-btn\" aria-label=\"Fermer\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6 6 18\"/></svg></button>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-icon-btn { display:grid; place-items:center; width:36px; height:36px; border:0; border-radius:var(--radius); background:var(--plate); color:var(--ink-soft); cursor:pointer; } .ds-icon-btn:hover { background:var(--ground); color:var(--ink); } .ds-icon-btn:focus-visible { outline:2px solid var(--prussian); outline-offset:2px; }"
+    },
+    {
+      "name": "Lien",
+      "kind": "button",
+      "refersTo": "link",
+      "description": "Lien Prusse, soulignement fin décalé, plein au survol.",
+      "html": "<button class=\"ds-link\">Voir les communes</button>",
+      "css": ":host { --prussian:#1f3a5f; --prussian-deep:#162b47; --prussian-line:#4f6b8f; --on-prussian:#f4f6f8; --on-prussian-soft:#c5d1e0; --ground:#f3f5f8; --plate:#ffffff; --ink:#26231e; --ink-soft:#5b564e; --hairline:#dcded8; --hairline-strong:#c4c7c0; --carmine:#8c2440; --carmine-tint:#f7e6e8; --radius:4px; --font:'Source Sans 3 Variable','Source Sans 3',system-ui,sans-serif; --ease-out:cubic-bezier(0.16,1,0.3,1); } .ds-link { border:0; padding:0; background:none; font-family:var(--font); font-size:14px; color:var(--prussian); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px; text-decoration-color:var(--prussian-line); cursor:pointer; } .ds-link:hover { text-decoration-color:currentColor; } .ds-link:focus-visible { outline:2px solid var(--prussian); outline-offset:2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Le plan cadastral lavé",
+    "overview": "La carte est une planche du cadastre napoléonien : chaque territoire est lavé au carmin, comme le plan colorié à la main que chaque commune garde encore dans ses archives, et la classe se lit à la profondeur du lavis. Tout le reste est l'outillage du géomètre : un bandeau bleu de Prusse, de l'encre, du papier blanc, des filets fins. La carte occupe tout l'écran ; la légende et la fiche sont des planches posées dessus, pas des widgets.\n\nLe système refuse le défaut de la catégorie : pas de fond de carte gris, pas de barre latérale de réglages, pas de rampe bleue, pas de cartes KPI. La densité vient des tableaux à filets (rangs, parts, tous les indicateurs), pas de tuiles. Le monde est clair uniquement, par direction : il n'y a pas de thème sombre (`color-scheme: light`).",
+    "keyCharacteristics": [
+      "La couleur est réservée aux données : lavis carmin sur la carte, valeur carmin dans la fiche, courbe carmin. Le chrome n'utilise que le bleu de Prusse, l'encre et le blanc.",
+      "Fond blanc froid, délibérément pas crème.",
+      "Des coutures blanches entre territoires, jamais de contours noirs.",
+      "Une seule linéale de travail, chiffres tabulaires partout ; noms de territoires en capitales espacées.",
+      "Aucune ombre au-delà d'un filet ; rayon de 4px, feuille mobile comprise."
+    ],
+    "rules": [
+      {
+        "name": "The Data Owns Colour Rule",
+        "body": "Le carmin et son lavis ne servent qu'à la donnée. Aucun bouton, aucun état, aucune décoration ne prend du carmin ; le chrome reste Prusse, encre et blanc.",
+        "section": "colors"
+      },
+      {
+        "name": "The Paper Seam Rule",
+        "body": "Les territoires se séparent par des coutures blanches (0,8 à 2px selon le zoom, 0,3 à 1px pour les communes), jamais par des contours sombres. Seuls le parent (Prusse à 55 %), le survol (encre, 1,5px) et la sélection (Prusse, 3px) tracent une ligne colorée.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cool Paper Rule",
+        "body": "Le fond est blanc froid, jamais crème ni beige.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cadastre Lettering Rule",
+        "body": "Les capitales espacées sont réservées aux noms propres : nom du territoire (fiche et info-bulle, 0,04 à 0,06em) et marque (0,14em). Jamais pour une étiquette de section ou un sur-titre.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "`font-variant-numeric: tabular-nums` est posé sur le corps du document ; toute nouvelle surface en hérite.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hairline-Only Rule",
+        "body": "Une surface se détache par un filet de 1px (hairline ou hairline-strong), jamais par une ombre, un flou ou un dégradé.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do réserver le carmin et le lavis aux valeurs : carte, valeur de la fiche, courbe, ligne courante.",
+      "Do tirer toute couleur de classe de `washAt()` dans `palette.ts`, pour que la carte et la légende restent identiques quel que soit le nombre de classes publiées.",
+      "Do séparer les territoires par des coutures blanches et tracer la sélection en bleu de Prusse (3px), le survol à l'encre (1,5px).",
+      "Do détacher les surfaces par un filet de 1px et garder un rayon de 4px, feuille mobile comprise.",
+      "Do montrer une valeur absente comme absente (gris « Sans donnée » sur la carte, « Pas de donnée » dans la fiche), jamais comme la classe la plus faible ni comme zéro.",
+      "Do placer toute série temporelle sur un axe de temps vrai et laisser les lacunes de recensement visibles.",
+      "Do écrire les noms de territoires en capitales espacées et les chiffres en tabulaires."
+    ],
+    "donts": [
+      "Don't ajouter d'ombre portée, de flou ou de dégradé décoratif ; seul le filet sépare.",
+      "Don't utiliser de fond crème ou beige : le fond est blanc froid.",
+      "Don't introduire de thème sombre : la carte est claire uniquement, par direction.",
+      "Don't colorer le chrome en dehors du bleu de Prusse, de l'encre et du blanc.",
+      "Don't tracer de contours noirs ou gris foncé entre territoires, ni poser de fond de carte gris.",
+      "Don't composer de cartes KPI, de tuiles ou de barre latérale de réglages : les chiffres vont dans des tableaux à filets.",
+      "Don't utiliser de sur-titres ou d'étiquettes en capitales espacées au-dessus des titres ; les capitales sont réservées aux noms propres.",
+      "Don't utiliser de police d'icônes ni de glyphes : les icônes sont des tracés SVG au trait de 1,8."
+    ]
+  }
+}

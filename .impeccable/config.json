@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-09T16:44:26.560Z",
+        "reason": "Claude: canon card sketch deliberately shows the category default look (Inter) on the decision page"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-09T16:57:31.219Z",
+        "reason": "Claude: unchosen decision-round sketch, its fonts belong to a rejected direction, not the shipped system"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-09T16:57:31.577Z",
+        "reason": "Claude: unchosen decision-round sketch, its fonts belong to a rejected direction, not the shipped system"
+      }
+    ]
+  }
+}

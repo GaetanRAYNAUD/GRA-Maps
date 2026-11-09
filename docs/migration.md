@@ -76,24 +76,25 @@ sont donc ceux de l'INSEE, et les écarts avec l'ancien site viennent de l'ancie
 
 Les types de `shared/src/types.ts` ont été confrontés à ces fichiers : mêmes noms de champs.
 
-## Front : à récupérer de l'ancien
+## Front
 
-- Vues, indicateurs affichés, légende Jenks, popups et fiches (`src/screens/`).
-- Recherche d'adresse : `https://api-adresse.data.gouv.fr/search`.
-- Fond de carte IGN, style dans `src/screens/map/map-style.ts`.
-- i18n (react-intl, `src/i18n/fr/`), analytics react-ga4 (à confirmer).
-- Chargement : un `fetch` par fichier, `common.json` et `jenks/*` au démarrage,
-  région/département/commune à la demande, cache mémoire.
-- À revoir en faisant le front : les fichiers Jenks sont lourds (08/11/2026, JSON brut :
-  `population.json` et `density.json` 12,9 Mo chacun, les quatre autres environ 24 Mo au
-  total ; environ 4 fois moins une fois compressés par le CDN). Tout charger au démarrage
-  représente une douzaine de Mo transférés. Pistes : ne charger que l'indicateur affiché, ou
-  découper les fichiers par année (`jenks/{indicateur}/{année}.json`).
+L'ancien front ne sert que de liste de fonctionnalités ; son apparence et son UX ne sont pas
+reprises. Le nouveau front (09/11/2026) couvre : carte par niveau, indicateur et année, légende
+Jenks, survol, fiche (rangs, parts, courbe), recherche commune et adresse, URL partageable.
+
+- Abandonnés : fond de carte IGN (carte choroplèthe pure), i18n (français seul), analytics.
+- Recherche d'adresse : l'API `api-adresse.data.gouv.fr` est remplacée par la Géoplateforme
+  (`https://data.geopf.fr/geocodage/search`).
+- Chargement : seul le fichier Jenks de l'indicateur affiché est chargé (08/11/2026, JSON brut :
+  `population.json` et `density.json` 12,9 Mo chacun, environ 4 fois moins compressés par le
+  CDN). Piste si c'est encore trop lourd : découper par année (`jenks/{indicateur}/{année}.json`).
+- Bornes des classes : générées depuis le 09/11/2026 (`bounds*` dans chaque nœud Jenks). Tant que
+  les fichiers en ligne ne les ont pas, la légende retombe sur « Moins / Plus ».
 
 ## Ordre de travail restant
 
 1. Générateur : écrit et validé contre les totaux INSEE (voir Parité).
 2. Publication R2 : bucket, CORS et règle de cache en place, script écrit ; reste à créer les
    tokens et à faire la première publication, voir [hosting.md](hosting.md).
-3. Front : carte + une vue, puis le reste.
+3. Front : carte, légende avec bornes, fiche et recherche en place.
 4. Bascule du domaine `maps.gaetanraynaud.fr`.

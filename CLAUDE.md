@@ -43,10 +43,15 @@ npm workspaces : `shared/` (types et chemins des JSON publiés), `generator/` (p
 
 ## Front
 
-- Vite + React + TypeScript strict, carte MapLibre GL (react-map-gl ou maplibre-gl direct),
-  librairie UI et graphiques au choix. `BrowserRouter` (le fallback SPA est géré par Cloudflare).
-- Données lues depuis `VITE_DATA_BASE_URL` : `common.json` et `jenks/*` au démarrage, région,
-  département et commune à la demande, un seul `fetch` par fichier, cache mémoire.
+- Vite + React + TypeScript strict, `maplibre-gl` direct (pas de react-map-gl), `react-router`
+  (`BrowserRouter`, le fallback SPA est géré par Cloudflare), graphiques en SVG maison, aucune
+  librairie UI. Le worker MapLibre est branché à la main : voir `web/src/maplibre-worker.ts`.
+- Données lues depuis `VITE_DATA_BASE_URL` : `common.json` au démarrage, `jenks/*` de
+  l'indicateur affiché seulement (les fichiers sont lourds), région, département et commune à
+  la demande, un seul `fetch` par fichier, cache mémoire.
+- Recherche d'adresse : Géoplateforme IGN (`https://data.geopf.fr/geocodage/search`).
+- Identité visuelle : [PRODUCT.md](PRODUCT.md) (produit) ; le contrat de direction de la carte
+  vit dans `web/.impeccable/surfaces/`.
 - Types et chemins des données importés depuis `@gra-maps/shared`, jamais redéfinis.
 
 ## Déploiement
