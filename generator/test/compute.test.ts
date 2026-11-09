@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { jenksClassifier } from '../src/compute/jenks.ts'
+import { jenksBreaks, jenksClassifier } from '../src/compute/jenks.ts'
 import { floor1, percent, ranker } from '../src/compute/ranks.ts'
 
 describe('ranker', () => {
@@ -61,5 +61,21 @@ describe('jenksClassifier', () => {
   it('puts values above the last break in the last class', () => {
     const classOf = jenksClassifier([1, 2, 3])
     expect(classOf(50)).toBe(classOf(3))
+  })
+})
+
+describe('jenksBreaks', () => {
+  it('gives the minimum then the maximum of each class', () => {
+    const groups = [0, 1000, 2000].flatMap((base) => Array.from({ length: 20 }, (_, i) => base + i))
+    const { bounds, classOf } = jenksBreaks(groups)
+    expect(bounds[0]).toBe(0)
+    expect(bounds.at(-1)).toBe(2019)
+    expect(bounds.length).toBe(classOf(2019) + 2)
+    for (let i = 1; i < bounds.length; i++) expect(bounds[i]).toBeGreaterThan(bounds[i - 1]!)
+    for (const v of groups) expect(v).toBeLessThanOrEqual(bounds[classOf(v) + 1]!)
+  })
+
+  it('has no bounds without values', () => {
+    expect(jenksBreaks([]).bounds).toEqual([])
   })
 })

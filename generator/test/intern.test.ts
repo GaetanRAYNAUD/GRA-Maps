@@ -83,6 +83,8 @@ describe('internStep', () => {
     expect(Object.keys(jenks.population)).toEqual(['2020'])
     expect(jenks.population[2020]!.communes!['69001']).toBeGreaterThan(jenks.population[2020]!.communes!['01001']!)
     expect(Object.keys(jenks.area.communes!).sort()).toEqual(['01001', '01002', '69001'])
+    const node = jenks.population[2020]!
+    expect(node.boundsCommunes).toHaveLength(node.nbCommunes + 2)
   })
 })
 

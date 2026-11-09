@@ -25,14 +25,20 @@ export type Common = {
  * Jenks class index (0-based, ascending values) of every node, for one indicator (and one
  * year). A level without any value has no map at all (empty objects are left out), and nodes
  * without a value are absent from their map. `nb*` is the highest class index of the level.
+ * `bounds*` gives the smallest value of the level, then the largest value of each class
+ * (`nb* + 2` ascending numbers): class `i` spans `]bounds[i], bounds[i + 1]]`, the first one
+ * includes its lower bound. Absent when the level has no value.
  */
 export type DataJenksNode = {
   regions?: Record<string, number>
   nbRegions: number
+  boundsRegions?: number[]
   departements?: Record<string, number>
   nbDepartements: number
+  boundsDepartements?: number[]
   communes?: Record<string, number>
   nbCommunes: number
+  boundsCommunes?: number[]
 }
 
 /** `jenks/area.json` holds a single node; the others are keyed by year. */

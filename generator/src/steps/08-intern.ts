@@ -1,6 +1,6 @@
 import type { CommunePopulations, DataJenksNode, Jenks, JenksByYear } from '@gra-maps/shared'
 import { checkTotals, logTotals } from '../compute/check-totals.ts'
-import { jenksClassifier } from '../compute/jenks.ts'
+import { jenksBreaks } from '../compute/jenks.ts'
 import { floor1, percent, ranker } from '../compute/ranks.ts'
 import type { Data, Step } from '../model.ts'
 import { addTo } from '../model.ts'
@@ -187,16 +187,26 @@ function jenksNode(data: Data, get: (node: Node) => number | undefined): DataJen
       const v = get(n)
       return v === undefined ? [] : [[n.id, v] as const]
     })
-    const classOf = jenksClassifier(kept.map(([, v]) => v))
+    const { classOf, bounds } = jenksBreaks(kept.map(([, v]) => v))
     const classes: Record<string, number> = {}
     let max = 0
     for (const [id, v] of kept) max = Math.max(max, (classes[id] = classOf(v)))
-    return [classes, max] as const
+    return [classes, max, bounds.length ? bounds : undefined] as const
   }
-  const [regions, nbRegions] = level(nodes(data.regions))
-  const [departements, nbDepartements] = level(nodes(data.departements))
-  const [communes, nbCommunes] = level(nodes(data.communes))
-  return { regions, nbRegions, departements, nbDepartements, communes, nbCommunes }
+  const [regions, nbRegions, boundsRegions] = level(nodes(data.regions))
+  const [departements, nbDepartements, boundsDepartements] = level(nodes(data.departements))
+  const [communes, nbCommunes, boundsCommunes] = level(nodes(data.communes))
+  return {
+    regions,
+    nbRegions,
+    ...(boundsRegions && { boundsRegions }),
+    departements,
+    nbDepartements,
+    ...(boundsDepartements && { boundsDepartements }),
+    communes,
+    nbCommunes,
+    ...(boundsCommunes && { boundsCommunes }),
+  }
 }
 
 /** One Jenks node per year present in the regions' series. */
