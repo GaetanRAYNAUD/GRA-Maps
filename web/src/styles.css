@@ -926,6 +926,17 @@ ul {
   font-size: 20px;
 }
 
+.chart-dialog-head .picker-button {
+  min-width: 230px;
+  border: 1px solid var(--hairline-strong);
+}
+
+.chart-dialog-empty {
+  margin: var(--space-6) 0;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
 .chart-dialog-close {
   margin: -6px -6px 0 0;
 }
@@ -955,6 +966,21 @@ ul {
   .chart-dialog-readout {
     order: 1;
     flex-basis: 100%;
+  }
+
+  .chart-dialog-head .picker {
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  .chart-dialog-head .picker-button {
+    width: 100%;
+  }
+
+  .chart-dialog-head .picker-list {
+    left: 0;
+    right: 0;
+    width: auto;
   }
 
   .chart-dialog-title {

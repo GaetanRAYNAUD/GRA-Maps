@@ -1,12 +1,15 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import type { Indicator } from './indicators.ts'
-import { formatValue } from './indicators.ts'
+import { formatValue, indicators } from './indicators.ts'
+import { IndicatorPicker } from './IndicatorPicker.tsx'
 import { Icon } from './Icon.tsx'
 import { useMediaQuery } from './useMediaQuery.ts'
 
 type Props = {
   indicator: Indicator
   series: Record<number, number>
+  /** Series of another indicator for the same territory, for the picker of the enlarged view. */
+  seriesOf: (indicator: Indicator) => Record<number, number> | undefined
   year: number | undefined
   onYear: (year: number) => void
   /** Territory name, for the enlarged view. */
@@ -16,6 +19,14 @@ type Props = {
 }
 
 type Point = { year: number; value: number }
+
+const toPoints = (series: Record<number, number>): Point[] =>
+  Object.entries(series)
+    .map(([y, v]) => ({ year: Number(y), value: v }))
+    .sort((a, b) => a.year - b.year)
+
+/** Indicators with a history: area has a single value. */
+const yearlyIndicators = indicators.filter((indicator) => indicator.yearly)
 
 type Size = 'compact' | 'normal' | 'large' | 'phone'
 
@@ -32,13 +43,11 @@ const sizes: Record<
 }
 
 /** Values on a true time axis: census years sit at their date, so the gaps stay visible. */
-export function HistoryChart({ indicator, series, year, onYear, place, compact = false }: Props) {
+export function HistoryChart({ indicator, series, seriesOf, year, onYear, place, compact = false }: Props) {
   const [hover, setHover] = useState<number | undefined>(undefined)
   const [open, setOpen] = useState(false)
   const titleId = useId()
-  const points = Object.entries(series)
-    .map(([y, v]) => ({ year: Number(y), value: v }))
-    .sort((a, b) => a.year - b.year)
+  const points = toPoints(series)
   if (points.length < 2) return null
 
   const first = points[0]!.year
@@ -70,21 +79,27 @@ export function HistoryChart({ indicator, series, year, onYear, place, compact =
         onYear={onYear}
       />
       {open ? (
-        <ChartDialog indicator={indicator} points={points} year={year} onYear={onYear} place={place} onClose={() => setOpen(false)} />
+        <ChartDialog initial={indicator} seriesOf={seriesOf} year={year} onYear={onYear} place={place} onClose={() => setOpen(false)} />
       ) : null}
     </figure>
   )
 }
 
-/** The chart at full width, in a modal dialog: Escape, the close button or a click outside closes it. */
+/**
+ * The chart at full width, in a modal dialog: Escape, the close button or a click outside closes it.
+ * It has its own indicator picker, to look through the territory's histories without changing
+ * the map.
+ */
 function ChartDialog({
-  indicator,
-  points,
+  initial,
+  seriesOf,
   year,
   onYear,
   place,
   onClose,
-}: Pick<Props, 'indicator' | 'year' | 'onYear' | 'place'> & { points: Point[]; onClose: () => void }) {
+}: Pick<Props, 'seriesOf' | 'year' | 'onYear' | 'place'> & { initial: Indicator; onClose: () => void }) {
+  const [indicator, setIndicator] = useState(initial)
+  const points = toPoints(seriesOf(indicator) ?? {})
   const dialog = useRef<HTMLDialogElement>(null)
   /** A press that starts in the box and ends on the backdrop is not a click outside. */
   const pressedOutside = useRef(false)
@@ -121,10 +136,11 @@ function ChartDialog({
               {place}
             </h2>
             <p className="chart-dialog-sub">
-              {indicator.label}, {points[0]!.year}–{points.at(-1)!.year}
-              {indicator.unit ? ` (${indicator.unit})` : ''}
+              {points.length > 0 ? `${points[0]!.year}–${points.at(-1)!.year}` : 'Pas de donnée'}
+              {indicator.unit ? ` · ${indicator.unit}` : ''}
             </p>
           </div>
+          <IndicatorPicker value={indicator} onChange={setIndicator} options={yearlyIndicators} />
           <p className="chart-dialog-readout" aria-live="polite">
             {shownPoint ? (
               <>
@@ -136,15 +152,19 @@ function ChartDialog({
             <Icon name="close" />
           </button>
         </header>
-        <Plot
-          size={phone ? 'phone' : 'large'}
-          indicator={indicator}
-          points={points}
-          shown={shownPoint}
-          labelledBy={titleId}
-          onHover={setHover}
-          onYear={onYear}
-        />
+        {points.length < 2 ? (
+          <p className="chart-dialog-empty">Pas d'historique pour cet indicateur.</p>
+        ) : (
+          <Plot
+            size={phone ? 'phone' : 'large'}
+            indicator={indicator}
+            points={points}
+            shown={shownPoint}
+            labelledBy={titleId}
+            onHover={setHover}
+            onYear={onYear}
+          />
+        )}
       </div>
     </dialog>
   )
