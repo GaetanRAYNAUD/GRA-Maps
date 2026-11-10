@@ -86,6 +86,8 @@ function ChartDialog({
   onClose,
 }: Pick<Props, 'indicator' | 'year' | 'onYear' | 'place'> & { points: Point[]; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null)
+  /** A press that starts in the box and ends on the backdrop is not a click outside. */
+  const pressedOutside = useRef(false)
   const phone = useMediaQuery('(max-width: 767px)')
   const [hover, setHover] = useState<number | undefined>(undefined)
   const titleId = useId()
@@ -104,8 +106,13 @@ function ChartDialog({
       className="chart-dialog"
       aria-labelledby={titleId}
       onClose={onClose}
-      // The dialog box fills the element: a click on the element itself is on the backdrop.
-      onClick={(event) => event.target === event.currentTarget && onClose()}
+      // The dialog box fills the element: a press on the element itself is on the backdrop.
+      onPointerDown={(event) => {
+        pressedOutside.current = event.target === event.currentTarget
+      }}
+      onClick={(event) => {
+        if (pressedOutside.current && event.target === event.currentTarget) onClose()
+      }}
     >
       <div className="chart-dialog-box">
         <header className="chart-dialog-head">

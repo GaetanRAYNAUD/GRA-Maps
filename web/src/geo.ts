@@ -43,12 +43,15 @@ export const franceBounds: [[number, number], [number, number]] = [
 ]
 
 /**
- * The address search returns arrondissement codes for Paris, Lyon and Marseille, the data
- * only knows the communes.
+ * Municipal arrondissements of Paris, Lyon and Marseille: code prefix -> commune. The data only
+ * knows the communes; the address search and the boundary tiles also know the arrondissements.
  */
+export const arrondissementPrefixes: Record<string, string> = { '751': '75056', '6938': '69123', '132': '13055' }
+
+/** The commune of a code, which may be an arrondissement (from the address search). */
 export function communeOfCityCode(code: string): string {
-  if (/^751\d\d$/.test(code)) return '75056'
-  if (/^6938\d$/.test(code)) return '69123'
-  if (/^132\d\d$/.test(code)) return '13055'
+  for (const [prefix, commune] of Object.entries(arrondissementPrefixes)) {
+    if (code.startsWith(prefix) && code !== commune) return commune
+  }
   return code
 }

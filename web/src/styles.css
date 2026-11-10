@@ -1,19 +1,23 @@
 :root {
-  --band: #1f4a3d;
-  --sapin: #1f4a3d;
-  --sapin-deep: #163a2f;
-  --sapin-line: #4f7366;
-  --on-sapin: #f3f6f4;
-  --on-sapin-soft: #c6d6cf;
-  --ground: #f3f5f8;
-  --plate: #ffffff;
-  --ink: #26231e;
-  --ink-soft: #5b564e;
-  --hairline: #dcded8;
-  --hairline-strong: #c4c7c0;
-  --carmine: #8c2440;
-  --carmine-tint: #f7e6e8;
-  --shimmer: #f9fafc;
+  /* Each colour is light-dark(light, dark): the theme follows color-scheme, which follows the
+     system unless the visitor chose one (data-theme, set by theme.ts). In dark the band keeps its
+     sapin; on the dark plates the sapin becomes a pale green so lines and links stay readable,
+     and the carmine brightens. */
+  --band: light-dark(#1f4a3d, #173a2f);
+  --sapin: light-dark(#1f4a3d, #8cc4ad);
+  --sapin-deep: light-dark(#163a2f, #10291f);
+  --sapin-line: light-dark(#4f7366, #5c8a78);
+  --on-sapin: light-dark(#f3f6f4, #eef3f0);
+  --on-sapin-soft: light-dark(#c6d6cf, #a9c2b7);
+  --ground: light-dark(#f3f5f8, #101316);
+  --plate: light-dark(#ffffff, #1a1e23);
+  --ink: light-dark(#26231e, #e9e6e0);
+  --ink-soft: light-dark(#5b564e, #a6a39c);
+  --hairline: light-dark(#dcded8, #2e343b);
+  --hairline-strong: light-dark(#c4c7c0, #414851);
+  --carmine: light-dark(#8c2440, #ef8a9e);
+  --carmine-tint: light-dark(#f7e6e8, #43242c);
+  --shimmer: light-dark(#f9fafc, #22272d);
   --radius: 4px;
   --font: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
   --band-h: 60px;
@@ -29,52 +33,14 @@
   --space-5: 24px;
   --space-6: 32px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --control-icon-filter: none;
+  color-scheme: light dark;
+}
+
+:root[data-theme='light'] {
   color-scheme: light;
 }
 
-/* Dark theme: from the system setting unless the visitor chose light, or chosen (data-theme,
-   set by theme.ts). The band keeps its sapin; on the dark plates the sapin becomes a pale green
-   so lines and links stay readable, and the carmine brightens. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --band: #173a2f;
-    --sapin: #8cc4ad;
-    --sapin-deep: #10291f;
-    --sapin-line: #5c8a78;
-    --on-sapin: #eef3f0;
-    --on-sapin-soft: #a9c2b7;
-    --ground: #101316;
-    --plate: #1a1e23;
-    --ink: #e9e6e0;
-    --ink-soft: #a6a39c;
-    --hairline: #2e343b;
-    --hairline-strong: #414851;
-    --carmine: #ef8a9e;
-    --carmine-tint: #43242c;
-    --shimmer: #22272d;
-    --control-icon-filter: invert(1);
-    color-scheme: dark;
-  }
-}
-
 :root[data-theme='dark'] {
-  --band: #173a2f;
-  --sapin: #8cc4ad;
-  --sapin-deep: #10291f;
-  --sapin-line: #5c8a78;
-  --on-sapin: #eef3f0;
-  --on-sapin-soft: #a9c2b7;
-  --ground: #101316;
-  --plate: #1a1e23;
-  --ink: #e9e6e0;
-  --ink-soft: #a6a39c;
-  --hairline: #2e343b;
-  --hairline-strong: #414851;
-  --carmine: #ef8a9e;
-  --carmine-tint: #43242c;
-  --shimmer: #22272d;
-  --control-icon-filter: invert(1);
   color-scheme: dark;
 }
 
@@ -360,7 +326,18 @@ ul {
 }
 
 .maplibregl-ctrl-attrib-button {
-  filter: var(--control-icon-filter);
+  filter: var(--control-icon-filter, none);
+}
+
+/* The attribution icon is a black image: inverted on the dark theme. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --control-icon-filter: invert(1);
+  }
+}
+
+:root[data-theme='dark'] {
+  --control-icon-filter: invert(1);
 }
 
 .maplibregl-ctrl.maplibregl-ctrl-group button + button {
@@ -1191,6 +1168,10 @@ ul {
 
   .legend-folded .maplibregl-ctrl-bottom-right {
     bottom: 64px;
+  }
+
+  .legend-folded:has(.legend-note) .maplibregl-ctrl-bottom-right {
+    bottom: 100px;
   }
 
   .has-fiche .maplibregl-ctrl-bottom-right {

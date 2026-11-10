@@ -19,13 +19,32 @@ function read(): ThemeChoice {
 
 let choice: ThemeChoice = read()
 
+/** Band colour of each theme, for the browser bar (the theme-color metas of index.html). */
+const bandColor: Record<Theme, string> = { light: '#1f4a3d', dark: '#173a2f' }
+
 /** The stylesheet reads data-theme; index.html sets it before the first paint too. */
 function apply(next: ThemeChoice) {
   if (next === 'system') delete document.documentElement.dataset['theme']
   else document.documentElement.dataset['theme'] = next
+  for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
+    const own: Theme = meta.media.includes('dark') ? 'dark' : 'light'
+    meta.content = bandColor[next === 'system' ? own : next]
+  }
+}
+
+const notify = () => {
+  for (const listener of listeners) listener()
 }
 
 apply(choice)
+
+// A choice made in another tab.
+window.addEventListener('storage', (event) => {
+  if (event.key !== storageKey && event.key !== null) return
+  choice = read()
+  apply(choice)
+  notify()
+})
 
 export function setThemeChoice(next: ThemeChoice) {
   choice = next
@@ -36,7 +55,7 @@ export function setThemeChoice(next: ThemeChoice) {
   } catch {
     // Private browsing: the choice lasts for this page only.
   }
-  for (const listener of listeners) listener()
+  notify()
 }
 
 /** Next choice in the switch order: system, light, dark. */

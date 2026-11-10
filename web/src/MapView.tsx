@@ -14,7 +14,7 @@ import { basemaps, tileUrl } from './basemaps.ts'
 import type { Basemap } from './basemaps.ts'
 import { dataUrl } from './data.ts'
 import { workerReady } from './maplibre-worker.ts'
-import { communesMinZoom, franceBounds, mapLevels } from './geo.ts'
+import { arrondissementPrefixes, communesMinZoom, franceBounds, mapLevels } from './geo.ts'
 import type { MapLevel } from './geo.ts'
 import { palettes, washExpression } from './palette.ts'
 import type { Palette } from './palette.ts'
@@ -67,8 +67,11 @@ const metropolitan: Record<MapLevel, FilterSpecification> = {
   communes: [
     'all',
     ['!=', ['slice', ['get', 'code'], 0, 2], '97'],
-    ['!', ['in', ['slice', ['get', 'code'], 0, 3], ['literal', ['751', '132']]]],
-    ['!=', ['slice', ['get', 'code'], 0, 4], '6938'],
+    ...Object.keys(arrondissementPrefixes).map((prefix): ExpressionSpecification => [
+      '!=',
+      ['slice', ['get', 'code'], 0, prefix.length],
+      prefix,
+    ]),
   ],
 }
 
