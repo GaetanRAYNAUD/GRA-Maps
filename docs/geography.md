@@ -73,6 +73,11 @@ tuiles vectorielles de data.gouv.fr :
 `departements`, `communes`, identifiants `code`). Elles sont générées à partir des contours
 administratifs d'Etalab (version 5 m).
 
+Les tuiles contiennent aussi les arrondissements municipaux de Paris (751xx), Lyon (6938x) et
+Marseille (132xx), superposés à leur commune. Les données n'existent qu'à la commune (les
+sources INSEE regroupent les arrondissements) : le front les filtre (`MapView.tsx`) pour que la
+commune s'affiche entière.
+
 On ne génère pas nos propres tuiles : sans frontières par année, ça n'apporterait que la maîtrise
 du millésime. La dépendance au serveur de data.gouv.fr est acceptée.
 

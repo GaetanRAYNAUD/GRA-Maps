@@ -56,11 +56,20 @@ type Props = {
   onView: (view: { zoom: number; center: [number, number] }) => void
 }
 
-/** DROM-COM are not in the data. */
+/**
+ * DROM-COM are not in the data. Neither are the municipal arrondissements of Paris (751xx), Lyon
+ * (6938x) and Marseille (132xx): the tiles draw them over their commune, so they would hide it
+ * with empty shapes. Without them the commune shows whole.
+ */
 const metropolitan: Record<MapLevel, FilterSpecification> = {
   regions: ['!=', ['slice', ['get', 'code'], 0, 1], '0'],
   departements: ['!=', ['slice', ['get', 'code'], 0, 2], '97'],
-  communes: ['!=', ['slice', ['get', 'code'], 0, 2], '97'],
+  communes: [
+    'all',
+    ['!=', ['slice', ['get', 'code'], 0, 2], '97'],
+    ['!', ['in', ['slice', ['get', 'code'], 0, 3], ['literal', ['751', '132']]]],
+    ['!=', ['slice', ['get', 'code'], 0, 4], '6938'],
+  ],
 }
 
 const flag = (key: string): ExpressionSpecification => ['boolean', ['feature-state', key], false]
