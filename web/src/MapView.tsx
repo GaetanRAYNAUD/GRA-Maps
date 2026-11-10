@@ -5,7 +5,7 @@ import type {
   FlyToOptions,
   IControl,
   MapGeoJSONFeature,
-  StyleSpecification
+  StyleSpecification,
 } from 'maplibre-gl'
 import { AttributionControl, Map as MapLibre } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'

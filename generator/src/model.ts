@@ -7,7 +7,7 @@ import {
   type Places,
   type Region,
   type ShapeLevel,
-  type Shapes
+  type Shapes,
 } from '@gra-maps/shared'
 
 /**
