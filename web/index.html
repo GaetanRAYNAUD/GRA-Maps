@@ -7,12 +7,20 @@
       name="description"
       content="Population, naissances, décès et densité des régions, départements et communes de France depuis 1876."
     />
-    <meta name="theme-color" content="#1f4a3d" />
+    <meta name="theme-color" content="#1f4a3d" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#173a2f" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>Cartes de France</title>
+    <script>
+      // The theme chosen on a previous visit, before the first paint (see src/theme.ts).
+      try {
+        const theme = localStorage.getItem('theme')
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -18,6 +18,8 @@ import { Icon } from './Icon.tsx'
 import { IndicatorPicker } from './IndicatorPicker.tsx'
 import { BasemapPicker } from './BasemapPicker.tsx'
 import { basemapById, defaultBasemap } from './basemaps.ts'
+import { useTheme } from './theme.ts'
+import { ThemeSwitch } from './ThemeSwitch.tsx'
 
 export function App() {
   return (
@@ -56,6 +58,7 @@ function MapPage() {
   const [search, setSearch] = useSearchParams()
   const navigate = useNavigate()
   const mobile = useMediaQuery('(max-width: 767px)')
+  const theme = useTheme()
 
   const indicator = indicatorBySlug(search.get('indicateur'))
   const basemap = basemapById(search.get('fond'))
@@ -72,6 +75,7 @@ function MapPage() {
   const [selectedNode, setSelectedNode] = useState<Region | Departement | Commune | undefined>(undefined)
   const [flownTo, setFlownTo] = useState<string | undefined>(undefined)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [legendCollapsed, setLegendCollapsed] = useState(false)
 
   useEffect(() => {
     loadCommon().then(setCommon, () => setFailed(true))
@@ -184,11 +188,11 @@ function MapPage() {
   // Room taken by the legend plate and the fiche, so the camera frames France beside them.
   const wide = window.innerWidth >= 1100
   const inset = mobile
-    ? { left: 0, right: 0, bottom: panelOpen ? Math.round(window.innerHeight * 0.52) : 150 }
+    ? { left: 0, right: 0, bottom: panelOpen ? Math.round(window.innerHeight * 0.52) : legendCollapsed ? 56 : 150 }
     : { left: wide ? 220 : 0, right: panelOpen ? 420 : 0, bottom: wide ? 60 : 210 }
 
   return (
-    <div className={`app${panelOpen ? ' has-fiche' : ''}`}>
+    <div className={`app${panelOpen ? ' has-fiche' : ''}${mobile && legendCollapsed ? ' legend-folded' : ''}`}>
       <header className="band">
         <a
           className="brand"
@@ -245,6 +249,7 @@ function MapPage() {
               setMenuOpen(false)
             }}
           />
+          <ThemeSwitch />
         </div>
       </header>
 
@@ -252,6 +257,7 @@ function MapPage() {
         <MapView
           level={level}
           basemap={basemap}
+          theme={theme}
           ids={ids}
           classes={classes}
           nb={nb}
@@ -290,6 +296,8 @@ function MapPage() {
                 : undefined
           }
           noticeAction={communesHidden && !failed ? 'Zoomer ici' : undefined}
+          collapsed={mobile && legendCollapsed}
+          onCollapse={setLegendCollapsed}
           onNotice={communesHidden && !failed ? () => setFocus({ center: view.center, zoom: communesMinZoom, key: Date.now() }) : undefined}
         />
 

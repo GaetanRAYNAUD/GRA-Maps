@@ -1,6 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { AttributionControl, Map as MapLibre } from 'maplibre-gl'
-import type { ExpressionSpecification, FilterSpecification, IControl, MapGeoJSONFeature, StyleSpecification } from 'maplibre-gl'
+import type {
+  ExpressionSpecification,
+  FilterSpecification,
+  FlyToOptions,
+  IControl,
+  MapGeoJSONFeature,
+  StyleSpecification,
+} from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { dataPaths } from '@gra-maps/shared'
 import { basemaps, tileUrl } from './basemaps.ts'
@@ -9,7 +16,9 @@ import { dataUrl } from './data.ts'
 import { workerReady } from './maplibre-worker.ts'
 import { communesMinZoom, franceBounds, mapLevels } from './geo.ts'
 import type { MapLevel } from './geo.ts'
-import { ink, sapin, seam, washExpression } from './palette.ts'
+import { palettes, washExpression } from './palette.ts'
+import type { Palette } from './palette.ts'
+import type { Theme } from './theme.ts'
 import { background, basemapSources, glyphs, overLayers, underLayers } from './basemapStyle.ts'
 
 /** data.gouv.fr boundary tiles: the communes, and the departements around them. */
@@ -32,6 +41,7 @@ export type Focus = { center: [number, number]; zoom: number; key: number }
 type Props = {
   level: MapLevel
   basemap: Basemap
+  theme: Theme
   /** Every id of the level, so ids without a class are reset. */
   ids: string[] | undefined
   classes: Record<string, number> | undefined
@@ -55,8 +65,9 @@ const metropolitan: Record<MapLevel, FilterSpecification> = {
 
 const flag = (key: string): ExpressionSpecification => ['boolean', ['feature-state', key], false]
 
-function buildStyle(): StyleSpecification {
-  const layers: StyleSpecification['layers'] = [background, ...underLayers]
+function buildStyle(palette: Palette): StyleSpecification {
+  const { ink, sapin, seam } = palette
+  const layers: StyleSpecification['layers'] = [background(palette), ...underLayers(palette)]
   const rasters: StyleSpecification['sources'] = {}
   for (const basemap of basemaps) {
     if (!basemap.layer) continue
@@ -77,7 +88,7 @@ function buildStyle(): StyleSpecification {
   for (const { value: level } of mapLevels) {
     const common = { ...sourceOf(level), filter: metropolitan[level], layout: { visibility: 'none' as const } }
     layers.push(
-      { id: `fill-${level}`, type: 'fill', ...common, paint: { 'fill-color': washExpression as ExpressionSpecification } },
+      { id: `fill-${level}`, type: 'fill', ...common, paint: { 'fill-color': washExpression(palette) as ExpressionSpecification } },
       {
         id: `seam-${level}`,
         type: 'line',
@@ -137,7 +148,7 @@ function buildStyle(): StyleSpecification {
       ...basemapSources,
     },
     glyphs,
-    layers: [...layers, ...overLayers],
+    layers: [...layers, ...overLayers(palette)],
   }
 }
 
@@ -184,7 +195,7 @@ class CameraControl implements IControl {
 
 const featureName = (feature: MapGeoJSONFeature): string => String(feature.properties['nom'] ?? feature.id ?? '')
 
-export function MapView({ level, basemap, ids, classes, nb, selected, focus, inset, onHover, onSelect, onView }: Props) {
+export function MapView({ level, basemap, theme, ids, classes, nb, selected, focus, inset, onHover, onSelect, onView }: Props) {
   const container = useRef<HTMLDivElement>(null)
   const map = useRef<MapLibre | undefined>(undefined)
   const ready = useRef(false)
@@ -216,7 +227,7 @@ export function MapView({ level, basemap, ids, classes, nb, selected, focus, ins
   function create(element: HTMLDivElement): MapLibre {
     const instance = new MapLibre({
       container: element,
-      style: buildStyle(),
+      style: buildStyle(palettes[theme]),
       bounds: franceBounds,
       fitBoundsOptions: { padding: fitPadding(inset) },
       minZoom: 3.5,
@@ -314,10 +325,22 @@ export function MapView({ level, basemap, ids, classes, nb, selected, focus, ins
     [level],
   )
 
-  // Background: one raster layer shown, and the wash lightened so it shows through.
+  // Theme and background. The colours of the theme are copied from a style built for it; then one
+  // raster layer is shown, and the wash lightened so it shows through.
+  const styledTheme = useRef(theme)
   useEffect(
     () =>
       whenReady((instance) => {
+        const palette = palettes[theme]
+        if (styledTheme.current !== theme) {
+          styledTheme.current = theme
+          for (const layer of buildStyle(palette).layers) {
+            if (!('paint' in layer) || !layer.paint) continue
+            for (const [property, value] of Object.entries(layer.paint)) {
+              if (property.endsWith('color')) instance.setPaintProperty(layer.id, property as 'fill-color', value)
+            }
+          }
+        }
         for (const other of basemaps) {
           if (other.layer) instance.setLayoutProperty(`basemap-${other.id}`, 'visibility', other.id === basemap.id ? 'visible' : 'none')
         }
@@ -325,7 +348,7 @@ export function MapView({ level, basemap, ids, classes, nb, selected, focus, ins
         // Sapin lines vanish on the photos: draw the parent borders in white there.
         const photo = Boolean(basemap.layer)
         for (const parent of ['regions', 'departements']) {
-          instance.setPaintProperty(`context-${parent}`, 'line-color', photo ? seam : sapin)
+          instance.setPaintProperty(`context-${parent}`, 'line-color', photo ? '#ffffff' : palette.sapin)
           instance.setPaintProperty(`context-${parent}`, 'line-width', [
             'interpolate',
             ['linear'],
@@ -339,7 +362,7 @@ export function MapView({ level, basemap, ids, classes, nb, selected, focus, ins
           ])
         }
       }),
-    [basemap.id],
+    [basemap.id, theme],
   )
 
   // Class position of every territory, as feature state: recolouring needs no style change.
@@ -363,11 +386,27 @@ export function MapView({ level, basemap, ids, classes, nb, selected, focus, ins
     }
   }, [selected?.level, selected?.id])
 
+  /** Flight to a focus still under way, so a padding change retargets it instead of cancelling it. */
+  const flight = useRef<FlyToOptions | undefined>(undefined)
+  const fly = (instance: MapLibre, options: FlyToOptions) => {
+    flight.current = options
+    // Listening only after flyTo: flyTo first stops the previous move, which fires moveend.
+    instance.flyTo(options)
+    if (!instance.isMoving()) {
+      flight.current = undefined
+      return
+    }
+    // Ends when the flight lands or is interrupted (drag, another flight).
+    instance.once('moveend', () => {
+      if (flight.current === options) flight.current = undefined
+    })
+  }
+
   useEffect(() => {
     if (!focus) return
     return whenReady((instance) => {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      instance.flyTo({
+      fly(instance, {
         center: focus.center,
         zoom: Math.max(focus.zoom, level === 'communes' ? communesMinZoom : 0),
         padding: { right: inset.right, bottom: inset.bottom, top: 0, left: 0 },
@@ -379,15 +418,16 @@ export function MapView({ level, basemap, ids, classes, nb, selected, focus, ins
   }, [focus?.key])
 
   // The fiche covers part of the map: slide the view so its centre stays in the visible part.
+  // A search moves the camera and opens the fiche in two renders: an easeTo here would cancel
+  // the flight, so the flight is resumed with the new padding instead.
   const paddingApplied = useRef(false)
   useEffect(
     () =>
       whenReady((instance) => {
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        instance.easeTo({
-          padding: { top: 0, left: 0, right: inset.right, bottom: inset.bottom },
-          duration: paddingApplied.current && !reduce ? 320 : 0,
-        })
+        const padding = { top: 0, left: 0, right: inset.right, bottom: inset.bottom }
+        if (flight.current) fly(instance, { ...flight.current, padding })
+        else instance.easeTo({ padding, duration: paddingApplied.current && !reduce ? 320 : 0 })
         paddingApplied.current = true
       }),
     [inset.right, inset.bottom],

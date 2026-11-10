@@ -45,9 +45,3 @@ données) et supprimerait la dépendance à leur serveur.
   (voir [geography.md](geography.md)).
 
 Historique de la migration : [migration.md](migration.md).
-
-## Thème sombre
-
-À prévoir : le site n'a qu'un thème clair. Il faudrait des couleurs sombres pour le bandeau, les
-planches (légende, fiche), le fond du monde (terres, mer, noms) et une rampe de lavis lisible sur
-fond foncé, en suivant `prefers-color-scheme`.

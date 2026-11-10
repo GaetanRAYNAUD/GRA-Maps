@@ -1,8 +1,9 @@
 import { basemaps, thumbnailUrl } from './basemaps.ts'
 import type { Basemap } from './basemaps.ts'
-import { wash } from './palette.ts'
+import { usePalette } from './palette.ts'
 
 function Thumbnail({ basemap }: { basemap: Basemap }) {
+  const { wash } = usePalette()
   if (!basemap.layer) {
     // No background: a few wash cells, the plate as it is.
     return (

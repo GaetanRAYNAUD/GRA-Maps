@@ -1,4 +1,5 @@
 :root {
+  --band: #1f4a3d;
   --sapin: #1f4a3d;
   --sapin-deep: #163a2f;
   --sapin-line: #4f7366;
@@ -12,6 +13,7 @@
   --hairline-strong: #c4c7c0;
   --carmine: #8c2440;
   --carmine-tint: #f7e6e8;
+  --shimmer: #f9fafc;
   --radius: 4px;
   --font: 'Source Sans 3 Variable', 'Source Sans 3', system-ui, sans-serif;
   --band-h: 60px;
@@ -27,7 +29,53 @@
   --space-5: 24px;
   --space-6: 32px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --control-icon-filter: none;
   color-scheme: light;
+}
+
+/* Dark theme: from the system setting unless the visitor chose light, or chosen (data-theme,
+   set by theme.ts). The band keeps its sapin; on the dark plates the sapin becomes a pale green
+   so lines and links stay readable, and the carmine brightens. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --band: #173a2f;
+    --sapin: #8cc4ad;
+    --sapin-deep: #10291f;
+    --sapin-line: #5c8a78;
+    --on-sapin: #eef3f0;
+    --on-sapin-soft: #a9c2b7;
+    --ground: #101316;
+    --plate: #1a1e23;
+    --ink: #e9e6e0;
+    --ink-soft: #a6a39c;
+    --hairline: #2e343b;
+    --hairline-strong: #414851;
+    --carmine: #ef8a9e;
+    --carmine-tint: #43242c;
+    --shimmer: #22272d;
+    --control-icon-filter: invert(1);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --band: #173a2f;
+  --sapin: #8cc4ad;
+  --sapin-deep: #10291f;
+  --sapin-line: #5c8a78;
+  --on-sapin: #eef3f0;
+  --on-sapin-soft: #a9c2b7;
+  --ground: #101316;
+  --plate: #1a1e23;
+  --ink: #e9e6e0;
+  --ink-soft: #a6a39c;
+  --hairline: #2e343b;
+  --hairline-strong: #414851;
+  --carmine: #ef8a9e;
+  --carmine-tint: #43242c;
+  --shimmer: #22272d;
+  --control-icon-filter: invert(1);
+  color-scheme: dark;
 }
 
 * {
@@ -132,7 +180,7 @@ ul {
   gap: var(--space-5);
   min-height: var(--band-h);
   padding: 0 var(--space-5);
-  background: var(--sapin);
+  background: var(--band);
   color: var(--on-sapin);
 }
 
@@ -185,7 +233,7 @@ ul {
 
 .segmented button.is-on {
   background: var(--on-sapin);
-  color: var(--sapin);
+  color: var(--band);
   font-weight: 600;
 }
 
@@ -288,7 +336,9 @@ ul {
   right: var(--fiche-w);
 }
 
-.maplibregl-ctrl-group {
+/* Doubled classes: MapLibre's own sheet loads after this one. */
+.maplibregl-ctrl.maplibregl-ctrl-group {
+  background: var(--plate);
   border-radius: var(--radius);
   box-shadow: none !important;
   border: 1px solid var(--hairline-strong);
@@ -297,6 +347,24 @@ ul {
 .maplibregl-ctrl-attrib {
   font-family: var(--font);
   font-size: 12px;
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-attrib,
+.maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact {
+  background: var(--plate);
+  color: var(--ink-soft);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: var(--ink-soft);
+}
+
+.maplibregl-ctrl-attrib-button {
+  filter: var(--control-icon-filter);
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-group button + button {
+  border-top-color: var(--hairline);
 }
 
 .tip {
@@ -315,7 +383,71 @@ ul {
   white-space: nowrap;
 }
 
+/* Theme switch: a quiet icon at the end of the band, a labelled row in the phone menu. */
+
+.theme-switch {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--on-sapin-soft);
+  transition: color 160ms var(--ease-out);
+}
+
+.theme-switch:hover {
+  color: var(--on-sapin);
+  background: var(--sapin-deep);
+}
+
+.theme-switch .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-switch-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .theme-switch {
+    display: flex;
+    gap: var(--space-2);
+    width: auto;
+    padding: 0 var(--space-2);
+    font-size: 14px;
+  }
+
+  .theme-switch-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+}
+
 /* Legend plate */
+
+.legend-toggle,
+.legend-year {
+  display: none;
+}
+
+.legend-year {
+  margin-left: auto;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sapin);
+}
 
 .legend {
   position: absolute;
@@ -430,7 +562,7 @@ ul {
 .play:hover,
 .play[aria-pressed='true'] {
   background: var(--sapin);
-  color: var(--on-sapin);
+  color: var(--plate);
 }
 
 .slider {
@@ -680,7 +812,34 @@ ul {
   color: var(--ink);
 }
 
-.chart svg {
+.chart-caption > span:first-child {
+  flex: 1;
+}
+
+.chart-enlarge {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin: -6px -6px -6px 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--ink-soft);
+}
+
+.chart-enlarge .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.chart-enlarge:hover {
+  background: var(--ground);
+  color: var(--ink);
+}
+
+.chart-plot {
   display: block;
   width: 100%;
   height: auto;
@@ -690,6 +849,10 @@ ul {
 
 .chart-grid {
   stroke: var(--hairline);
+}
+
+.chart-grid-minor {
+  stroke-dasharray: 2 4;
 }
 
 .chart-tick {
@@ -725,6 +888,101 @@ ul {
   fill: var(--plate);
   stroke: var(--sapin);
   stroke-width: 2;
+}
+
+/* Enlarged chart */
+
+.chart-dialog {
+  width: min(960px, calc(100vw - 2 * var(--space-4)));
+  max-width: none;
+  max-height: calc(100dvh - 2 * var(--space-4));
+  padding: 0;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius);
+  background: var(--plate);
+  color: var(--ink);
+}
+
+.chart-dialog::backdrop {
+  background: rgb(16 19 22 / 0.55);
+}
+
+.chart-dialog-box {
+  padding: var(--space-5) var(--space-5) var(--space-4);
+}
+
+.chart-dialog-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.chart-dialog-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.chart-dialog-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.chart-dialog-sub {
+  margin: var(--space-1) 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.chart-dialog-readout {
+  margin: var(--space-1) 0 0;
+  font-size: 16px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.chart-dialog-readout strong {
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.chart-dialog-close {
+  margin: -6px -6px 0 0;
+}
+
+.chart-plot-large .chart-tick {
+  font-size: 13px;
+}
+
+.chart-plot-large .chart-line {
+  stroke-width: 2.5;
+}
+
+@media (max-width: 767px) {
+  .chart-dialog-box {
+    padding: var(--space-4) var(--space-3) var(--space-3);
+  }
+
+  .chart-dialog-head {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .chart-dialog-head > div {
+    flex-basis: calc(100% - 48px);
+  }
+
+  .chart-dialog-readout {
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  .chart-dialog-title {
+    font-size: 18px;
+  }
 }
 
 .others-caption {
@@ -774,7 +1032,7 @@ ul {
 
 .skeleton {
   border-radius: var(--radius);
-  background: linear-gradient(90deg, var(--ground), #f9fafc, var(--ground));
+  background: linear-gradient(90deg, var(--ground), var(--shimmer), var(--ground));
   background-size: 200% 100%;
   animation: shimmer 1.2s linear infinite;
 }
@@ -869,6 +1127,49 @@ ul {
     display: none;
   }
 
+  /* Folding the legend leaves its title, the year and the notices. With the fiche open the
+     legend is already down to the year slider, so it does not fold there. */
+  .legend-toggle {
+    display: grid;
+    place-items: center;
+    align-self: center;
+    width: 36px;
+    height: 32px;
+    margin: -6px -10px -6px 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius);
+    background: none;
+    color: var(--ink-soft);
+  }
+
+  .legend.is-collapsed .legend-head {
+    margin-bottom: 0;
+  }
+
+  .legend.is-collapsed .legend-unit {
+    display: none;
+  }
+
+  .legend.is-collapsed .legend-year {
+    display: block;
+  }
+
+  .has-fiche .legend.is-collapsed .legend-year {
+    display: none;
+  }
+
+  .app:not(.has-fiche) .legend.is-collapsed .ramp-wrap,
+  .app:not(.has-fiche) .legend.is-collapsed .years,
+  .app:not(.has-fiche) .legend.is-collapsed .legend-static,
+  .legend.is-collapsed .legend-credit {
+    display: none;
+  }
+
+  .legend.is-collapsed .legend-note {
+    margin-top: var(--space-2);
+  }
+
   .has-fiche .legend .years {
     margin: 0;
     padding: 0;
@@ -886,6 +1187,10 @@ ul {
 
   .maplibregl-ctrl-bottom-right {
     bottom: 200px;
+  }
+
+  .legend-folded .maplibregl-ctrl-bottom-right {
+    bottom: 64px;
   }
 
   .has-fiche .maplibregl-ctrl-bottom-right {
@@ -1035,7 +1340,7 @@ ul {
     padding: 0 30px 0 10px;
     border: 1px solid var(--sapin-line);
     border-radius: var(--radius);
-    background: var(--sapin);
+    background: var(--band);
     font-size: 14px;
     font-weight: 600;
     line-height: 1.1;
@@ -1064,7 +1369,7 @@ ul {
     flex-wrap: wrap;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3) var(--space-3);
-    background: var(--sapin);
+    background: var(--band);
     border-top: 1px solid var(--sapin-line);
   }
 

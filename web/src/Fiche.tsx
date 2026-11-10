@@ -187,7 +187,9 @@ function FicheBody({ loaded, countryCounts, communeIds, indicator, year, onIndic
         )}
       </div>
 
-      {series && phone ? <HistoryChart indicator={indicator} series={series} year={year} onYear={onYear} compact /> : null}
+      {series && phone ? (
+        <HistoryChart indicator={indicator} series={series} year={year} onYear={onYear} place={node.name} compact />
+      ) : null}
 
       <table className="ranks">
         <caption className="visually-hidden">
@@ -226,7 +228,7 @@ function FicheBody({ loaded, countryCounts, communeIds, indicator, year, onIndic
         </tbody>
       </table>
 
-      {series && !phone ? <HistoryChart indicator={indicator} series={series} year={year} onYear={onYear} /> : null}
+      {series && !phone ? <HistoryChart indicator={indicator} series={series} year={year} onYear={onYear} place={node.name} /> : null}
 
       <table className="others">
         <caption className="others-caption">Tous les indicateurs{indicator.yearly ? `, ${effectiveYear}` : ''}</caption>

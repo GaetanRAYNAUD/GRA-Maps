@@ -1,7 +1,7 @@
 import type { ExpressionSpecification, FilterSpecification, LayerSpecification, SourceSpecification } from 'maplibre-gl'
 import { dataPaths } from '@gra-maps/shared'
 import { dataUrl } from './data.ts'
-import { ink, land, landLine, plate, sea, seaInk } from './palette.ts'
+import type { Palette } from './palette.ts'
 
 /**
  * Quiet world background from OpenFreeMap (OpenStreetMap data in the OpenMapTiles schema, free,
@@ -26,21 +26,21 @@ const smallNeighbours = ['MC', 'AD', 'LU', 'LI', 'SM', 'VA', 'JE', 'GG', 'IM', '
 
 const frenchName: ExpressionSpecification = ['coalesce', ['get', 'name:fr'], ['get', 'name']]
 
-const halo = { 'text-halo-color': plate, 'text-halo-width': 1.2, 'text-halo-blur': 0.3 }
+const halo = ({ plate }: Palette) => ({ 'text-halo-color': plate, 'text-halo-width': 1.2, 'text-halo-blur': 0.3 })
 
 /**
  * Under the wash: sea, country borders and the cities of the OpenStreetMap tiles. The wash, drawn
  * next, hides the French ones, so only the neighbours' cities show, in grey; ours are drawn above.
  * The aerial photos cover these layers too.
  */
-export const underLayers: LayerSpecification[] = [
+export const underLayers = (palette: Palette): LayerSpecification[] => [
   {
     id: 'world-water',
     type: 'fill',
     source: basemapSourceId,
     'source-layer': 'water',
     filter: ['!=', ['get', 'brunnel'], 'tunnel'],
-    paint: { 'fill-color': sea },
+    paint: { 'fill-color': palette.sea },
   },
   {
     id: 'world-borders',
@@ -49,7 +49,7 @@ export const underLayers: LayerSpecification[] = [
     'source-layer': 'boundary',
     filter: ['all', ['==', ['get', 'admin_level'], 2], ['!=', ['get', 'maritime'], 1], ['!=', ['get', 'disputed'], 1]],
     layout: { 'line-join': 'round' },
-    paint: { 'line-color': landLine, 'line-width': ['interpolate', ['linear'], ['zoom'], 3, 0.6, 8, 1.2] },
+    paint: { 'line-color': palette.landLine, 'line-width': ['interpolate', ['linear'], ['zoom'], 3, 0.6, 8, 1.2] },
   },
   {
     id: 'world-cities',
@@ -64,7 +64,7 @@ export const underLayers: LayerSpecification[] = [
       'text-size': ['interpolate', ['linear'], ['zoom'], 5, 10, 10, 13],
       'symbol-sort-key': ['get', 'rank'],
     },
-    paint: { 'text-color': seaInk, ...halo },
+    paint: { 'text-color': palette.seaInk, ...halo(palette) },
   },
 ]
 
@@ -77,7 +77,7 @@ const tiers: [string, FilterSpecification, number, [number, number], string][] =
 ]
 
 /** Over the wash and the borders: seas, neighbouring countries, then the French places. */
-export const overLayers: LayerSpecification[] = [
+export const overLayers = (palette: Palette): LayerSpecification[] => [
   {
     id: 'label-seas',
     type: 'symbol',
@@ -86,7 +86,7 @@ export const overLayers: LayerSpecification[] = [
     maxzoom: 9,
     filter: ['match', ['geometry-type'], ['Point', 'MultiPoint'], true, false],
     layout: { 'text-field': frenchName, 'text-font': ['Noto Sans Italic'], 'text-size': 13, 'text-letter-spacing': 0.06 },
-    paint: { 'text-color': seaInk },
+    paint: { 'text-color': palette.seaInk },
   },
   {
     id: 'label-countries',
@@ -104,7 +104,7 @@ export const overLayers: LayerSpecification[] = [
       'text-letter-spacing': 0.18,
       'text-max-width': 8,
     },
-    paint: { 'text-color': seaInk, ...halo },
+    paint: { 'text-color': palette.seaInk, ...halo(palette) },
   },
   // Smallest tier first: MapLibre places the topmost layer's labels first, the largest cities.
   ...tiers
@@ -124,8 +124,12 @@ export const overLayers: LayerSpecification[] = [
         'text-padding': 3,
         'text-max-width': 9,
       },
-      paint: { 'text-color': ink, ...halo },
+      paint: { 'text-color': palette.ink, ...halo(palette) },
     })),
 ]
 
-export const background = { id: 'ground', type: 'background', paint: { 'background-color': land } } satisfies LayerSpecification
+export const background = (palette: Palette): LayerSpecification => ({
+  id: 'ground',
+  type: 'background',
+  paint: { 'background-color': palette.land },
+})

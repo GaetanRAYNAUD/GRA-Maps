@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from 'react'
 import type { Indicator } from './indicators.ts'
 import { formatValue } from './indicators.ts'
-import { noData, washAt } from './palette.ts'
+import { usePalette, washAt } from './palette.ts'
 import { Icon } from './Icon.tsx'
 
 type Props = {
@@ -21,6 +21,9 @@ type Props = {
   notice: string | undefined
   onNotice: (() => void) | undefined
   noticeAction: string | undefined
+  /** Phones: only the title and the year, to leave the map room. */
+  collapsed: boolean
+  onCollapse: (collapsed: boolean) => void
 }
 
 const stepDelay = 650
@@ -39,7 +42,10 @@ export function Legend({
   notice,
   onNotice,
   noticeAction,
+  collapsed,
+  onCollapse,
 }: Props) {
+  const { wash, noData } = usePalette()
   const [playing, setPlaying] = useState(false)
   const sliderId = useId()
   const index = year === undefined ? -1 : years.indexOf(year)
@@ -71,13 +77,23 @@ export function Legend({
   }
 
   return (
-    <section className="legend" aria-label="Légende">
+    <section className={`legend${collapsed ? ' is-collapsed' : ''}`} aria-label="Légende">
       <div className="legend-head">
         <h2 className="legend-title">
           {indicator.label}
           <span className="legend-level"> · {levelLabel}</span>
         </h2>
         <span className="legend-unit">{indicator.unit === '‰' ? 'pour 1 000 habitants' : indicator.unit}</span>
+        {indicator.yearly && year !== undefined ? <span className="legend-year">{year}</span> : null}
+        <button
+          type="button"
+          className="legend-toggle"
+          onClick={() => onCollapse(!collapsed)}
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? 'Déplier la légende' : 'Replier la légende'}
+        >
+          <Icon name={collapsed ? 'expand' : 'chevron'} />
+        </button>
       </div>
 
       <div className="ramp-wrap">
@@ -86,7 +102,7 @@ export function Legend({
             <i
               key={cls}
               className={cls === markClass ? 'is-marked' : undefined}
-              style={{ background: washAt(nb === 0 ? 1 : cls / nb) }}
+              style={{ background: washAt(wash, nb === 0 ? 1 : cls / nb) }}
               title={range(cls)}
             />
           ))}
