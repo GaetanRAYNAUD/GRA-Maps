@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { checkTotals } from '../src/compute/check-totals.ts'
-import { emptyData, newCommune, newDepartement, newRegion, type Data } from '../src/model.ts'
+import { type Data, emptyData, newCommune, newDepartement, newRegion } from '../src/model.ts'
 import { internStep } from '../src/steps/08-intern.ts'
 
 /** Two departements in one region, three communes; population and births for 2020. */

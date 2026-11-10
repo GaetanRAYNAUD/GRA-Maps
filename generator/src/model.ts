@@ -1,13 +1,13 @@
 import {
-  Level,
   type Commune,
   type CommunePopulations,
   type Departement,
   type Jenks,
+  Level,
   type Places,
   type Region,
   type ShapeLevel,
-  type Shapes,
+  type Shapes
 } from '@gra-maps/shared'
 
 /**

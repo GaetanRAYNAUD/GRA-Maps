@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
-import { Level } from '@gra-maps/shared'
 import type { Commune, Departement, Region } from '@gra-maps/shared'
+import { Level } from '@gra-maps/shared'
+import { useEffect, useState } from 'react'
 import { loadCommune, loadDepartement, loadRegion } from './data.ts'
 import { HistoryChart } from './HistoryChart.tsx'
 import { Icon } from './Icon.tsx'
-import { useMediaQuery } from './useMediaQuery.ts'
-import { formatNumber, formatValue, indicators, percentFor, rankFor, scopesFor, seriesFor, valueFor } from './indicators.ts'
 import type { Indicator, Scope } from './indicators.ts'
+import { formatNumber, formatValue, indicators, percentFor, rankFor, scopesFor, seriesFor, valueFor } from './indicators.ts'
+import { useMediaQuery } from './useMediaQuery.ts'
 
 export type Selection = { level: Level; id: string }
 

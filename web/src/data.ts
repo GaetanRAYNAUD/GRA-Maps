@@ -1,5 +1,5 @@
-import { dataPaths, jenksKeys } from '@gra-maps/shared'
 import type { Common, Commune, Departement, Jenks, JenksKind, Region } from '@gra-maps/shared'
+import { dataPaths, jenksKeys } from '@gra-maps/shared'
 
 const baseUrl = (import.meta.env.VITE_DATA_BASE_URL ?? '').replace(/\/$/, '')
 

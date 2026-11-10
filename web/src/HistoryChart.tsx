@@ -1,8 +1,8 @@
 import { useEffect, useId, useRef, useState } from 'react'
+import { Icon } from './Icon.tsx'
+import { IndicatorPicker } from './IndicatorPicker.tsx'
 import type { Indicator } from './indicators.ts'
 import { formatValue, indicators } from './indicators.ts'
-import { IndicatorPicker } from './IndicatorPicker.tsx'
-import { Icon } from './Icon.tsx'
 import { useMediaQuery } from './useMediaQuery.ts'
 
 type Props = {

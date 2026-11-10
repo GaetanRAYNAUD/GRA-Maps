@@ -1,5 +1,5 @@
-import { useTheme } from './theme.ts'
 import type { Theme } from './theme.ts'
+import { useTheme } from './theme.ts'
 
 export type Palette = {
   /** Wash ramp, lowest class first. */

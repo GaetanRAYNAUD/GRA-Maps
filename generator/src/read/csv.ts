@@ -1,5 +1,5 @@
-import { readFile } from 'node:fs/promises'
 import { parse } from 'csv-parse/sync'
+import { readFile } from 'node:fs/promises'
 
 type CsvOptions = {
   delimiter?: string

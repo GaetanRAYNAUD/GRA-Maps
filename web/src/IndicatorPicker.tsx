@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Icon } from './Icon.tsx'
-import { indicators } from './indicators.ts'
 import type { Indicator } from './indicators.ts'
+import { indicators } from './indicators.ts'
 
 const groups = ['Population', 'État civil'] as const
 

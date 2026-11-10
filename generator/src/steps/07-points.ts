@@ -1,5 +1,5 @@
-import { readFile } from 'node:fs/promises'
 import type { Point } from '@gra-maps/shared'
+import { readFile } from 'node:fs/promises'
 import type { Step } from '../model.ts'
 import { sources } from '../sources/registry.ts'
 

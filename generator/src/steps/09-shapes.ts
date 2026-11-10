@@ -1,7 +1,7 @@
+import type { Places, ShapeLevel, Shapes } from '@gra-maps/shared'
+import mapshaper from 'mapshaper'
 import { readFile } from 'node:fs/promises'
 import { gunzipSync } from 'node:zlib'
-import mapshaper from 'mapshaper'
-import type { Places, ShapeLevel, Shapes } from '@gra-maps/shared'
 import type { Data, Step } from '../model.ts'
 import { sources } from '../sources/registry.ts'
 

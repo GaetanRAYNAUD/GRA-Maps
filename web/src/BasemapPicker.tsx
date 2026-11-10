@@ -1,5 +1,5 @@
-import { basemaps, thumbnailUrl } from './basemaps.ts'
 import type { Basemap } from './basemaps.ts'
+import { basemaps, thumbnailUrl } from './basemaps.ts'
 import { usePalette } from './palette.ts'
 
 function Thumbnail({ basemap }: { basemap: Basemap }) {

@@ -1,8 +1,8 @@
+import { type Common, dataPaths, jenksKeys, jenksKinds, shapeLevels } from '@gra-maps/shared'
 import { createHash } from 'node:crypto'
 import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import pLimit from 'p-limit'
-import { dataPaths, jenksKeys, jenksKinds, shapeLevels, type Common } from '@gra-maps/shared'
 import type { Data, Mode } from './model.ts'
 import { OUT_DIR } from './paths.ts'
 

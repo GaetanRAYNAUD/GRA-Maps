@@ -1,5 +1,5 @@
-import type { ExpressionSpecification, FilterSpecification, LayerSpecification, SourceSpecification } from 'maplibre-gl'
 import { dataPaths } from '@gra-maps/shared'
+import type { ExpressionSpecification, FilterSpecification, LayerSpecification, SourceSpecification } from 'maplibre-gl'
 import { dataUrl } from './data.ts'
 import type { Palette } from './palette.ts'
 

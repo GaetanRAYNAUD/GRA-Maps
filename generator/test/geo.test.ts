@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { bordersReport } from '../src/compute/check-borders.ts'
-import { buildConverter, movesFrom, type Move } from '../src/geo.ts'
+import { buildConverter, type Move, movesFrom } from '../src/geo.ts'
 
 const row = (MOD: string, DATE_EFF: string, COM_AV: string, COM_AP: string, TYPECOM_AV = 'COM', TYPECOM_AP = 'COM') => ({
   MOD,

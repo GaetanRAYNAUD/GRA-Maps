@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, readdir, rename, rm } from 'node:fs/promises'
 import path from 'node:path'
 import type { Mode } from '../model.ts'
-import { sources, type Source } from './registry.ts'
+import { type Source, sources } from './registry.ts'
 
 /** Side files written next to `file` by a download (`<file><suffix>`, e.g. `x.zip.catalog.json`). */
 async function sideFiles(file: string): Promise<string[]> {

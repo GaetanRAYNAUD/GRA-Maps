@@ -1,7 +1,7 @@
-import { Icon } from './Icon.tsx'
 import type { IconName } from './Icon.tsx'
-import { cycleThemeChoice, useThemeChoice } from './theme.ts'
+import { Icon } from './Icon.tsx'
 import type { ThemeChoice } from './theme.ts'
+import { cycleThemeChoice, useThemeChoice } from './theme.ts'
 
 const order: ThemeChoice[] = ['system', 'light', 'dark']
 

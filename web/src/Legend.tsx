@@ -1,8 +1,8 @@
 import { useEffect, useId, useState } from 'react'
+import { Icon } from './Icon.tsx'
 import type { Indicator } from './indicators.ts'
 import { formatValue } from './indicators.ts'
 import { usePalette, washAt } from './palette.ts'
-import { Icon } from './Icon.tsx'
 
 type Props = {
   indicator: Indicator

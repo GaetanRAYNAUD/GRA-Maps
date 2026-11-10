@@ -1,10 +1,10 @@
-import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
+import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import { emptyData, type Data, type RegionNode } from '../src/model.ts'
+import { type Data, emptyData, type RegionNode } from '../src/model.ts'
 import { writeOutput } from '../src/write.ts'
 
 const region = (id: string, name: string) => ({ id, name }) as unknown as RegionNode

@@ -20,15 +20,15 @@
  *   e.g. `--only regions/`; common.json is then left alone unless the prefix matches it.
  * Reads its settings from the root `.env` (see .env.example). Manual only, never in a build.
  */
+import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { dataPaths } from '@gra-maps/shared'
 import { createHash } from 'node:crypto'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
-import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import pLimit from 'p-limit'
-import { dataPaths } from '@gra-maps/shared'
 import { OUT_DIR } from '../generator/src/paths.ts'
-import { planPublish, type LocalFile } from './publish-plan.ts'
+import { type LocalFile, planPublish } from './publish-plan.ts'
 
 const DATA_HOST = 'maps-data.gaetanraynaud.fr'
 const CACHE_CONTROL = 'public, max-age=300'

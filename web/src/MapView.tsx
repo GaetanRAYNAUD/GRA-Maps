@@ -1,25 +1,25 @@
-import { useEffect, useRef } from 'react'
-import { AttributionControl, Map as MapLibre } from 'maplibre-gl'
+import { dataPaths } from '@gra-maps/shared'
 import type {
   ExpressionSpecification,
   FilterSpecification,
   FlyToOptions,
   IControl,
   MapGeoJSONFeature,
-  StyleSpecification,
+  StyleSpecification
 } from 'maplibre-gl'
+import { AttributionControl, Map as MapLibre } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { dataPaths } from '@gra-maps/shared'
-import { basemaps, tileUrl } from './basemaps.ts'
+import { useEffect, useRef } from 'react'
 import type { Basemap } from './basemaps.ts'
-import { dataUrl } from './data.ts'
-import { workerReady } from './maplibre-worker.ts'
-import { arrondissementPrefixes, communesMinZoom, franceBounds, mapLevels } from './geo.ts'
-import type { MapLevel } from './geo.ts'
-import { palettes, washExpression } from './palette.ts'
-import type { Palette } from './palette.ts'
-import type { Theme } from './theme.ts'
+import { basemaps, tileUrl } from './basemaps.ts'
 import { background, basemapSources, glyphs, overLayers, underLayers } from './basemapStyle.ts'
+import { dataUrl } from './data.ts'
+import type { MapLevel } from './geo.ts'
+import { arrondissementPrefixes, communesMinZoom, franceBounds, mapLevels } from './geo.ts'
+import { workerReady } from './maplibre-worker.ts'
+import type { Palette } from './palette.ts'
+import { palettes, washExpression } from './palette.ts'
+import type { Theme } from './theme.ts'
 
 /** data.gouv.fr boundary tiles: the communes, and the departements around them. */
 const tiles = 'admin'
